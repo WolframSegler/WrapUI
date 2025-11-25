@@ -9,6 +9,7 @@ Feel free to create forks or contribute. Bug reports are also appreciated.
 - Barebones UI state tracking using `UIState.java`
 - Simple dialog wrapper for accessing the dialog panel instance
 - Systems for tooltips and fader management to reduce boilerplate, with a more composition-oriented approach
+-Basic number formatter for large numbers
 
 # UI Elements
 - Button implementation similar to vanilla, without using `ButtonAPI`
@@ -20,6 +21,7 @@ Feel free to create forks or contribute. Bug reports are also appreciated.
 # Usage
 - All panels that wish to use Plugins or Systems must extend `CustomPanel`.
 - To access the actual `CustomPanelAPI` instance, the getPanel() method can be used.
+- Do not forget to call getPlugin().init() inside the panel constructor.
 
 # Possible Questions
 - Why is it called Wrap UI?

@@ -15,6 +15,8 @@ public class ActionListenerPanel extends CustomPanel<
 
     public ActionListenerPanel(UIPanelAPI parent, int width, int height) {
         super(parent, width, width, new BasePanelPlugin<>());
+
+        getPlugin().init(this);
     }
 
     public void createPanel() {}

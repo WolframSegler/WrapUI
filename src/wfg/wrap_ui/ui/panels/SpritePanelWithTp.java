@@ -50,8 +50,6 @@ public class SpritePanelWithTp extends SpritePanel<SpritePanelWithTp> implements
     public SpritePanelWithTp(UIPanelAPI parent, int width, int height,
         SpritePanelPlugin<SpritePanelWithTp> plugin, String spriteID, Color color, Color fillColor, boolean drawBorder) {
         super(parent, width, height, plugin, spriteID, color, fillColor, drawBorder);
-
-        initializePlugin(hasPlugin);
     }
 
     public Color getGlowColor() {

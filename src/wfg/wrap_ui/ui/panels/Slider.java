@@ -99,13 +99,10 @@ public class Slider extends CustomPanel<SliderPlugin, Slider, UIPanelAPI> {
         this.maxRange = maxRange;
         cachedMaxValue = maxRange;
 
-        initializePlugin(hasPlugin);
+        getPlugin().init(this);
         createLabel(null);
     }
-
-    public void initializePlugin(boolean hasPlugin) {
-        getPlugin().init(this);
-    }
+    
     public void createPanel() {}
 
     private void createLabel(String fontInput) {

@@ -59,8 +59,6 @@ public abstract class CustomPanel<
     protected final CustomPanelAPI m_panel;
     protected final PluginType m_plugin;
 
-    protected boolean hasPlugin = false;
-
     /**
      * Ownership and lifecycle rules for child panels:
      * <ul>
@@ -69,17 +67,14 @@ public abstract class CustomPanel<
      *       since each panel handles positioning its children separately.</li>
      *   <li>The parent <b>MUST NOT</b> call <code>{@link #createPanel()}</code>.
      *      This ensures that the child’s members are fully initialized before panel creation.</li>
-     *   <li>The parent <b>MUST NOT</b> call <code>{@link #initializePlugin()}</code>.
-     *      Initialization may depend on child-specific members. 
-     *      The child <b>must</b> call this in the Constructor.</li>
+     *   <li>The child is responsible for initializing the Plugin with <code>{@link #getPlugin()}</code>
+     *      and calling init(this).</li>
      * </ul>
      */
     @SuppressWarnings("unchecked")
     public CustomPanel(UIPanelAPI parent, int width, int height, PluginType plugin) {
         m_parent = (ParentType) parent;
         m_plugin = plugin;
-
-        hasPlugin = plugin != null;
         
         m_panel = Global.getSettings().createCustom(width, height, plugin);
     }
@@ -161,21 +156,7 @@ public abstract class CustomPanel<
     }
 
     /**
-     * The child is responsible for initializing the Plugin.
-     * The plugin must not keep copies of the panel’s internal members.
-     * If no Plugin is needed, this method should be left empty.
-     *
-     * <ul>
-     *  <li>Custom systems should be added to the plugin by the child within this method. Since system management belongs to the plugin, doing this in the constructor is discouraged. The constructor calls this method, keeping related logic together.</li>
-     *  <li>Systems provided by the UI library are added automatically by the base plugin.</li>
-     *  <li>The panel must implement any required interfaces defined in {@link CustomPanel} to support the relevant systems.</li>
-     *  <li>All state management for systems should be handled within the plugin.</li>
-     * </ul>
-     */
-    public abstract void initializePlugin(boolean hasPlugin);
-
-    /**
-     * The method for populating the main panel.
+     * The method for populating the main panel. Can be left empty.
      */
     public abstract void createPanel();
 

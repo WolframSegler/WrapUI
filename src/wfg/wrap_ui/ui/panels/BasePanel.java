@@ -24,12 +24,8 @@ public class BasePanel extends CustomPanel<
         BasePanelPlugin<BasePanel> plugin) {
         super(parent, width, height, plugin);
 
-        initializePlugin(hasPlugin);
-        createPanel();
-    }
-
-    public void initializePlugin(boolean hasPlugin) {
         getPlugin().init(this);
+        createPanel();
     }
 
     public void createPanel() {

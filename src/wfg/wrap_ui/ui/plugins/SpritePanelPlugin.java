@@ -11,8 +11,10 @@ public class SpritePanelPlugin<
 
     private boolean isDrawFilledQuad = false;
 
-    public void init() {
-        if (getPanel().fillColor != null) {
+    @Override
+    public void init(PanelType panel) {
+        super.init(panel);
+        if (m_panel.fillColor != null) {
             isDrawFilledQuad = true;
         }
     }
@@ -24,32 +26,32 @@ public class SpritePanelPlugin<
     @Override
     public void renderBelow(float alphaMult) {
         super.renderBelow(alphaMult);
-        if (getPanel().m_sprite == null) {
+        if (m_panel.m_sprite == null) {
             return;
         }
 
-        if (getPanel().color != null) {
-            getPanel().m_sprite.setColor(getPanel().color);
+        if (m_panel.color != null) {
+            m_panel.m_sprite.setColor(m_panel.color);
         }
 
-        final PositionAPI pos = getPanel().getPos();
+        final PositionAPI pos = m_panel.getPos();
         final float x = pos.getX();
         final float y = pos.getY();
         final float w = pos.getWidth();
         final float h = pos.getHeight();
 
-        if (isDrawFilledQuad && getPanel().fillColor != null) {
-            getPanel().m_sprite.setColor(getPanel().fillColor);
-            RenderUtils.drawQuad(x, y, w, h, getPanel().fillColor, alphaMult, false);
+        if (isDrawFilledQuad && m_panel.fillColor != null) {
+            m_panel.m_sprite.setColor(m_panel.fillColor);
+            RenderUtils.drawQuad(x, y, w, h, m_panel.fillColor, alphaMult, false);
         }
 
-        if (getPanel().drawTexOutline && getPanel().texOutlineColor != null) {
+        if (m_panel.drawTexOutline && m_panel.texOutlineColor != null) {
             RenderUtils.drawSpriteOutline(
-                getPanel().m_sprite, getPanel().texOutlineColor, x, y, w, h, alphaMult, 2
+                m_panel.m_sprite, m_panel.texOutlineColor, x, y, w, h, alphaMult, 2
             );
         }
 
-        getPanel().m_sprite.setSize(w, h);
-        getPanel().m_sprite.render(x, y);
+        m_panel.m_sprite.setSize(w, h);
+        m_panel.m_sprite.render(x, y);
     }
 }

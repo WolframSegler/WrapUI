@@ -11,7 +11,6 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.ui.UIPanelAPI;
 import com.fs.starfarer.api.util.Misc;
 
-import wfg.wrap_ui.ui.UIState.State;
 import wfg.wrap_ui.ui.panels.CustomPanel.HasTooltip;
 import wfg.wrap_ui.ui.plugins.PieChartPlugin;
 import wfg.wrap_ui.util.RenderUtils;
@@ -35,12 +34,7 @@ public class PieChart extends CustomPanel<PieChartPlugin, PieChart, UIPanelAPI> 
 
         this.data = data;
 
-        initializePlugin(hasPlugin);
-    }
-
-    public void initializePlugin(boolean hasPlugin) {
         getPlugin().init(this);
-        getPlugin().setTargetUIState(State.NONE);
     }
 
     public void createPanel() {}

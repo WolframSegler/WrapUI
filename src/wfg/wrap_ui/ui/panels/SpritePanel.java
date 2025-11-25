@@ -59,6 +59,7 @@ public class SpritePanel<
     public boolean drawBorder = false;
     public boolean drawTexOutline = false;
 
+    @SuppressWarnings("unchecked")
     public SpritePanel(UIPanelAPI parent, int width, int height,
         SpritePanelPlugin<PanelType> plugin, String spriteID, Color color, Color fillColor, boolean drawBorder) {
         super(parent, width, height, plugin);
@@ -68,14 +69,7 @@ public class SpritePanel<
         this.fillColor = fillColor;
         this.drawBorder = drawBorder;
 
-        initializePlugin(hasPlugin);
-    }
-
-    @SuppressWarnings("unchecked")
-    public void initializePlugin(boolean hasPlugin) {
-        // PanelType is a subclass of LtvSpritePanel. This cast is safe.
-        getPlugin().init((PanelType)this); 
-        getPlugin().init();
+        getPlugin().init((PanelType)this);
     }
 
     public Outline getOutline() {

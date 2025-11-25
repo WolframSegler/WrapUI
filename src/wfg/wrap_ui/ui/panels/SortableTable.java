@@ -20,7 +20,6 @@ import com.fs.starfarer.api.util.Misc;
 import wfg.wrap_ui.util.CallbackRunnable;
 import wfg.wrap_ui.util.WrapUiUtils;
 import wfg.wrap_ui.util.WrapUiUtils.AnchorType;
-import wfg.wrap_ui.ui.UIState.State;
 import wfg.wrap_ui.ui.panels.CustomPanel.HasTooltip.PendingTooltip;
 import wfg.wrap_ui.ui.panels.SpritePanel.Base;
 import wfg.wrap_ui.ui.plugins.BasePanelPlugin;
@@ -139,12 +138,7 @@ public class SortableTable extends CustomPanel<BasePanelPlugin<SortableTable>, S
         super(parent, width, height, null);
         HEADER_HEIGHT = headerHeight;
         ROW_HEIGHT = rowHeight;
-
-        // The Table itself needs to be created after the rows are ready
-        initializePlugin(hasPlugin);
     }
-
-    public void initializePlugin(boolean hasPlugin) {}
 
     public void createPanel() {
         getPanel().removeComponent(m_headerContainer);
@@ -259,14 +253,8 @@ public class SortableTable extends CustomPanel<BasePanelPlugin<SortableTable>, S
             this.column = column;
             this.listIndex = listIndex;
 
-            createPanel();
-            initializePlugin(hasPlugin);
-        }
-
-        @Override
-        public void initializePlugin(boolean hasPlugin) {
             getPlugin().init(this);
-            getPlugin().setTargetUIState(State.DIALOG);
+            createPanel();
         }
 
         @Override
@@ -342,11 +330,6 @@ public class SortableTable extends CustomPanel<BasePanelPlugin<SortableTable>, S
         }
 
         private boolean isExpanded = false;
-
-        @Override
-        public void initializePlugin(boolean hasPlugin) {
-            super.initializePlugin(hasPlugin);
-        }
 
         @Override
         public CustomPanelAPI getTpParent() {
@@ -475,12 +458,7 @@ public class SortableTable extends CustomPanel<BasePanelPlugin<SortableTable>, S
 
             m_fader = new FaderUtil(0, 0, 0.2f, true, true);
 
-            initializePlugin(hasPlugin);
-        }
-
-        public void initializePlugin(boolean hasPlugin) {
             getPlugin().init(this);
-            getPlugin().setTargetUIState(State.DIALOG);
         }
 
         public void createPanel() {

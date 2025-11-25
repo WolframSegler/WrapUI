@@ -75,13 +75,9 @@ public class Button extends CustomPanel<ButtonPlugin, Button, UIPanelAPI> implem
         labelFont = font;
         this.onClick = onClick;
 
-        initializePlugin(hasPlugin);
-        createPanel();
-    }
-
-    public void initializePlugin(boolean hasPlugin) {
         getPlugin().init(this);
         getPlugin().setIgnoreUIState(true);
+        createPanel();
     }
 
     public void createPanel() {

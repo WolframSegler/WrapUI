@@ -34,14 +34,8 @@ public class CustomDetailDialogPanel<
         PluginType plugin) {
         super(parent, width, height, plugin);
 
-        initializePlugin(hasPlugin);
+        if (plugin != null) getPlugin().init(this);
         createPanel();
-    }
-
-    public void initializePlugin(boolean hasPlugin) {
-        if (!hasPlugin) return;
-        
-        getPlugin().init(this);
     }
 
     public void createPanel() {}
