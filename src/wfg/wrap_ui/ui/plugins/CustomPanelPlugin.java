@@ -91,6 +91,7 @@ public abstract class CustomPanelPlugin<
     public final List<BaseSystem<?, PanelType>> components = new ArrayList<>();
     protected final InputSnapshot inputSnapshot = new InputSnapshot();
     
+    protected boolean initialized = false;
     protected State targetUIState = State.NONE;
     protected boolean ignoreUIState = false;
 
@@ -101,6 +102,9 @@ public abstract class CustomPanelPlugin<
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     public void init(PanelType panel) {
+        if (initialized) return;
+        initialized = true;
+
         m_panel = panel;
 
         if (panel instanceof HasTooltip provider) {
