@@ -254,6 +254,7 @@ public class SortableTable extends CustomPanel<BasePanelPlugin<SortableTable>, S
             this.listIndex = listIndex;
 
             getPlugin().init(this);
+            getPlugin().setIgnoreUIState(true);
             createPanel();
         }
 
@@ -459,6 +460,7 @@ public class SortableTable extends CustomPanel<BasePanelPlugin<SortableTable>, S
             m_fader = new FaderUtil(0, 0, 0.2f, true, true);
 
             getPlugin().init(this);
+            getPlugin().setIgnoreUIState(true);
         }
 
         public void createPanel() {
