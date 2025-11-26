@@ -6,9 +6,9 @@
 	{
 		"major":0,
 		"minor":1,
-		"patch":0,
+		"patch":0
 	},
 	"starsectorVersion":"0.97a-RC11",
 	"directDownloadURL":"https://github.com/WolframSegler/WrapUI/releases/latest/download/WrapUI.zip",
-	"changelogURL":"https://raw.githubusercontent.com/WolframSegler/WrapUI/v0.1.0-beta/changelog.txt",
+	"changelogURL":"https://raw.githubusercontent.com/WolframSegler/WrapUI/v0.1.0-beta/changelog.txt"
 }
