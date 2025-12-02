@@ -107,7 +107,11 @@ public class NumFormat {
 		return x;
 	}
 
-    public static final String formatCredits(long number) {
+    public static final String formatCredit(long number) {
         return String.format("%,d", number) + Strings.C;
+    }
+
+    public static final String formatCreditAbs(long number) {
+        return String.format("%,d", Math.abs(number)) + Strings.C;
     }
 }

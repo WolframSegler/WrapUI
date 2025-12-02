@@ -83,6 +83,7 @@ public class TextPanel extends CustomPanel<BasePanelPlugin<TextPanel>, TextPanel
         super(parent, width, height, plugin);
 
         getPlugin().init(this);
+        getPlugin().setIgnoreUIState(true);
         createPanel();
     }
 
