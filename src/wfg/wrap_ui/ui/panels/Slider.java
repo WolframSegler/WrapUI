@@ -744,9 +744,7 @@ public class Slider extends CustomPanel<SliderPlugin, Slider, UIPanelAPI> {
     public void advanceImpl(float delta) {
         if (roundBarValue && roundingIncrement > 0) {
             cachedProgressValue = Math.round(cachedProgressValue / roundingIncrement) * roundingIncrement;
-            if (roundingIncrement != 1) {
-                progressValue = Math.round(progressValue / roundingIncrement) * roundingIncrement;
-            }
+            progressValue = Math.round(progressValue / roundingIncrement) * roundingIncrement;
         }
 
         if (cachedProgressValue != progressValue || cachedMin != minValue || cachedMax != maxValue || 

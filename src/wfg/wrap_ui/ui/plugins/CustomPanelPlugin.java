@@ -2,6 +2,7 @@ package wfg.wrap_ui.ui.plugins;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.lwjgl.input.Mouse;
 
@@ -28,7 +29,7 @@ import wfg.wrap_ui.ui.systems.OutlineSystem;
 import wfg.wrap_ui.ui.systems.TooltipSystem;
 
 /**
- * The plugin serves as the central coordinator for its associated {@link CustomPanel} and components.
+ * The plugin serves as the central coordinator for its associated {@link CustomPanel} and systems.
  *
  * <p><strong>Design principles:</strong></p>
  * <ul>
@@ -47,7 +48,7 @@ import wfg.wrap_ui.ui.systems.TooltipSystem;
  * // Plugin accessing panel data:
  * float width = m_panel.getPos().getWidth();
  *
- * // Component accessing panel data via plugin:
+ * // System accessing panel data via plugin:
  * var panel = getPlugin().getPanel();
  * Color bg = panel.getBgColor();
  * </pre>
@@ -88,7 +89,7 @@ public abstract class CustomPanelPlugin<
         return m_panel;
     }
 
-    public final List<BaseSystem<?, PanelType>> components = new ArrayList<>();
+    public final List<BaseSystem<?, PanelType>> systems = new ArrayList<>();
     protected final InputSnapshot inputSnapshot = new InputSnapshot();
     
     protected boolean initialized = false;
@@ -100,6 +101,8 @@ public abstract class CustomPanelPlugin<
     public int offsetW = 0;
     public int offsetH = 0;
 
+    public final UUID UniqueID = UUID.randomUUID();
+
     @SuppressWarnings({"rawtypes", "unchecked"})
     public void init(PanelType panel) {
         if (initialized) return;
@@ -108,37 +111,37 @@ public abstract class CustomPanelPlugin<
         m_panel = panel;
 
         if (panel instanceof HasTooltip provider) {
-            addComponent(new TooltipSystem(this, provider));
+            addSystem(new TooltipSystem(this, provider));
         }
 
         if (panel instanceof HasBackground) {
-            addComponent(new BackgroundSystem(this));
+            addSystem(new BackgroundSystem(this));
         }
 
         if (panel instanceof HasAudioFeedback) {
-            addComponent(new AudioFeedbackSystem(this));
+            addSystem(new AudioFeedbackSystem(this));
         }
 
         if (panel instanceof HasOutline) {
-            addComponent(new OutlineSystem(this));
+            addSystem(new OutlineSystem(this));
         }
 
         if (panel instanceof HasFader) {
-            addComponent(new FaderSystem(this));
+            addSystem(new FaderSystem(this));
         }
 
         if (panel instanceof AcceptsActionListener) {
-            addComponent(new ActionListenerSystem(this));
+            addSystem(new ActionListenerSystem(this));
         }
     }
 
-    protected final <C extends BaseSystem<?, PanelType>> void addComponent(C comp) {
-        components.add(comp);
+    protected final <C extends BaseSystem<?, PanelType>> void addSystem(C system) {
+        systems.add(system);
     }
 
-    public void removeComponent(BaseSystem<?, PanelType> comp) {
-        components.remove(comp);
-        comp.onRemove(inputSnapshot);
+    public void removeSystem(BaseSystem<?, PanelType> system) {
+        systems.remove(system);
+        system.onRemove(inputSnapshot);
     }
 
     public void setTargetUIState(State a) {
@@ -164,27 +167,27 @@ public abstract class CustomPanelPlugin<
     }
 
     public void renderBelow(float alphaMult) {
-        for (BaseSystem<?, PanelType> comp : components) {
-            comp.renderBelow(alphaMult, inputSnapshot);
+        for (BaseSystem<?, PanelType> system : systems) {
+            system.renderBelow(alphaMult, inputSnapshot);
         }
     }
 
     public void render(float alphaMult) {
-        for (BaseSystem<?, PanelType> comp : components) {
-            comp.render(alphaMult, inputSnapshot);
+        for (BaseSystem<?, PanelType> system : systems) {
+            system.render(alphaMult, inputSnapshot);
         }
     }
 
     public void advance(float amount) {
-        for (BaseSystem<?, PanelType> comp : components) {
-            comp.advance(amount, inputSnapshot);
+        for (BaseSystem<?, PanelType> system : systems) {
+            system.advance(amount, inputSnapshot);
         }
     }
 
     public void processInput(List<InputEventAPI> events) {
         inputSnapshot.resetFrameFlags();
 
-        // General events used by most components
+        // General events used by most systems
         for (InputEventAPI event : events) {
             
             if (event.isMouseMoveEvent()) {
@@ -230,9 +233,9 @@ public abstract class CustomPanelPlugin<
             }
         }
 
-        // Component specific
-        for (BaseSystem<?, PanelType> comp : components) {
-            comp.processInput(events, inputSnapshot);
+        // System specific
+        for (BaseSystem<?, PanelType> system : systems) {
+            system.processInput(events, inputSnapshot);
         }
     }
 
