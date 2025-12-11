@@ -26,12 +26,15 @@ import wfg.wrap_ui.ui.plugins.ButtonPlugin;
 import wfg.wrap_ui.ui.systems.FaderSystem.Glow;
 import wfg.wrap_ui.util.CallbackRunnable;
 import wfg.wrap_ui.util.RenderUtils;
+import static wfg.wrap_ui.util.UIConstants.*;
 
 public class Button extends CustomPanel<ButtonPlugin, Button, UIPanelAPI> implements 
     HasAudioFeedback, HasFader, HasActionListener, AcceptsActionListener, HasTooltip
 {
 
     public float highlightBrightness = 0.2f;
+    public float bgAlpha = 0.9f;
+    public float bgDisabledAlpha = 0.8f;
     public boolean checked = false;
     public boolean disabled = false;
     public boolean quickMode = false;
@@ -42,9 +45,9 @@ public class Button extends CustomPanel<ButtonPlugin, Button, UIPanelAPI> implem
     public boolean tooltipExpanded = false;
     public boolean tooltipEnabled = false;
     public boolean disabledWhileInvisible = true;
-    public Color bgColor = Misc.getDarkPlayerColor();
+    public Color bgColor = dark;
     public Color bgDisabledColor = new Color(17, 52, 62);
-    public Color highlightColor = Misc.getBasePlayerColor();
+    public Color highlightColor = base;
     public Glow highlightType = Glow.OVERLAY;
     public Object customData = null;
 
@@ -92,7 +95,7 @@ public class Button extends CustomPanel<ButtonPlugin, Button, UIPanelAPI> implem
         label.setColor(labelColor);
         label.setAlignment(labelAlg);
         if (appendShortcutToText) {
-            label.setHighlightColor(Misc.getHighlightColor());
+            label.setHighlightColor(highlight);
             label.setHighlight(Keyboard.getKeyName(shortcut));
         }
 
@@ -124,7 +127,10 @@ public class Button extends CustomPanel<ButtonPlugin, Button, UIPanelAPI> implem
     }
 
     public void onShortcutPressed(CustomPanel<?, ?, ?> source) {
-        if (disabled && !performActionWhenDisabled) return;
+        if (disabled && !performActionWhenDisabled) {
+            Global.getSoundPlayer().playUISound("ui_button_disabled_pressed", 1, 1);
+            return;
+        }
         if (getPanel().getOpacity() <= 0f && !disabledWhileInvisible) return;
 
         if (onClick != null) {
@@ -262,7 +268,7 @@ public class Button extends CustomPanel<ButtonPlugin, Button, UIPanelAPI> implem
     }
 
     public float getBgAlpha() {
-        return disabled ? 0.8f : 0.9f;
+        return disabled ? bgDisabledAlpha : bgAlpha;
     }
 
     public void setCutStyle(CutStyle style) {

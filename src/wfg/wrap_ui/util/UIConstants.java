@@ -1,0 +1,19 @@
+package wfg.wrap_ui.util;
+
+import java.awt.Color;
+
+import com.fs.starfarer.api.util.Misc;
+
+public class UIConstants {
+    public static final int pad = 3;
+    public static final int opad = 10; 
+
+    public static final Color highlight = Misc.getHighlightColor();
+    public static final Color positive = Misc.getPositiveHighlightColor();
+    public static final Color negative = Misc.getNegativeHighlightColor();
+    public static final Color base = Misc.getBasePlayerColor();
+    public static final Color dark = Misc.getDarkPlayerColor();
+    public static final Color gray = Misc.getGrayColor();
+
+    public static final float bgAlpha = 0.85f;
+}

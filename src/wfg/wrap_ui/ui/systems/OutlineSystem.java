@@ -8,6 +8,7 @@ import wfg.wrap_ui.ui.plugins.CustomPanelPlugin;
 import wfg.wrap_ui.ui.plugins.CustomPanelPlugin.InputSnapshot;
 import wfg.wrap_ui.util.RenderUtils;
 import wfg.wrap_ui.util.WrapUiUtils;
+import static wfg.wrap_ui.util.UIConstants.*;
 
 public final class OutlineSystem<
     PluginType extends CustomPanelPlugin<PanelType, PluginType>,
@@ -26,8 +27,6 @@ public final class OutlineSystem<
         TEX_MEDIUM,
         TEX_THICK
     }
-
-    public static final int pad = 3;
 
     public OutlineSystem(PluginType plugin) {
         super(plugin);

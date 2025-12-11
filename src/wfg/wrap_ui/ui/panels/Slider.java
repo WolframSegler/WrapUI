@@ -639,77 +639,77 @@ public class Slider extends CustomPanel<SliderPlugin, Slider, UIPanelAPI> {
             if (numSubdivisions > 0) { // Subdivision Notches & Underfill Highlight
                 for (int i = 0; i < numSubdivisions - 1; ++i) {
                     final float subdivisionX = (int)(usableWidth / (float) numSubdivisions) * (i + 1) + 2;
-                    final float notchPadding = 3.0f;
+                    final float notchPadding = 3f;
                     final float topOffset = getXCoordinateForProgressValue(progressValue) >
-                        leftMargin + subdivisionX ? 1.0f : 3.0f;
+                        leftMargin + subdivisionX ? 1f : 3f;
 
-                    RenderUtils.drawGradientSprite(lineTexture, leftMargin + subdivisionX - 1.0f, y + topOffset,
-                        leftMargin + subdivisionX - 1.0f, y + h - topOffset,
-                        1.0f, Color.black, false, alphaMult, alphaMult, alphaMult
+                    RenderUtils.drawGradientSprite(lineTexture, leftMargin + subdivisionX - 1f, y + topOffset,
+                        leftMargin + subdivisionX - 1f, y + h - topOffset,
+                        1f, Color.black, false, alphaMult, alphaMult, alphaMult
                     );
 
                     RenderUtils.drawGradientSprite(lineTexture, leftMargin + subdivisionX, y + topOffset,
                         leftMargin + subdivisionX, y + h - topOffset,
-                        1.0f, widgetColor, false, alphaMult * 0.5f, alphaMult, alphaMult * 0.5f
+                        1f, widgetColor, false, alphaMult * 0.5f, alphaMult, alphaMult * 0.5f
                     );
 
-                    RenderUtils.drawGradientSprite(lineTexture, leftMargin + subdivisionX + 1.0f, y + topOffset,
-                        leftMargin + subdivisionX + 1.0f, y + h - topOffset,
-                        1.0f, Color.black, false, alphaMult, alphaMult, alphaMult
+                    RenderUtils.drawGradientSprite(lineTexture, leftMargin + subdivisionX + 1f, y + topOffset,
+                        leftMargin + subdivisionX + 1f, y + h - topOffset,
+                        1f, Color.black, false, alphaMult, alphaMult, alphaMult
                     );
 
                     RenderUtils.drawGradientSprite(lineTexture, leftMargin + subdivisionX - notchPadding,
-                        y - 1.0f, leftMargin + subdivisionX + notchPadding + 1.0f, y - 1.0f,
-                        1.0f, widgetColor, false, alphaMult, alphaMult, alphaMult
+                        y - 1f, leftMargin + subdivisionX + notchPadding + 1f, y - 1f,
+                        1f, widgetColor, false, alphaMult, alphaMult, alphaMult
                     );
 
                     RenderUtils.drawGradientSprite(lineTexture, leftMargin + subdivisionX - notchPadding, y,
-                        leftMargin + subdivisionX + notchPadding + 1.0f, y,
-                        1.0f, Color.black, false, alphaMult, alphaMult, alphaMult
+                        leftMargin + subdivisionX + notchPadding + 1f, y,
+                        1f, Color.black, false, alphaMult, alphaMult, alphaMult
                     );
 
                     RenderUtils.drawGradientSprite(lineTexture, leftMargin + subdivisionX - notchPadding, y + h,
-                        leftMargin + subdivisionX + notchPadding + 1.0f, y + h,
-                        1.0f, widgetColor, false, alphaMult, alphaMult, alphaMult
+                        leftMargin + subdivisionX + notchPadding + 1f, y + h,
+                        1f, widgetColor, false, alphaMult, alphaMult, alphaMult
                     );
 
                     RenderUtils.drawGradientSprite(lineTexture, leftMargin + subdivisionX - notchPadding,
-                        y + h - 1.0f, leftMargin + subdivisionX + notchPadding + 1.0f, y + h - 1.0f,
-                        1.0f, Color.black, false, alphaMult, alphaMult, alphaMult
+                        y + h - 1f, leftMargin + subdivisionX + notchPadding + 1f, y + h - 1f,
+                        1f, Color.black, false, alphaMult, alphaMult, alphaMult
                     );
                 }
 
-                overAmount = Math.min(10.0f, underfillWidth);
-                final float baseX = x + 6.0f + usableWidth;
+                overAmount = Math.min(10f, underfillWidth);
+                final float baseX = x + 6f + usableWidth;
 
-                RenderUtils.drawGradientSprite(lineTexture, baseX + 2.0f, y + 1.0f, baseX + 2.0f - overAmount,
-                    y + 1.0f, 1.0f, widgetColor, false, 0.0f,
+                RenderUtils.drawGradientSprite(lineTexture, baseX + 2f, y + 1f, baseX + 2f - overAmount,
+                    y + 1f, 1f, widgetColor, false, 0f,
                     0.5f * alphaMult, alphaMult
                 );
 
-                RenderUtils.drawGradientSprite(lineTexture, baseX + 2.0f - overAmount, y + 1.0f,
-                    baseX - underfillWidth + 1.5f, y + 1.0f, 1.0f, widgetColor, false,
+                RenderUtils.drawGradientSprite(lineTexture, baseX + 2f - overAmount, y + 1f,
+                    baseX - underfillWidth + 1.5f, y + 1f, 1f, widgetColor, false,
                     alphaMult, alphaMult, alphaMult
                 );
 
-                RenderUtils.drawGradientSprite(lineTexture, baseX + 2.0f, y + h - 2.0f,
-                    baseX + 2.0f - overAmount, y + h - 2.0f, 1.0f, widgetColor,
-                    false, 0.0f, 0.5f * alphaMult, alphaMult
+                RenderUtils.drawGradientSprite(lineTexture, baseX + 2f, y + h - 2f,
+                    baseX + 2f - overAmount, y + h - 2f, 1f, widgetColor,
+                    false, 0f, 0.5f * alphaMult, alphaMult
                 );
 
-                RenderUtils.drawGradientSprite(lineTexture, baseX + 2.0f - overAmount, y + h - 2.0f,
-                    baseX - underfillWidth + 1.5f, y + h - 2.0f, 1.0f,
+                RenderUtils.drawGradientSprite(lineTexture, baseX + 2f - overAmount, y + h - 2f,
+                    baseX - underfillWidth + 1.5f, y + h - 2f, 1f,
                     widgetColor, false, alphaMult, alphaMult, alphaMult
                 );
 
-                RenderUtils.drawGradientSprite(lineTexture, baseX - underfillWidth + 1.5f, y + 1.0f,
-                    baseX - underfillWidth + 1.5f, y + h - 1.0f, 1.0f, widgetColor, 
+                RenderUtils.drawGradientSprite(lineTexture, baseX - underfillWidth + 1.5f, y + 1f,
+                    baseX - underfillWidth + 1.5f, y + h - 1f, 1f, widgetColor, 
                     false, alphaMult, alphaMult, alphaMult
                 );
 
-                RenderUtils.drawGradientSprite(lineTexture, baseX - underfillWidth + 1.5f, y + 1.0f,
-                    baseX - underfillWidth + 1.5f, y + h - 1.0f, 1.0f, Color.white, 
-                    false, 0.0f, alphaMult, 0.0f
+                RenderUtils.drawGradientSprite(lineTexture, baseX - underfillWidth + 1.5f, y + 1f,
+                    baseX - underfillWidth + 1.5f, y + h - 1f, 1f, Color.white, 
+                    false, 0f, alphaMult, 0f
                 );
             }
 

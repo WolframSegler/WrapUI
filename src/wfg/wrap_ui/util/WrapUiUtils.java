@@ -21,10 +21,10 @@ import com.fs.starfarer.codex2.CodexDialog;
 import wfg.reflection.ReflectionUtils;
 import wfg.wrap_ui.ui.Attachments;
 import wfg.wrap_ui.ui.dialogs.WrapDialogDelegate;
+import static wfg.wrap_ui.util.UIConstants.*;
 
 public class WrapUiUtils {
     public static final int APICodexHeight = 28;
-    public static final int opad = 10;
 
     public static final void resetFlowLeft(TooltipMakerAPI tooltip, float opad) {
         float prevHeight = tooltip.getHeightSoFar();

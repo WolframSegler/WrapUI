@@ -1,5 +1,8 @@
 package wfg.wrap_ui.ui.panels;
 
+import static wfg.wrap_ui.util.UIConstants.bgAlpha;
+import static wfg.wrap_ui.util.UIConstants.dark;
+
 import java.awt.Color;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -17,7 +20,6 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI.ActionListenerDelegate;
 import com.fs.starfarer.api.ui.UIComponentAPI;
 import com.fs.starfarer.api.ui.UIPanelAPI;
 import com.fs.starfarer.api.util.FaderUtil;
-import com.fs.starfarer.api.util.Misc;
 
 import wfg.reflection.ReflectionUtils;
 import wfg.reflection.ReflectionUtils.ReflectedField;
@@ -105,7 +107,7 @@ public abstract class CustomPanel<
         return m_plugin;
     }
 
-    public void setPlugin(CustomUIPanelPlugin newPlugin) {
+    public final void setPlugin(CustomUIPanelPlugin newPlugin) {
         ReflectedField plugin = ReflectionUtils.getFieldsMatching(m_panel, null, CustomUIPanelPlugin.class).get(0);
 
         plugin.set(m_panel, newPlugin);
@@ -318,7 +320,7 @@ public abstract class CustomPanel<
         }
 
         default Color getOutlineColor() {
-            return Misc.getDarkPlayerColor();
+            return dark;
         }
     }
 
@@ -345,11 +347,8 @@ public abstract class CustomPanel<
             return true;
         }
 
-        /**
-         * default is 0.85f.
-         */
         default float getBgAlpha() {
-            return 0.85f;
+            return bgAlpha;
         }
     }
 

@@ -25,6 +25,7 @@ import wfg.wrap_ui.ui.panels.SpritePanel.Base;
 import wfg.wrap_ui.ui.plugins.BasePanelPlugin;
 import wfg.wrap_ui.ui.systems.FaderSystem.Glow;
 import wfg.wrap_ui.ui.systems.OutlineSystem.Outline;
+import static wfg.wrap_ui.util.UIConstants.*;
 
 /**
  * SortableTable is a customizable, sortable UI table component designed to display
@@ -121,8 +122,6 @@ public class SortableTable extends CustomPanel<BasePanelPlugin<SortableTable>, S
         return m_selectedRow;
     }
 
-    public final static int pad = 3;
-    public final static int opad = 10;
     public final static int headerTooltipWidth = 250;
 
     public final static String sortIconPath;
@@ -437,7 +436,7 @@ public class SortableTable extends CustomPanel<BasePanelPlugin<SortableTable>, S
     public class RowManager extends CustomPanel<BasePanelPlugin<RowManager>, RowManager, CustomPanelAPI> 
         implements HasTooltip, HasFader, HasOutline, HasAudioFeedback, HasActionListener, AcceptsActionListener
     {
-        public Color textColor = Misc.getBasePlayerColor();
+        public Color textColor = base;
         public PendingTooltip<? extends UIPanelAPI> m_tooltip = null;
         public CallbackRunnable<RowManager> onRowClicked = null;
         public Object customData = null;
@@ -450,9 +449,9 @@ public class SortableTable extends CustomPanel<BasePanelPlugin<SortableTable>, S
 
         private final FaderUtil m_fader;
         private boolean isPersistentGlow = false;
-        private Color glowColor = Misc.getDarkPlayerColor();
+        private Color glowColor = dark;
         private Outline outline = Outline.NONE;
-        private Color outlineColor = Misc.getDarkPlayerColor();
+        private Color outlineColor = dark;
 
         public RowManager(UIPanelAPI parent, int width, int height) {
             super(parent, width, height, new BasePanelPlugin<>());
@@ -536,8 +535,6 @@ public class SortableTable extends CustomPanel<BasePanelPlugin<SortableTable>, S
         }
 
         private float calcXOffset(float baseX, float colWidth, float compWidth, cellAlg alignment) {
-            final int pad = 3; // define pad somewhere appropriate
-
             switch (alignment) {
                 case LEFT:
                     return baseX;

@@ -9,12 +9,13 @@ import com.fs.starfarer.api.ui.CustomPanelAPI;
 import com.fs.starfarer.api.ui.PositionAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.ui.UIPanelAPI;
-import com.fs.starfarer.api.util.Misc;
 
 import wfg.wrap_ui.ui.panels.CustomPanel.HasTooltip;
 import wfg.wrap_ui.ui.plugins.PieChartPlugin;
 import wfg.wrap_ui.util.RenderUtils;
 import wfg.wrap_ui.util.WrapUiUtils;
+
+import static wfg.wrap_ui.util.UIConstants.*;
 
 public class PieChart extends CustomPanel<PieChartPlugin, PieChart, UIPanelAPI> implements
     HasTooltip
@@ -26,7 +27,6 @@ public class PieChart extends CustomPanel<PieChartPlugin, PieChart, UIPanelAPI> 
     public PendingTooltip<CustomPanelAPI> pendingTp = null;
     public float anglePerSegment = 3f;
 
-    private static final int opad = 10;
     private final ArrayList<PieSlice> data;
 
     public PieChart(UIPanelAPI parent, int width, int height, ArrayList<PieSlice> data) {
@@ -67,7 +67,7 @@ public class PieChart extends CustomPanel<PieChartPlugin, PieChart, UIPanelAPI> 
 
             final float alphaFactor = haloMaxAlpha * (1f - (r / (float) haloRings) * (r / (float) haloRings));
 
-            RenderUtils.setGlColor(Misc.getBasePlayerColor(), alphaFactor);
+            RenderUtils.setGlColor(base, alphaFactor);
             GL11.glBegin(GL11.GL_TRIANGLE_FAN);
             GL11.glVertex2f(cx, cy);
             for (int i = 0; i <= haloSegments; i++) {
