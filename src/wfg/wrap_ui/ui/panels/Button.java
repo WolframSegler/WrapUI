@@ -10,6 +10,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.SettingsAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.CustomPanelAPI;
+import com.fs.starfarer.api.ui.Fonts;
 import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.PositionAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
@@ -26,12 +27,12 @@ import wfg.wrap_ui.ui.plugins.ButtonPlugin;
 import wfg.wrap_ui.ui.systems.FaderSystem.Glow;
 import wfg.wrap_ui.util.CallbackRunnable;
 import wfg.wrap_ui.util.RenderUtils;
+
 import static wfg.wrap_ui.util.UIConstants.*;
 
 public class Button extends CustomPanel<ButtonPlugin, Button, UIPanelAPI> implements 
     HasAudioFeedback, HasFader, HasActionListener, AcceptsActionListener, HasTooltip
 {
-
     public float highlightBrightness = 0.2f;
     public float bgAlpha = 0.9f;
     public float bgDisabledAlpha = 0.8f;
@@ -45,15 +46,16 @@ public class Button extends CustomPanel<ButtonPlugin, Button, UIPanelAPI> implem
     public boolean tooltipExpanded = false;
     public boolean tooltipEnabled = false;
     public boolean disabledWhileInvisible = true;
+    public Color bgSelectedColor = new Color(60, 230, 250);
     public Color bgColor = dark;
     public Color bgDisabledColor = new Color(17, 52, 62);
     public Color highlightColor = base;
     public Glow highlightType = Glow.OVERLAY;
     public Object customData = null;
 
-    protected String labelText = "";
+    protected String labelText;
+    protected String labelFont;
     protected Alignment labelAlg = Alignment.MID;
-    protected String labelFont = "";
     protected LabelAPI label = null;
     protected CallbackRunnable<Button> onClick;
     protected int shortcut = 0;
@@ -74,8 +76,8 @@ public class Button extends CustomPanel<ButtonPlugin, Button, UIPanelAPI> implem
     ) {
         super(parent, width, height, new ButtonPlugin());
 
-        labelText = text;
-        labelFont = font;
+        labelText = text == null ? "" : text;
+        labelFont = font == null ? Fonts.ORBITRON_12 : font;
         this.onClick = onClick;
 
         getPlugin().init(this);
@@ -264,7 +266,9 @@ public class Button extends CustomPanel<ButtonPlugin, Button, UIPanelAPI> implem
     }
 
     public Color getBgColor() {
-        return disabled ? bgDisabledColor : bgColor;
+        if (disabled) return bgDisabledColor;
+        if (quickMode && checked) return bgSelectedColor;
+        return bgColor;
     }
 
     public float getBgAlpha() {
