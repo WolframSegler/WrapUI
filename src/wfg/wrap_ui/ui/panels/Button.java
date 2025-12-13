@@ -69,7 +69,7 @@ public class Button extends CustomPanel<ButtonPlugin, Button, UIPanelAPI> implem
     protected final PendingTooltip<CustomPanelAPI> tooltip = new PendingTooltip<>();
     
     /**
-     * @param onClick default action toggles the checked state. Otherwise the toggle must be done by the Runnable
+     * @param onClick if null, clicking toggles the checked state; otherwise, the Runnable handles it.
      */
     public Button(UIPanelAPI parent, int width, int height, String text, String font,
         CallbackRunnable<Button> onClick
@@ -267,7 +267,7 @@ public class Button extends CustomPanel<ButtonPlugin, Button, UIPanelAPI> implem
 
     public Color getBgColor() {
         if (disabled) return bgDisabledColor;
-        if (quickMode && checked) return bgSelectedColor;
+        if (!quickMode && checked) return bgSelectedColor;
         return bgColor;
     }
 
