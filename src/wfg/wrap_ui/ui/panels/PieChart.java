@@ -20,12 +20,12 @@ import static wfg.wrap_ui.util.UIConstants.*;
 public class PieChart extends CustomPanel<PieChartPlugin, PieChart, UIPanelAPI> implements
     HasTooltip
 {
-
     /**
      * Does not require manual positioning or parent attachment for this instance.
      */
     public PendingTooltip<CustomPanelAPI> pendingTp = null;
     public float anglePerSegment = 3f;
+    public Direction startDirection = Direction.NORTH;
 
     private final ArrayList<PieSlice> data;
 
@@ -40,7 +40,7 @@ public class PieChart extends CustomPanel<PieChartPlugin, PieChart, UIPanelAPI> 
     public void createPanel() {}
 
     public void renderImpl(float alpha) {
-        float startDeg = 0f;
+        float startDeg = startDirection.direction;
 
         final PositionAPI pos = getPos();
         final float radiusX = pos.getWidth() / 2f;
@@ -196,5 +196,20 @@ public class PieChart extends CustomPanel<PieChartPlugin, PieChart, UIPanelAPI> 
             this.color = color;
             this.fraction = fraction;
         }
+    }
+
+    public enum Direction {
+        NORTH(90f),
+        NORTHEAST(45f),
+        EAST(0f),
+        SOUTHEAST(315f),
+        SOUTH(270f),
+        SOUTHWEST(225f),
+        WEST(180f),
+        NORTHWEST(135f);
+
+        public final float direction;
+
+        Direction(float angleDeg) { direction = angleDeg; }
     }
 }
