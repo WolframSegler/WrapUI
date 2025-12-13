@@ -82,7 +82,7 @@ public class NumFormat {
         return String.format("1.%.0f%s", Math.round(delta * 10) / 10.0, SMALL_SUFFIXES[exp]);
     }
 
-    public static final String formatSmart(double value) {
+    public static final String formatWithAdaptivePrecision(double value) {
         double rounded = Math.round(value * 100.0) / 100.0;
         String formatted;
 
@@ -98,6 +98,12 @@ public class NumFormat {
         }
 
         return formatted;
+    }
+
+    public static String formatMagnitudeAware(double value) {
+        return Math.abs(value) < 1000
+            ? formatWithAdaptivePrecision(value)
+            : engNotation((long) value);
     }
 
     public static final int firstDigit(int x) {
