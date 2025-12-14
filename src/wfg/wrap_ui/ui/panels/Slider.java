@@ -74,7 +74,7 @@ public class Slider extends CustomPanel<SliderPlugin, Slider, UIPanelAPI> {
     private SpriteAPI lineTexture;
     private FaderUtil barHighlightFader = null;
     private boolean userAdjustable = false;
-    private Color barColor = new Color(107, 175, 0, 255);
+    private Color barColor;
     private Color barColorOverflow;
     private boolean shouldInterpolateCachedValues = false;
     private FaderUtil flashOnOverflowFader = null;
@@ -90,6 +90,7 @@ public class Slider extends CustomPanel<SliderPlugin, Slider, UIPanelAPI> {
         super(parent, width, height, new SliderPlugin());
         final SettingsAPI settings = Global.getSettings();
 
+        barColor = settings.getColor("progressBarStandardColor");
         barColorOverflow = settings.getColor("progressBarOverflowColor");
         widgetColor = settings.getColor("widgetBorderColorBright");
         lineTexture = settings.getSprite("graphics/hud/line4x4.png");
