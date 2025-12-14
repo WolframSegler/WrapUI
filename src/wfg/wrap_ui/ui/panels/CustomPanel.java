@@ -325,8 +325,12 @@ public abstract class CustomPanel<
     }
 
     public static interface HasAudioFeedback {
-        default boolean isSoundEnabled() {
+        default boolean isSoundActive() {
             return true;
+        }
+
+        default boolean isUseDisableSound() {
+            return false;
         }
 
         default String getButtonPressedSound() {
@@ -335,6 +339,10 @@ public abstract class CustomPanel<
 
         default String getMouseOverSound() {
             return "ui_button_mouseover";
+        }
+
+        default String getButtonPressedDisabledSound() {
+            return "ui_button_disabled_pressed";
         }
     }
 

@@ -91,7 +91,7 @@ public class TextPanel extends CustomPanel<BasePanelPlugin<TextPanel>, TextPanel
         isSoundEnabled = a;
     }
 
-    public boolean isSoundEnabled() {
+    public boolean isSoundActive() {
         return isSoundEnabled;
     }
 

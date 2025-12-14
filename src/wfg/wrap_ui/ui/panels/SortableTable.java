@@ -447,7 +447,7 @@ public class SortableTable extends CustomPanel<BasePanelPlugin<SortableTable>, S
         protected final List<Color> m_useColor = new ArrayList<>();
         protected String codexID = null;
 
-        private final FaderUtil m_fader;
+        private final FaderUtil m_fader = new FaderUtil(0, 0, 0.2f, true, true);
         private boolean isPersistentGlow = false;
         private Color glowColor = dark;
         private Outline outline = Outline.NONE;
@@ -455,8 +455,6 @@ public class SortableTable extends CustomPanel<BasePanelPlugin<SortableTable>, S
 
         public RowManager(UIPanelAPI parent, int width, int height) {
             super(parent, width, height, new BasePanelPlugin<>());
-
-            m_fader = new FaderUtil(0, 0, 0.2f, true, true);
 
             getPlugin().init(this);
             getPlugin().setIgnoreUIState(true);

@@ -20,7 +20,6 @@ import com.fs.starfarer.api.util.Misc;
 
 import wfg.wrap_ui.ui.panels.CustomPanel.AcceptsActionListener;
 import wfg.wrap_ui.ui.panels.CustomPanel.HasActionListener;
-import wfg.wrap_ui.ui.panels.CustomPanel.HasAudioFeedback;
 import wfg.wrap_ui.ui.panels.CustomPanel.HasFader;
 import wfg.wrap_ui.ui.panels.CustomPanel.HasTooltip;
 import wfg.wrap_ui.ui.plugins.ButtonPlugin;
@@ -31,7 +30,7 @@ import wfg.wrap_ui.util.RenderUtils;
 import static wfg.wrap_ui.util.UIConstants.*;
 
 public class Button extends CustomPanel<ButtonPlugin, Button, UIPanelAPI> implements 
-    HasAudioFeedback, HasFader, HasActionListener, AcceptsActionListener, HasTooltip
+    HasFader, HasActionListener, AcceptsActionListener, HasTooltip
 {
     public float highlightBrightness = 0.2f;
     public float bgAlpha = 0.9f;
@@ -46,7 +45,8 @@ public class Button extends CustomPanel<ButtonPlugin, Button, UIPanelAPI> implem
     public boolean tooltipExpanded = false;
     public boolean tooltipEnabled = false;
     public boolean disabledWhileInvisible = true;
-    public Color bgSelectedColor = new Color(60, 230, 250);
+    public boolean soundEnabled = true; 
+    public Color bgSelectedColor = dark;
     public Color bgColor = dark;
     public Color bgDisabledColor = new Color(17, 52, 62);
     public Color highlightColor = base;
@@ -59,7 +59,6 @@ public class Button extends CustomPanel<ButtonPlugin, Button, UIPanelAPI> implem
     protected LabelAPI label = null;
     protected CallbackRunnable<Button> onClick;
     protected int shortcut = 0;
-    protected String buttonPressedSound = "ui_button_pressed";
     protected String mouseOverSound = "ui_button_mouseover";
     protected boolean appendShortcutToText = false;
     protected CutStyle cutStyle = CutStyle.NONE;
@@ -124,17 +123,24 @@ public class Button extends CustomPanel<ButtonPlugin, Button, UIPanelAPI> implem
         onShortcutPressed(source);
     }
 
+    public void onHoverStarted(CustomPanel<?, ?, ?> source) {
+        Global.getSoundPlayer().playUISound(mouseOverSound, 1, 1);
+    }
+
     public void setOnClick(CallbackRunnable<Button> r) {
         onClick = r;
     }
 
     public void onShortcutPressed(CustomPanel<?, ?, ?> source) {
+        if (getPanel().getOpacity() <= 0f && !disabledWhileInvisible) return;
+        fader.forceIn();
+
         if (disabled && !performActionWhenDisabled) {
             Global.getSoundPlayer().playUISound("ui_button_disabled_pressed", 1, 1);
             return;
         }
-        if (getPanel().getOpacity() <= 0f && !disabledWhileInvisible) return;
 
+        Global.getSoundPlayer().playUISound("ui_button_pressed", 1, 1);
         if (onClick != null) {
             onClick.run(this);
         } else if (!quickMode) checked = !checked;
@@ -153,10 +159,6 @@ public class Button extends CustomPanel<ButtonPlugin, Button, UIPanelAPI> implem
         shortcut = keyCode;
         appendShortcutToText = true;
         createPanel();
-    }
-
-    public boolean isSoundEnabled() {
-        return !disabled;
     }
 
     public FaderUtil getFader() {
@@ -186,16 +188,8 @@ public class Button extends CustomPanel<ButtonPlugin, Button, UIPanelAPI> implem
         return tooltipEnabled && (showTooltipWhileInactive || !disabled);
     }
 
-    public String getButtonPressedSound() {
-        return buttonPressedSound;
-    }
-
     public String getMouseOverSound() {
         return mouseOverSound;
-    }
-
-    public void setButtonPressedSound(String settingsID) {
-        buttonPressedSound = settingsID;
     }
 
     public void setMouseOverSound(String settingsID) {

@@ -32,7 +32,7 @@ import wfg.wrap_ui.ui.systems.OutlineSystem.Outline;
  * 
  * <p><b>Example:</b>
  * <pre>
- * SpritePanel.Base sprite = new SpritePanel.Base(root, parent, market, 64, 64, plugin, "ui/icons/sprite", Color.WHITE, null, true);
+ * SpritePanel.Base sprite = new SpritePanel.Base(parent, 64, 64, plugin, "ui/icons/sprite", Color.WHITE, null, true);
  * sprite.setOutlineColor(Color.RED);
  * 
  * panel.addComponent(sprite.getPanel());
