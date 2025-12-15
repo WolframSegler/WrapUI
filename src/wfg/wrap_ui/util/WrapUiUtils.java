@@ -383,7 +383,6 @@ public class WrapUiUtils {
                 public void init(InteractionDialogAPI dialog) {
                     dialogPanel.setInteractionDialog(dialog);
                     dialog.showCustomDialog(width, height, dialogPanel);
-                    dialogPanel.setInteractionDialog(dialog);
 
                     dialog.setPromptText("");
                 }
@@ -409,8 +408,8 @@ public class WrapUiUtils {
         final InteractionDialogAPI dialog = Attachments.getInteractionDialog();
 
         if (dialog != null) { // Local
-            dialog.showCustomDialog(width, height, dialogPanel);
             dialogPanel.setInteractionDialog(dialog);
+            dialog.showCustomDialog(width, height, dialogPanel);
         } else { // Remote
             WrapUiUtils.showStandaloneCustomDialog(
                 dialogPanel, width, height
