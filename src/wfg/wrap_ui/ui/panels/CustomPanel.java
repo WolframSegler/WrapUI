@@ -21,8 +21,7 @@ import com.fs.starfarer.api.ui.UIComponentAPI;
 import com.fs.starfarer.api.ui.UIPanelAPI;
 import com.fs.starfarer.api.util.FaderUtil;
 
-import wfg.reflection.ReflectionUtils;
-import wfg.reflection.ReflectionUtils.ReflectedField;
+import rolflectionlib.util.RolfLectionUtil;
 import wfg.wrap_ui.ui.plugins.CustomPanelPlugin;
 import wfg.wrap_ui.ui.systems.ActionListenerSystem;
 import wfg.wrap_ui.ui.systems.FaderSystem.Glow;
@@ -57,6 +56,16 @@ public abstract class CustomPanel<
     PanelType extends CustomPanel<PluginType, ? extends CustomPanel<?, ? extends PanelType, ParentType>, ParentType>,
     ParentType extends UIPanelAPI
 > {
+    private static Object clearChildrenMethod;
+    private static Object pluginField;
+
+    static {
+        clearChildrenMethod = RolfLectionUtil.getMethod(
+            "clearChildren", UIPanelAPI.class);
+        pluginField = RolfLectionUtil.getAllFields(CustomPanelAPI.class)
+            .stream().filter(o -> o instanceof CustomUIPanelPlugin).findFirst().get();
+    }
+
     protected final ParentType m_parent;
     protected final CustomPanelAPI m_panel;
     protected final PluginType m_plugin;
@@ -108,9 +117,7 @@ public abstract class CustomPanel<
     }
 
     public final void setPlugin(CustomUIPanelPlugin newPlugin) {
-        ReflectedField plugin = ReflectionUtils.getFieldsMatching(m_panel, null, CustomUIPanelPlugin.class).get(0);
-
-        plugin.set(m_panel, newPlugin);
+        RolfLectionUtil.setPrivateVariable(pluginField, m_panel, newPlugin);
     }
 
     public final PositionAPI add(LabelAPI a) {
@@ -142,7 +149,7 @@ public abstract class CustomPanel<
     }
 
     public final void clearChildren() {
-        ReflectionUtils.invoke(m_panel, "clearChildren");
+        RolfLectionUtil.invokeMethodDirectly(clearChildrenMethod, m_panel);
     }
 
     public final void setSize(int width, int height) {

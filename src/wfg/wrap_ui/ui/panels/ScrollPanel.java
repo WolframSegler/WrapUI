@@ -13,7 +13,7 @@ import com.fs.starfarer.api.ui.CustomPanelAPI;
 import com.fs.starfarer.api.ui.UIComponentAPI;
 import com.fs.starfarer.api.ui.UIPanelAPI;
 
-import wfg.reflection.ReflectionUtils;
+import rolflectionlib.util.RolfLectionUtil;
 import wfg.wrap_ui.ui.panels.CustomPanel.HasBackground;
 import wfg.wrap_ui.ui.plugins.ScrollPanelPlugin;
 import wfg.wrap_ui.ui.plugins.CustomPanelPlugin.InputSnapshot;
@@ -40,7 +40,8 @@ public class ScrollPanel extends CustomPanel<ScrollPanelPlugin, ScrollPanel, UIP
     public ScrollPanel(UIPanelAPI parent, int viewportWidth, int viewportHeight) {
         super(parent, viewportWidth, viewportHeight, new ScrollPanelPlugin());
 
-        ReflectionUtils.invoke(m_panel, "setClipping", true);
+        RolfLectionUtil.getMethodAndInvokeDirectly(
+            "setClipping", m_panel, true);
 
         contentWidth = viewportWidth;
         contentHeight = viewportHeight;

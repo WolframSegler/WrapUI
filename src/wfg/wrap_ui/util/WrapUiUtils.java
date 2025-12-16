@@ -17,14 +17,22 @@ import com.fs.starfarer.api.ui.PositionAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.ui.UIComponentAPI;
 import com.fs.starfarer.codex2.CodexDialog;
+import com.fs.starfarer.ui.impl.StandardTooltipV2;
 
-import wfg.reflection.ReflectionUtils;
+import rolflectionlib.util.RolfLectionUtil;
 import wfg.wrap_ui.ui.Attachments;
 import wfg.wrap_ui.ui.dialogs.WrapDialogDelegate;
 import static wfg.wrap_ui.util.UIConstants.*;
 
 public class WrapUiUtils {
     public static final int APICodexHeight = 28;
+
+    public static Object expandLabelField;
+
+    static {
+        expandLabelField = RolfLectionUtil.getFieldByName(
+            "expandLabel", StandardTooltipV2.class);
+    }
 
     public static final void resetFlowLeft(TooltipMakerAPI tooltip, float opad) {
         float prevHeight = tooltip.getHeightSoFar();
@@ -34,7 +42,7 @@ public class WrapUiUtils {
     }
 
     public static final void positionCodexLabel(TooltipMakerAPI tooltip, int opad, int pad) {
-        LabelAPI F2Label = (LabelAPI) ReflectionUtils.get(tooltip, "expandLabel", LabelAPI.class, true);
+        LabelAPI F2Label = (LabelAPI) RolfLectionUtil.getPrivateVariable(expandLabelField, tooltip);
         if (F2Label != null) {
             F2Label.getPosition().inBL(opad + pad, -pad * 6);
         }

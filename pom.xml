@@ -123,7 +123,7 @@
       <artifactId>reflection</artifactId>
       <version>1.0</version>
       <scope>system</scope>
-      <systemPath>${project.basedir}/jars/libs/reflection.jar</systemPath>
+      <systemPath>${project.basedir}/jars/libs/RolflectionLib.jar</systemPath>
     </dependency>
   </dependencies>
 

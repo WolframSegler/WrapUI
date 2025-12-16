@@ -8,7 +8,8 @@ import com.fs.starfarer.campaign.CampaignState;
 import com.fs.starfarer.combat.CombatState;
 import com.fs.state.AppDriver;
 
-import wfg.reflection.ReflectionUtils;
+import rolflectionlib.util.RolfLectionUtil;
+
 
 /**
  * Utility class providing access points to UI elements across different game contexts:
@@ -16,6 +17,14 @@ import wfg.reflection.ReflectionUtils;
  * dialogs, and overlays depending on the current mode. Is not null-safe.
  */
 public class Attachments {
+
+    private static Object getWarRoomObject;
+    
+    static {
+        getWarRoomObject = RolfLectionUtil.getMethod(
+            "getWarroom", getCombatState().getClass());
+    }
+
     /**
      * Must be interacting with an entity.
      */
@@ -82,7 +91,8 @@ public class Attachments {
      * Must be in combat mode.
      */
     public static final UIPanelAPI getWarroomPanel() {
-        return (UIPanelAPI) ReflectionUtils.invoke(getCombatState(), "getWarroom");
+        return (UIPanelAPI) RolfLectionUtil.invokeMethodDirectly(
+            getWarRoomObject, getCombatState());
     }
 
     
