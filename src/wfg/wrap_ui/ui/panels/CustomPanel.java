@@ -56,14 +56,26 @@ public abstract class CustomPanel<
     PanelType extends CustomPanel<PluginType, ? extends CustomPanel<?, ? extends PanelType, ParentType>, ParentType>,
     ParentType extends UIPanelAPI
 > {
-    private static Object clearChildrenMethod;
-    private static Object pluginField;
+    public static final Object clearChildrenMethod;
+    public static final Object getChildrenCopyMethod;
+    public static final Object getChildrenNonCopyMethod;
+
+    private static final Object pluginField;
 
     static {
+        final CustomPanelAPI panelIns = Global.getSettings().createCustom(0, 0, null);
+        final Class<?> panelClazz = panelIns.getClass();
+
         clearChildrenMethod = RolfLectionUtil.getMethod(
-            "clearChildren", UIPanelAPI.class);
-        pluginField = RolfLectionUtil.getAllFields(CustomPanelAPI.class)
-            .stream().filter(o -> o instanceof CustomUIPanelPlugin).findFirst().get();
+            "clearChildren", panelClazz);
+        getChildrenCopyMethod = RolfLectionUtil.getMethod(
+            "getChildrenCopy", panelClazz);
+        getChildrenNonCopyMethod = RolfLectionUtil.getMethod(
+            "getChildrenNonCopy", panelClazz);
+        pluginField = RolfLectionUtil.getAllFields(panelClazz).stream()
+            .filter(f -> CustomUIPanelPlugin.class.isAssignableFrom(
+                RolfLectionUtil.getFieldType(f)))
+            .findFirst().get();
     }
 
     protected final ParentType m_parent;

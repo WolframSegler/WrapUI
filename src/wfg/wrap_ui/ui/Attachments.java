@@ -18,11 +18,11 @@ import rolflectionlib.util.RolfLectionUtil;
  */
 public class Attachments {
 
-    private static Object getWarRoomObject;
+    private static final Object getWarRoomObject;
     
     static {
         getWarRoomObject = RolfLectionUtil.getMethod(
-            "getWarroom", getCombatState().getClass());
+            "getWarroom", CombatState.class);
     }
 
     /**
@@ -43,8 +43,15 @@ public class Attachments {
     /**
      * Must be in campaign mode.
      */
-    public static final UIPanelAPI getCoreUI() {
+    public static final UIPanelAPI getCampaignCoreUI() {
         return CampaignEngine.getInstance().getCampaignUI().getCore();
+    }
+
+    /**
+     * Works in-general
+     */
+    public static final UIPanelAPI getCoreUI() {
+        return getInteractionCoreUI() == null ? getCampaignCoreUI() : getInteractionCoreUI();
     }
 
     /**
