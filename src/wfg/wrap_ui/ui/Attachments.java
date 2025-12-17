@@ -68,8 +68,15 @@ public class Attachments {
      * Returns the panel for the current tab (FLEET, CHARACTER, COMMAND etc.) in the campaign screen.
      * Must be in campaign mode.
      */
-    public static final UIPanelAPI getCurrentTab() {
+    public static final UIPanelAPI getCampaignCurrentTab() {
         return CampaignEngine.getInstance().getCampaignUI().getCore().getCurrentTab();
+    }
+
+    /**
+     * Works in-general
+     */
+    public static final UIPanelAPI getCurrentTab() {
+        return getInteractionCurrentTab() == null ? getCampaignCurrentTab() : getInteractionCurrentTab();
     }
 
     /**
