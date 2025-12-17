@@ -37,6 +37,7 @@ public class Attachments {
      * Must be interacting with an entity.
      */
     public static final UIPanelAPI getInteractionCoreUI() {
+        if (getCampaignState().getEncounterDialog() == null) return null;
         return getCampaignState().getEncounterDialog().getCoreUI();
     }
 
