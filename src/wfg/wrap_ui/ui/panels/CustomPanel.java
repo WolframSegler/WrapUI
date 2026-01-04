@@ -59,12 +59,16 @@ public abstract class CustomPanel<
     public static final Object clearChildrenMethod;
     public static final Object getChildrenCopyMethod;
     public static final Object getChildrenNonCopyMethod;
+    public static final Object addToPositionMethod;
+    public static final Object removeFromPositionMethod;
+    public static final Object positionSetParentMethod;
 
     private static final Object pluginField;
 
     static {
         final CustomPanelAPI panelIns = Global.getSettings().createCustom(0, 0, null);
         final Class<?> panelClazz = panelIns.getClass();
+        final Class<?> posClazz = panelIns.getPosition().getClass();
 
         clearChildrenMethod = RolfLectionUtil.getMethod(
             "clearChildren", panelClazz);
@@ -72,6 +76,9 @@ public abstract class CustomPanel<
             "getChildrenCopy", panelClazz);
         getChildrenNonCopyMethod = RolfLectionUtil.getMethod(
             "getChildrenNonCopy", panelClazz);
+        addToPositionMethod = RolfLectionUtil.getMethod("add", posClazz);
+        removeFromPositionMethod = RolfLectionUtil.getMethod("remove", posClazz);
+        positionSetParentMethod = RolfLectionUtil.getMethod("setParent", posClazz);
         pluginField = RolfLectionUtil.getAllFields(panelClazz).stream()
             .filter(f -> CustomUIPanelPlugin.class.isAssignableFrom(
                 RolfLectionUtil.getFieldType(f)))
@@ -158,6 +165,20 @@ public abstract class CustomPanel<
 
     public final void remove(UIComponentAPI a) {
         m_panel.removeComponent(a);
+    }
+
+    public PositionAPI addPositionOnly(UIComponentAPI comp) {
+        final PositionAPI pos = comp.getPosition();
+        RolfLectionUtil.invokeMethodDirectly(positionSetParentMethod, pos, getPos());
+        RolfLectionUtil.invokeMethodDirectly(addToPositionMethod, getPos(), pos);
+        return pos;
+    }
+
+    public PositionAPI removePositionOnly(UIComponentAPI comp) {
+        final PositionAPI pos = comp.getPosition();
+        RolfLectionUtil.invokeMethodDirectly(positionSetParentMethod, pos, (Object)null);
+        RolfLectionUtil.invokeMethodDirectly(removeFromPositionMethod, getPos(), pos);
+        return pos;
     }
 
     public final void clearChildren() {

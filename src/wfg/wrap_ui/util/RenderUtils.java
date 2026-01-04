@@ -343,6 +343,53 @@ public class RenderUtils {
         };
     }
 
+    /**
+     * The texture size should match the actual size of the sprites.
+     * <pre>
+     * Available prefixes:
+     * "ui_border1"
+     * "ui_border2"
+     * "ui_border3"
+     * "ui_border4"
+     * </pre>
+     */
+    public static final void drawRoundedBorder(float x, float y, float width, float height,
+        float alpha, String borderPrefix, int textureSize, Color color
+    ) {
+        final SpriteAPI nw = Global.getSettings().getSprite("ui", borderPrefix + "_top_left");
+        final SpriteAPI ne = Global.getSettings().getSprite("ui", borderPrefix + "_top_right");
+        final SpriteAPI sw = Global.getSettings().getSprite("ui", borderPrefix + "_bot_left");
+        final SpriteAPI se = Global.getSettings().getSprite("ui", borderPrefix + "_bot_right");
+
+        final SpriteAPI n = Global.getSettings().getSprite("ui", borderPrefix + "_top");
+        final SpriteAPI s = Global.getSettings().getSprite("ui", borderPrefix + "_bot");
+        final SpriteAPI w = Global.getSettings().getSprite("ui", borderPrefix + "_left");
+        final SpriteAPI e = Global.getSettings().getSprite("ui", borderPrefix + "_right");
+
+        for (SpriteAPI sprite : new SpriteAPI[] { nw, ne, sw, se, n, s, w, e }) {
+            sprite.setAlphaMult(alpha);
+            sprite.setColor(color);
+        }
+
+        // Draw corners
+        nw.render(x, y + height - textureSize);
+        ne.render(x + width - textureSize, y + height - textureSize);
+        sw.render(x, y);
+        se.render(x + width - textureSize, y);
+
+        // Resize edges to stretch between corners
+        n.setSize(width - 2 * textureSize, textureSize);
+        s.setSize(width - 2 * textureSize, textureSize);
+        w.setSize(textureSize, height - 2 * textureSize);
+        e.setSize(textureSize, height - 2 * textureSize);
+
+        // Draw edges
+        n.render(x + textureSize, y + height - textureSize);
+        s.render(x + textureSize, y);
+        w.render(x, y + textureSize);
+        e.render(x + width - textureSize, y + textureSize);
+    }
+
     private static final void quadWithBlend(float x, float y, float w, float h, Color color, float alphaMult) {
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glEnable(GL11.GL_BLEND);

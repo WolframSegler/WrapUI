@@ -2,6 +2,7 @@ package wfg.wrap_ui.util;
 
 import java.awt.Color;
 
+import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.util.Misc;
 
 public class UIConstants {
@@ -14,6 +15,9 @@ public class UIConstants {
     public static final Color base = Misc.getBasePlayerColor();
     public static final Color dark = Misc.getDarkPlayerColor();
     public static final Color gray = Misc.getGrayColor();
+
+    public static final Color btnTxtColor = Misc.getButtonTextColor();
+    public static final Color btnBgColorDark = Global.getSettings().getColor("buttonBgDark");
 
     public static final float bgAlpha = 0.85f;
 }

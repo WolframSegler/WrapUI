@@ -16,7 +16,6 @@ import com.fs.starfarer.api.ui.PositionAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.ui.UIPanelAPI;
 import com.fs.starfarer.api.util.FaderUtil;
-import com.fs.starfarer.api.util.Misc;
 
 import wfg.wrap_ui.ui.panels.CustomPanel.AcceptsActionListener;
 import wfg.wrap_ui.ui.panels.CustomPanel.HasActionListener;
@@ -63,7 +62,7 @@ public class Button extends CustomPanel<ButtonPlugin, Button, UIPanelAPI> implem
     protected boolean appendShortcutToText = false;
     protected CutStyle cutStyle = CutStyle.NONE;
     protected int overrideCut = 0;
-    protected Color labelColor = Misc.getButtonTextColor();
+    protected Color labelColor = btnTxtColor;
     protected final FaderUtil fader = new FaderUtil(0, 0, 0.2f, true, true);
     protected final PendingTooltip<CustomPanelAPI> tooltip = new PendingTooltip<>();
     

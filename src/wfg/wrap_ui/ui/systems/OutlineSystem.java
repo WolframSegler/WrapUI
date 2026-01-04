@@ -7,7 +7,6 @@ import wfg.wrap_ui.ui.panels.CustomPanel.HasOutline;
 import wfg.wrap_ui.ui.plugins.CustomPanelPlugin;
 import wfg.wrap_ui.ui.plugins.CustomPanelPlugin.InputSnapshot;
 import wfg.wrap_ui.util.RenderUtils;
-import wfg.wrap_ui.util.WrapUiUtils;
 import static wfg.wrap_ui.util.UIConstants.*;
 
 public final class OutlineSystem<
@@ -76,14 +75,12 @@ public final class OutlineSystem<
         }
 
         if (textureID != null) {
-            WrapUiUtils.drawRoundedBorder(
+            RenderUtils.drawRoundedBorder(
                 pos.getX() - pad + getPlugin().offsetX,
                 pos.getY() - pad + getPlugin().offsetY,
                 pos.getWidth() + pad * 2 + getPlugin().offsetW,
                 pos.getHeight() + pad * 2 + getPlugin().offsetH,
-                1,
-                textureID,
-                textureSize,
+                1, textureID, textureSize,
                 getPanel().getOutlineColor()
             );
         }

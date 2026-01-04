@@ -1,21 +1,17 @@
 package wfg.wrap_ui.util;
 
 import java.awt.Color;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.lwjgl.util.vector.Vector2f;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.InteractionDialogAPI;
-import com.fs.starfarer.api.campaign.InteractionDialogPlugin;
-import com.fs.starfarer.api.campaign.rules.MemoryAPI;
-import com.fs.starfarer.api.combat.EngagementResultAPI;
-import com.fs.starfarer.api.graphics.SpriteAPI;
+import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.PositionAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.ui.UIComponentAPI;
+import com.fs.starfarer.api.ui.UIPanelAPI;
 import com.fs.starfarer.codex2.CodexDialog;
 import com.fs.starfarer.ui.impl.StandardTooltipV2;
 
@@ -53,63 +49,15 @@ public class WrapUiUtils {
      * In other words, it's directed towards the positive x-axis in Hyperspace.
      */
     public static final float rotateSprite(Vector2f origin, Vector2f target) {
-        Vector2f delta = Vector2f.sub(target, origin, null);
+        final Vector2f delta = Vector2f.sub(target, origin, null);
 
-        float angleDegrees = (float) Math.toDegrees(Math.atan2(delta.y, delta.x));
+        final float angleDegrees = (float) Math.toDegrees(Math.atan2(delta.y, delta.x));
 
         return angleDegrees;
     }
 
     public static final void openCodexPage(String codexID) {
         CodexDialog.show(codexID);
-    }
-
-    /**
-     * The texture size should match the actual size of the sprites.
-     * <pre>
-     * Available prefixes:
-     * "ui_border1"
-     * "ui_border2"
-     * "ui_border3"
-     * "ui_border4"
-     * </pre>
-     * @hidden
-     */
-    public static final void drawRoundedBorder(float x, float y, float w, float h, float alpha, String borderPrefix,
-        int textureSize, Color color) {
-
-        final SpriteAPI nw = Global.getSettings().getSprite("ui", borderPrefix + "_top_left");
-        final SpriteAPI ne = Global.getSettings().getSprite("ui", borderPrefix + "_top_right");
-        final SpriteAPI sw = Global.getSettings().getSprite("ui", borderPrefix + "_bot_left");
-        final SpriteAPI se = Global.getSettings().getSprite("ui", borderPrefix + "_bot_right");
-
-        final SpriteAPI n = Global.getSettings().getSprite("ui", borderPrefix + "_top");
-        final SpriteAPI s = Global.getSettings().getSprite("ui", borderPrefix + "_bot");
-        final SpriteAPI wSprite = Global.getSettings().getSprite("ui", borderPrefix + "_left");
-        final SpriteAPI e = Global.getSettings().getSprite("ui", borderPrefix + "_right");
-
-        for (SpriteAPI sprite : new SpriteAPI[] { nw, ne, sw, se, n, s, wSprite, e }) {
-            sprite.setAlphaMult(alpha);
-            sprite.setColor(color);
-        }
-
-        // Draw corners
-        nw.render(x, y + h - textureSize);
-        ne.render(x + w - textureSize, y + h - textureSize);
-        sw.render(x, y);
-        se.render(x + w - textureSize, y);
-
-        // Resize edges to stretch between corners
-        n.setSize(w - 2 * textureSize, textureSize);
-        s.setSize(w - 2 * textureSize, textureSize);
-        wSprite.setSize(textureSize, h - 2 * textureSize);
-        e.setSize(textureSize, h - 2 * textureSize);
-
-        // Draw edges
-        n.render(x + textureSize, y + h - textureSize);
-        s.render(x + textureSize, y);
-        wSprite.render(x, y + textureSize);
-        e.render(x + w - textureSize, y + textureSize);
     }
 
     /**
@@ -368,61 +316,28 @@ public class WrapUiUtils {
     }
 
     /**
-    <div>
-        <p>
-            Opens a CustomDialogDelegate inside a temporary 
-            InteractionDialog. This is useful when no 
-            InteractionDialogAPI is currently active (e.g. opening 
-            dialogs from command UI).
-        </p>
-        <h4>Usage Example</h4>
-        <pre>
-            ComDetailDialog panel = new ComDetailDialog(rowPanel, commodity);
-            UiUtils.showCustomDialogAsInteraction(panel, market.getPrimaryEntity());
-        </pre>
-    </div>
-     */
-    public static final boolean showStandaloneCustomDialog(
-        final WrapDialogDelegate dialogPanel, float width, float height
-    ) {
-        return Global.getSector().getCampaignUI().showInteractionDialogFromCargo(
-            new InteractionDialogPlugin() {
-                @Override
-                public void init(InteractionDialogAPI dialog) {
-                    dialogPanel.setInteractionDialog(dialog);
-                    dialog.showCustomDialog(width, height, dialogPanel);
-
-                    dialog.setPromptText("");
-                }
-
-                public void optionSelected(String optionText, Object optionData) {}
-                public void optionMousedOver(String optionText, Object optionData) {}
-                public void advance(float amount) {}
-                public void backFromEngagement(EngagementResultAPI result) {}
-                public Object getContext() { return null;}
-                public Map<String, MemoryAPI> getMemoryMap() { return new HashMap<>();}
-            },
-            null, null
-        );
-    }
-
-    /**
      * Displays a {@link WrapDialogDelegate}, which is a light wrapper for CustomDialogDelegate.
-     * Works both with and without an interaction target. 
+     * Works both with and without an interaction target. Target and parent can be null.
      */
-    public static final void CustomDialogViewer(
-        final WrapDialogDelegate dialogPanel, float width, float height
+    public static void showCustomDialog(WrapDialogDelegate delegate, float width,
+        float height, SectorEntityToken target, UIPanelAPI parent
     ) {
-        final InteractionDialogAPI dialog = Attachments.getInteractionDialog();
-
-        if (dialog != null) { // Local
-            dialogPanel.setInteractionDialog(dialog);
-            dialog.showCustomDialog(width, height, dialogPanel);
-        } else { // Remote
-            WrapUiUtils.showStandaloneCustomDialog(
-                dialogPanel, width, height
-            );
+        final InteractionDialogAPI existing = Attachments.getInteractionDialog();
+        if (existing != null) {
+            delegate.setInteractionDialog(existing);
+            delegate.setWasInteractionDialogCreated(false);
+            existing.showCustomDialog(width, height, delegate);
+            return;
         }
+        if (target == null) target = Global.getSector().getPlayerFleet();
+        if (parent == null) parent = Attachments.getCoreUI();
+
+        final InteractionDialogAPI createdDialog = Attachments.createInteractionDialog(
+            parent, target
+        );
+        delegate.setInteractionDialog(createdDialog);
+        delegate.setWasInteractionDialogCreated(true);
+        createdDialog.showCustomDialog(width, height, delegate);
     }
 
     /**

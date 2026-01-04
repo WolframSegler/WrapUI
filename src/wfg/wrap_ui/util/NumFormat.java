@@ -56,6 +56,10 @@ public class NumFormat {
         return df.format(scaled) + LARGE_SUFFIXES[suffix];
     }
 
+    public static final String engNotation(double input) {
+        return engNotation((long) input);
+    }
+
     /**
      * <p>Formats a multiplier into readable notation.</p>
      * 
