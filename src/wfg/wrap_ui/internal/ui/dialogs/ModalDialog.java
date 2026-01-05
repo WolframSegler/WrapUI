@@ -40,7 +40,7 @@ public class ModalDialog extends CustomPanel<ModalDialogPlugin, ModalDialog, UIP
 
     protected UIPanelAPI inputInterceptor;
     protected Set<Integer> optionSet = new HashSet<>();
-    protected FaderUtil fader = new FaderUtil(0, 0, 0.2f, true, true);
+    protected FaderUtil fader = new FaderUtil(0f, 0.5f, 0.2f);
 
     public ModalDialog() {
         this(Attachments.getScreenPanel(), 500, 200, null);
@@ -55,16 +55,13 @@ public class ModalDialog extends CustomPanel<ModalDialogPlugin, ModalDialog, UIP
         getPlugin().init(this);
 
         delegate = dialogDismissed;
-        fader.setDuration(0.5f, 0.5f);
-        fader.forceOut();
         inputInterceptor = Global.getSettings().createCustom(
             Global.getSettings().getScreenWidth(), Global.getSettings().getScreenHeight(),
             new ModalInterceptorPlugin(this)
         );
     }
 
-    public void createPanel() {
-    }
+    public void createPanel() {}
 
     public UIPanelAPI getInterceptor() {
         return inputInterceptor;
@@ -93,35 +90,32 @@ public class ModalDialog extends CustomPanel<ModalDialogPlugin, ModalDialog, UIP
             getPos().inBL(
                     centerX - pos.getX() - pos.getWidth() / 2f,
                     centerY - pos.getY() - pos.getHeight() / 2f);
-        } else
-            getPos().inMid();
+        } else getPos().inMid();
 
-        if (fadeInAndOut)
-            fader.fadeIn();
+        if (fadeInAndOut) fader.fadeIn();
+        else fader.forceIn();
 
         dismissOption = -1;
     }
 
-    public void resetOption() {
-        dismissOption = -1;
-    }
+    public void resetOption() { dismissOption = -1;}
 
     public void dismiss(int option) {
         dismissOption = option;
         if (fadeInAndOut) {
-            if (optionSet.contains(option))
-                fader.forceOut();
-            else
-                fader.fadeOut();
+            if (optionSet.contains(option)) fader.forceOut();
+            else fader.fadeOut();
         }
 
-        if (delegate != null) {
-            delegate.run(option);
-        }
+        if (delegate != null) delegate.run(option);
     }
 
     public void makeOptionInstant(int option) {
         optionSet.add(option);
+    }
+
+    public final float getFaderBrightness() {
+        return fader.getBrightness();
     }
 
     protected boolean isFullyShown() {
@@ -199,12 +193,13 @@ public class ModalDialog extends CustomPanel<ModalDialogPlugin, ModalDialog, UIP
     }
 
     public void advanceImpl(float delta) {
-        if (suspendEventInterception)
-            return;
+        fader.advance(delta);
+
+        if (suspendEventInterception) return;
 
         if (isBeingDismissed() && fader.getBrightness() == 0f && m_parent != null) {
             m_parent.removeComponent(inputInterceptor);
-            m_parent.removeComponent(getPanel());
+            m_parent.removeComponent(m_panel);
         }
     }
 }

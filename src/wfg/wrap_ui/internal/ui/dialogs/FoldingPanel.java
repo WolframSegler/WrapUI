@@ -102,8 +102,8 @@ public class FoldingPanel extends CustomPanel<FoldingPanelPlugin, FoldingPanel, 
         );
     }
 
-    public void foldOut(float var1) {
-        fader.setDurationIn(var1);
+    public void foldOut(float dur) {
+        fader.setDurationIn(dur);
         fader.fadeIn();
     }
 
@@ -115,8 +115,8 @@ public class FoldingPanel extends CustomPanel<FoldingPanelPlugin, FoldingPanel, 
         fader.forceIn();
     }
 
-    public void foldIn(float var1) {
-        fader.setDurationOut(var1);
+    public void foldIn(float dur) {
+        fader.setDurationOut(dur);
         fader.fadeOut();
     }
 

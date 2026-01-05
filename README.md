@@ -18,6 +18,7 @@ Feel free to create forks or contribute. Bug reports are also appreciated.
 - [`SortableTable`](src/wfg/wrap_ui/ui/panels/SortableTable.java) similar to `UITable` in functionality, avoiding the obfuscated vanilla table
 - [`SpritePanel`](src/wfg/wrap_ui/ui/panels/SpritePanel.java) with optional tooltip; essentially a `SpriteAPI` wrapper.
 - [`ScrollPanel`](src/wfg/wrap_ui/ui/panels/ScrollPanel.java) for vertical and horizontal scroll.
+- [`DialogPanel`](src/wfg/wrap_ui/ui/dialogs/DialogPanel.java) is the vanilla Folding Dialog Panel but without the annoying vanilla API.
 
 # Usage
 - All panels that wish to use Plugins or Systems must extend [`CustomPanel`](src/wfg/wrap_ui/ui/panels/CustomPanel.java).
