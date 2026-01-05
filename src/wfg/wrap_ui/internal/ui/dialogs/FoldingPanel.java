@@ -27,7 +27,7 @@ public class FoldingPanel extends CustomPanel<FoldingPanelPlugin, FoldingPanel, 
     public boolean transitionEnabled = true;
     public boolean isAlwaysScissor = false;
     public float borderThickness = 7f;
-    public float noiseAlpha = 1f;
+    public float noiseAlpha = 0.7f;
 
     private UIComponentAPI currentPanel;
     private UIComponentAPI nextPanel;
@@ -35,19 +35,19 @@ public class FoldingPanel extends CustomPanel<FoldingPanelPlugin, FoldingPanel, 
     private PanelFillRenderer backgroundLayer;
     private PanelFillRenderer foregroundLayer;
     private NoiseRenderer noiseRenderer;
-    private FaderUtil fader = new FaderUtil(1f, 0f);
+    private final FaderUtil fader = new FaderUtil(1f, 0f);
     private int backgroundAlphaMin = 125;
     private int backgroundAlphaMax = 175;
 
     public FoldingPanel(UIPanelAPI parent, int width, int height, String borderPrefix,
         int borderThickness
     ) {
-        super(parent, width, height, new FoldingPanelPlugin());
+        super(parent, width + borderThickness*2, height + borderThickness*2, new FoldingPanelPlugin());
         getPlugin().init(this);
         this.borderThickness = borderThickness;
         borderRenderer = new BorderRenderer(borderPrefix, width, height);
         initializeBackground();
-        noiseRenderer.fadeOut(0.5f);
+        noiseRenderer.fadeOut(0.4f);
     }
 
     public FoldingPanel(int width, int height, String borderPrefix, int borderThickness) {
@@ -161,11 +161,11 @@ public class FoldingPanel extends CustomPanel<FoldingPanelPlugin, FoldingPanel, 
         return getPos().getHeight() - borderThickness * 2f;
     }
 
-    public void flickerNoise(float var1, float var2) {
-        noiseRenderer.fadeIn(var1, var2);
+    public void flickerNoise(float inDuration, float outDuration) {
+        noiseRenderer.fadeIn(inDuration, outDuration);
     }
 
-    public void advanceImpl(float var1) {
+    public void advanceImpl(float delta) {
         if (nextPanel != null && noiseRenderer.isMaxBrightness()) {
             currentPanel = nextPanel;
             nextPanel = null;
@@ -175,17 +175,17 @@ public class FoldingPanel extends CustomPanel<FoldingPanelPlugin, FoldingPanel, 
         }
 
         if (fader.getBrightness() != 0.0F || !fader.isIdle()) {
-            backgroundLayer.advance(var1);
-            foregroundLayer.advance(var1);
-            noiseRenderer.advance(var1);
-            fader.advance(var1);
+            backgroundLayer.advance(delta);
+            foregroundLayer.advance(delta);
+            noiseRenderer.advance(delta);
+            fader.advance(delta);
             if (currentPanel != null) {
-                currentPanel.advance(var1);
+                currentPanel.advance(delta);
             }
         }
     }
 
-    public FaderUtil getFanOut() {
+    public FaderUtil getFader() {
         return fader;
     }
 
@@ -199,7 +199,7 @@ public class FoldingPanel extends CustomPanel<FoldingPanelPlugin, FoldingPanel, 
         if (fader.getBrightness() == 0f && fader.isIdle()) return;
 
         final PositionAPI pos = getPos();
-        final float brightness = fader.getBrightness();
+        final float brightness = fader.getBrightness() * alphaMult;
         final float heightScale = Math.min(1f, brightness / 0.75f);
         final float transitionAlpha = Math.max(0f, (brightness - 0.75f) / 0.25f);
         final float borderAlphaFactor = Math.min(1f, brightness / 0.25f);
@@ -210,7 +210,7 @@ public class FoldingPanel extends CustomPanel<FoldingPanelPlugin, FoldingPanel, 
         final float y = pos.getY() + pos.getHeight() / 2f - panelHeight / 2f;
         if (renderBackground) {
             borderRenderer.setSize(panelWidth, panelHeight);
-            borderRenderer.render(x, y, alphaMult * borderAlphaFactor);
+            borderRenderer.render(x, y, brightness * borderAlphaFactor);
         }
 
         if (brightness != 1f || isAlwaysScissor) {
@@ -226,24 +226,24 @@ public class FoldingPanel extends CustomPanel<FoldingPanelPlugin, FoldingPanel, 
 
         if (renderBackground) {
             backgroundLayer.renderVerticalGradient(pos.getX() + pad, pos.getY() + pad,
-                alphaMult * borderAlphaFactor
+                brightness * borderAlphaFactor
             );
         }
 
         if (currentPanel != null) {
             if (transitionEnabled && renderBackground) {
-            currentPanel.render(transitionAlpha * alphaMult * (1f - noiseRenderer.getBrightness()));
+            currentPanel.render(transitionAlpha * brightness * (1f - noiseRenderer.getBrightness()));
             } else {
-            currentPanel.render(transitionAlpha * alphaMult);
+            currentPanel.render(transitionAlpha * brightness);
             }
         }
 
         if (renderBackground) {
             foregroundLayer.renderVerticalGradient(pos.getX() + pad, pos.getY() + pad, 
-                alphaMult * borderAlphaFactor
+                brightness * borderAlphaFactor
             );
             noiseRenderer.render(pos.getX() + pad, pos.getY() + pad,
-                alphaMult * noiseAlpha
+                brightness * noiseAlpha
             );
         }
 

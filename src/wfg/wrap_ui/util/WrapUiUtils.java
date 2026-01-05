@@ -5,19 +5,14 @@ import java.awt.Color;
 import org.lwjgl.util.vector.Vector2f;
 
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.campaign.InteractionDialogAPI;
-import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.PositionAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.ui.UIComponentAPI;
-import com.fs.starfarer.api.ui.UIPanelAPI;
 import com.fs.starfarer.codex2.CodexDialog;
 import com.fs.starfarer.ui.impl.StandardTooltipV2;
 
 import rolflectionlib.util.RolfLectionUtil;
-import wfg.wrap_ui.ui.Attachments;
-import wfg.wrap_ui.ui.dialogs.WrapDialogDelegate;
 import static wfg.wrap_ui.util.UIConstants.*;
 
 public class WrapUiUtils {
@@ -313,31 +308,6 @@ public class WrapUiUtils {
         MidTopRight,
         MidBottomLeft,
         MidBottomRight
-    }
-
-    /**
-     * Displays a {@link WrapDialogDelegate}, which is a light wrapper for CustomDialogDelegate.
-     * Works both with and without an interaction target. Target and parent can be null.
-     */
-    public static void showCustomDialog(WrapDialogDelegate delegate, float width,
-        float height, SectorEntityToken target, UIPanelAPI parent
-    ) {
-        final InteractionDialogAPI existing = Attachments.getInteractionDialog();
-        if (existing != null) {
-            delegate.setInteractionDialog(existing);
-            delegate.setWasInteractionDialogCreated(false);
-            existing.showCustomDialog(width, height, delegate);
-            return;
-        }
-        if (target == null) target = Global.getSector().getPlayerFleet();
-        if (parent == null) parent = Attachments.getCoreUI();
-
-        final InteractionDialogAPI createdDialog = Attachments.createInteractionDialog(
-            parent, target
-        );
-        delegate.setInteractionDialog(createdDialog);
-        delegate.setWasInteractionDialogCreated(true);
-        createdDialog.showCustomDialog(width, height, delegate);
     }
 
     /**

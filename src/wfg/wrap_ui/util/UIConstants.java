@@ -18,6 +18,8 @@ public class UIConstants {
 
     public static final Color btnTxtColor = Misc.getButtonTextColor();
     public static final Color btnBgColorDark = Global.getSettings().getColor("buttonBgDark");
+    public static final int BUTTON_W = 150;
+    public static final int BUTTON_H = 25;
 
     public static final float bgAlpha = 0.85f;
 }

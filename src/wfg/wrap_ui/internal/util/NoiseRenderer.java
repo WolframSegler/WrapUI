@@ -13,24 +13,23 @@ import com.fs.starfarer.api.util.Misc;
 import wfg.wrap_ui.util.RenderUtils;
 
 public class NoiseRenderer {
-    public final FaderUtil fader = new FaderUtil(0f, 1f, 1f);
+    public final FaderUtil fader = new FaderUtil(0f, 1f, 1f, false, true);
     public Color noiseColor = Global.getSettings().getColor("noiseColor");
-    private float renderW;
-    private float renderH;
+    public float renderW;
+    public float renderH;
 
-    private SpriteAPI m_sprite;
-    private NoiseGenerator noise = new NoiseGenerator();
+    private final SpriteAPI m_sprite;
+    private final NoiseGenerator noise = new NoiseGenerator();
     private long randomNum = 0L;
 
     public NoiseRenderer(SpriteAPI sprite, float width, float height) {
         m_sprite = sprite;
         renderW = width;
         renderH = height;
-        fader.setBounceDown(true);
     }
 
     public float getNoiseBrightness() {
-        return (0.5F + 0.5F * noise.getIntensity()) * fader.getBrightness();
+        return (0.5f + 0.5f * noise.getIntensity()) * fader.getBrightness();
     }
 
     public float getBrightness() {
@@ -57,12 +56,12 @@ public class NoiseRenderer {
     }
 
     public void advance(float delta) {
+        fader.advance(delta);
+
         if (fader.getBrightness() > 0f) {
             noise.advance(delta);
+            randomNum = Misc.random.nextLong();
         }
-
-        fader.advance(delta);
-        randomNum = Misc.random.nextLong();
     }
 
     public void render(float x, float y, float intensityMultiplier) {

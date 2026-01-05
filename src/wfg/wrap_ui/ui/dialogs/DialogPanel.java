@@ -88,15 +88,17 @@ dlg.show(0.5f, 0.5f);
 public class DialogPanel extends ModalDialog implements CallbackRunnable<Button> {
     public boolean noiseOnConfirmDismiss = true;
 
-    private UIPanelAPI innerPanel;
-    private final FoldingPanel holo;
-    private final Map<Button, Integer> optionsMap = new HashMap<>();
+    protected UIPanelAPI innerPanel;
+    protected final FoldingPanel holo;
+    protected final Map<Button, Integer> optionsMap = new HashMap<>();
 
-    public DialogPanel(UIPanelAPI parent, int width, int height, RunnableWithCode runnable) {
-        super(parent, width, height, runnable);
+    public DialogPanel(UIPanelAPI parent, int w, int h, RunnableWithCode runnable) {
+        super(parent, w, h + BUTTON_H + pad, runnable);
         getPlugin().init(this);
 
-        holo = new FoldingPanel(width, height);
+        holo = new FoldingPanel(m_panel, w, h + BUTTON_H + pad,
+            "ui_border1", 7
+        );
         add(holo);
         holo.getPos().inMid();
         holo.forceFoldIn();
@@ -105,59 +107,60 @@ public class DialogPanel extends ModalDialog implements CallbackRunnable<Button>
 
         holo.transitionEnabled = false;
         holo.setNext(innerPanel);
-
-        createPanel();
     }
 
     public DialogPanel(UIPanelAPI parent, RunnableWithCode runnable, String txt, String... btnText) {
-        this(500, 200, parent, runnable, txt, btnText);
+        this(parent, 500, 200, runnable, txt, btnText);
     }
 
-    public DialogPanel(int w, int h, UIPanelAPI parent, RunnableWithCode runnable,
+    public DialogPanel(UIPanelAPI parent, int w, int h, RunnableWithCode runnable,
         String txt, String... btnText
     ) {
-        this(w, h, btnTxtColor, btnBgColorDark, parent, runnable, txt, btnText);
+        this(parent, w, h, btnTxtColor, btnBgColorDark, runnable, txt, btnText);
     }
 
-    public DialogPanel(int w, int h, Color btnTxtColor, Color btnBgColor, UIPanelAPI parent,
+    public DialogPanel(UIPanelAPI parent, int w, int h, Color btnTxtColor, Color btnBgColor,
         RunnableWithCode runnable, String txt, String... btnTextArr
     ) {
         this(parent, w, h, runnable);
 
         final PositionAPI innerPos = innerPanel.getPosition();
-        final int btnW = 150;
-        final int btnH = 25;
 
-        final LabelAPI txtLbl = Global.getSettings().createLabel(
-            txt, "graphics/fonts/insignia21LTaa.fnt"
-        );
-        innerPanel.addComponent((UIComponentAPI)txtLbl);
-        txtLbl.setColor(btnTxtColor);
-        txtLbl.getPosition().setSize(
-            innerPos.getWidth() - opad*2,
-            innerPos.getHeight() - btnH - opad*2
-        ).inTL(opad, opad);
-        txtLbl.setAlignment(Alignment.TL);
-        final String font = "graphics/fonts/orbitron20aa.fnt";
+        if (txt != null && !txt.equals("")) {
+            final LabelAPI txtLbl = Global.getSettings().createLabel(
+                txt, "graphics/fonts/insignia21LTaa.fnt"
+            );
+            innerPanel.addComponent((UIComponentAPI)txtLbl);
+            txtLbl.setColor(btnTxtColor);
+            txtLbl.getPosition().setSize(
+                innerPos.getWidth() - opad*2,
+                innerPos.getHeight() - BUTTON_H - opad*2
+            ).inTL(opad, opad);
+            txtLbl.setAlignment(Alignment.TL);
+        }
 
-        Button prevBtn = null;
-        for(int i = btnTextArr.length - 1; i >= 0; i--) {
-            final String BtnTxt = btnTextArr[i];
-            if (BtnTxt == null) continue;
-
-            final Button btn = new Button(innerPanel, btnW, btnH, BtnTxt, font, this);
-            btn.setAlignment(Alignment.MID);
-            btn.setCutStyle(CutStyle.TL_BR);
-            btn.quickMode = true;
-            optionsMap.put(btn, i);
-            innerPanel.addComponent(btn.getPanel());
-            if (prevBtn == null) {
-                btn.getPos().inBR(opad, opad);
-            } else {
-                btn.getPos().leftOfMid(prevBtn.getPanel(), opad);
+        if (btnTextArr != null && btnTextArr.length > 0) {
+            Button prevBtn = null;
+            for(int i = btnTextArr.length - 1; i >= 0; i--) {
+                final String BtnTxt = btnTextArr[i];
+                if (BtnTxt == null) continue;
+    
+                final Button btn = new Button(innerPanel, BUTTON_W, BUTTON_H, BtnTxt,
+                    "graphics/fonts/orbitron20aa.fnt", this
+                );
+                btn.setAlignment(Alignment.MID);
+                btn.setCutStyle(CutStyle.TL_BR);
+                btn.quickMode = true;
+                optionsMap.put(btn, i);
+                innerPanel.addComponent(btn.getPanel());
+                if (prevBtn == null) {
+                    btn.getPos().inBR(opad, opad);
+                } else {
+                    btn.getPos().leftOfMid(prevBtn.getPanel(), opad);
+                }
+    
+                prevBtn = btn;
             }
-
-            prevBtn = btn;
         }
     }
 
@@ -182,17 +185,16 @@ public class DialogPanel extends ModalDialog implements CallbackRunnable<Button>
     public void dismiss(int option) {
         holo.foldIn(fader.getDurationOut() * 0.5f);
         if (noiseOnConfirmDismiss || option != 0) {
-            holo.flickerNoise(0f, 1.25f);
+            holo.flickerNoise(0f, 1f);
         }
 
         super.dismiss(option);
     }
 
-    public void show(float var1, float var2) {
-        super.show(var1, var2);
-        float var3 = fader.getDurationIn() * 0.5f;
-        holo.foldOut(var3);
-        holo.flickerNoise(0.0F, 1.25F);
+    public void show(float durIn, float durOut) {
+        super.show(durIn, durOut);
+        holo.foldOut(fader.getDurationIn() * 0.5f);
+        holo.flickerNoise(0f, 1f);
     }
 
     @Override

@@ -1,5 +1,3 @@
-Thank you for reading me.
-
 IMPORTANT
 - The mod LTV_Economy needs WrapUI to function properly. Please add both of these to your mods folder
 - Certain aspects of the mod can be modified under LTV_Economy/data/config/
