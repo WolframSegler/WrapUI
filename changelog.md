@@ -5,5 +5,5 @@
 - Removed old dialog wrappers.
 - Misc. bug fixes
 
-### v0.1.0-beta
+### v0.1.0-bet
 - Initial release of WrapUI
