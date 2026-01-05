@@ -54,7 +54,6 @@ public class Button extends CustomPanel<ButtonPlugin, Button, UIPanelAPI> implem
 
     protected String labelText;
     protected String labelFont;
-    protected Alignment labelAlg = Alignment.MID;
     protected LabelAPI label = null;
     protected CallbackRunnable<Button> onClick;
     protected int shortcut = 0;
@@ -93,18 +92,13 @@ public class Button extends CustomPanel<ButtonPlugin, Button, UIPanelAPI> implem
         label = settings.createLabel(finalText, labelFont);
         label.getPosition().setSize(pos.getWidth(), pos.getHeight());
         label.setColor(labelColor);
-        label.setAlignment(labelAlg);
+        label.setAlignment(Alignment.MID);
         if (appendShortcutToText) {
             label.setHighlightColor(highlight);
             label.setHighlight(Keyboard.getKeyName(shortcut));
         }
 
-        add(label);
-        final float centerX = pos.getX() + pos.getWidth() / 2f;
-        final float centerY = pos.getY() + pos.getHeight() / 2f;
-        final float labelW = label.getPosition().getWidth();
-        final float labelH = label.getPosition().getHeight();
-        label.getPosition().inBL(centerX - labelW / 2f, centerY - labelH / 2f);
+        add(label).inBL(0f, 0f);
     }
 
     public Optional<HasActionListener> getActionListener() {
@@ -244,8 +238,7 @@ public class Button extends CustomPanel<ButtonPlugin, Button, UIPanelAPI> implem
     }
 
     public void setAlignment(Alignment alg) {
-        labelAlg = alg;
-        createPanel();
+        label.setAlignment(alg);
     }
 
     public void setTooltipFactory(Supplier<TooltipMakerAPI> factory) {

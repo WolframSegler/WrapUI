@@ -39,12 +39,11 @@ public class ModalDialog extends CustomPanel<ModalDialogPlugin, ModalDialog, UIP
     protected float centerX, centerY;
 
     protected UIPanelAPI inputInterceptor;
-    protected UIPanelAPI dialogParent;
     protected Set<Integer> optionSet = new HashSet<>();
     protected FaderUtil fader = new FaderUtil(0, 0, 0.2f, true, true);
 
     public ModalDialog() {
-        this(Attachments.getScreenPanel(), 900, 450, null);
+        this(Attachments.getScreenPanel(), 500, 200, null);
     }
 
     public ModalDialog(int width, int height) {
@@ -52,14 +51,9 @@ public class ModalDialog extends CustomPanel<ModalDialogPlugin, ModalDialog, UIP
     }
 
     public ModalDialog(UIPanelAPI parent, int width, int height, RunnableWithCode dialogDismissed) {
-        super(parent,
-            (int) Global.getSettings().getScreenWidth(),
-            (int) Global.getSettings().getScreenHeight(),
-            new ModalDialogPlugin()
-        );
+        super(parent, width, height, new ModalDialogPlugin());
         getPlugin().init(this);
 
-        dialogParent = parent;
         delegate = dialogDismissed;
         fader.setDuration(0.5f, 0.5f);
         fader.forceOut();
@@ -76,9 +70,7 @@ public class ModalDialog extends CustomPanel<ModalDialogPlugin, ModalDialog, UIP
         return inputInterceptor;
     }
 
-    public void outsideClickAbsorbed(InputEventAPI event) {
-    
-    }
+    public void outsideClickAbsorbed(InputEventAPI event) {}
 
     public void setCenter(float cx, float cy) {
         centerX = cx;
@@ -92,10 +84,10 @@ public class ModalDialog extends CustomPanel<ModalDialogPlugin, ModalDialog, UIP
 
     public void show(float durIn, float durOut) {
         fader.setDuration(durIn, durOut);
-        dialogParent.removeComponent(inputInterceptor);
-        dialogParent.addComponent(inputInterceptor);
-        dialogParent.addComponent(getPanel());
-        final PositionAPI pos = dialogParent.getPosition();
+        m_parent.removeComponent(inputInterceptor);
+        m_parent.addComponent(inputInterceptor);
+        m_parent.addComponent(m_panel);
+        final PositionAPI pos = m_parent.getPosition();
         inputInterceptor.getPosition().setSize(pos.getWidth(), pos.getHeight()).inMid();
         if (useCustomCenter) {
             getPos().inBL(
@@ -142,14 +134,14 @@ public class ModalDialog extends CustomPanel<ModalDialogPlugin, ModalDialog, UIP
 
     public void setSuspendEventInterception(boolean bool) {
         if (bool && !suspendEventInterception) {
-            dialogParent.removeComponent(inputInterceptor);
+            m_parent.removeComponent(inputInterceptor);
         } else if (!bool && suspendEventInterception) {
-            dialogParent.removeComponent(inputInterceptor);
-            dialogParent.addComponent(inputInterceptor);
-            final PositionAPI pos = dialogParent.getPosition();
+            m_parent.removeComponent(inputInterceptor);
+            m_parent.addComponent(inputInterceptor);
+            final PositionAPI pos = m_parent.getPosition();
             inputInterceptor.getPosition().setSize(pos.getWidth(), pos.getHeight()).inMid();
             RolfLectionUtil.invokeMethod(
-                    "bringToTop", dialogParent, this);
+                    "bringToTop", m_parent, this);
         }
 
         suspendEventInterception = bool;
@@ -210,13 +202,9 @@ public class ModalDialog extends CustomPanel<ModalDialogPlugin, ModalDialog, UIP
         if (suspendEventInterception)
             return;
 
-        if (isBeingDismissed() && fader.getBrightness() == 0f && dialogParent != null) {
-            dialogParent.removeComponent(inputInterceptor);
-            dialogParent.removeComponent(getPanel());
+        if (isBeingDismissed() && fader.getBrightness() == 0f && m_parent != null) {
+            m_parent.removeComponent(inputInterceptor);
+            m_parent.removeComponent(getPanel());
         }
-    }
-
-    public UIPanelAPI getDialogParent() {
-        return dialogParent;
     }
 }

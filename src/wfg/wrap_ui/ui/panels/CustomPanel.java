@@ -76,9 +76,9 @@ public abstract class CustomPanel<
             "getChildrenCopy", panelClazz);
         getChildrenNonCopyMethod = RolfLectionUtil.getMethod(
             "getChildrenNonCopy", panelClazz);
-        addToPositionMethod = RolfLectionUtil.getMethod("add", posClazz);
-        removeFromPositionMethod = RolfLectionUtil.getMethod("remove", posClazz);
-        positionSetParentMethod = RolfLectionUtil.getMethod("setParent", posClazz);
+        addToPositionMethod = RolfLectionUtil.getMethod("add", posClazz, 1);
+        removeFromPositionMethod = RolfLectionUtil.getMethod("remove", posClazz, 1);
+        positionSetParentMethod = RolfLectionUtil.getMethod("setParent", posClazz, 1);
         pluginField = RolfLectionUtil.getAllFields(panelClazz).stream()
             .filter(f -> CustomUIPanelPlugin.class.isAssignableFrom(
                 RolfLectionUtil.getFieldType(f)))

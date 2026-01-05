@@ -20,19 +20,21 @@ import wfg.wrap_ui.internal.ui.dialogs.FoldingPanel;
 import wfg.wrap_ui.internal.ui.dialogs.ModalDialog;
 import wfg.wrap_ui.ui.panels.Button;
 import wfg.wrap_ui.ui.panels.Button.CutStyle;
+import wfg.wrap_ui.util.CallbackRunnable;
 import wfg.wrap_ui.util.RunnableWithCode;
 
-public class DialogPanel extends ModalDialog {
+public class DialogPanel extends ModalDialog implements CallbackRunnable<Button> {
     public boolean noiseOnConfirmDismiss = true;
     public LabelAPI titleLbl;
 
-    private FoldingPanel holo = new FoldingPanel(0, 0);
-    private UIPanelAPI innerPanel;
+    private FoldingPanel holo;
     private Map<Button, Integer> optionsMap = new HashMap<>();
 
     public DialogPanel(UIPanelAPI parent, int width, int height, RunnableWithCode runnable) {
         super(parent, width, height, runnable);
         getPlugin().init(this);
+
+        holo = new FoldingPanel(width, height);
 
         createPanel();
     }
@@ -50,36 +52,34 @@ public class DialogPanel extends ModalDialog {
     public DialogPanel(int w, int h, Color btnTxtColor, Color btnBgColor, UIPanelAPI parent,
         RunnableWithCode runnable, String title, String... btnTextArr
     ) {
-        super(parent, w, h, runnable);
-        getPlugin().init(this);
+        this(parent, w, h, runnable);
 
-        createPanel();
-
-        PositionAPI contentPanel = innerPanel.getPosition();
+        final UIPanelAPI innerComp = getInnerUIPanel();
+        final PositionAPI innerPos = innerComp.getPosition();
         final int btnW = 150;
         final int btnH = 25;
 
         titleLbl = Global.getSettings().createLabel(title, "graphics/fonts/insignia21LTaa.fnt");
-        innerPanel.addComponent((UIComponentAPI)titleLbl);
+        innerComp.addComponent((UIComponentAPI)titleLbl);
         titleLbl.setColor(btnTxtColor);
         titleLbl.getPosition().setSize(
-            contentPanel.getWidth() - opad*2,
-            contentPanel.getHeight() - btnH - opad*2
+            innerPos.getWidth() - opad*2,
+            innerPos.getHeight() - btnH - opad*2
         ).inTL(opad, opad);
         titleLbl.setAlignment(Alignment.TL);
         final String font = "graphics/fonts/orbitron20aa.fnt";
-        Button prevBtn = null;
 
-        for(int var14 = btnTextArr.length - 1; var14 >= 0; --var14) {
-            final String BtnTxt = btnTextArr[var14];
+        Button prevBtn = null;
+        for(int i = btnTextArr.length - 1; i >= 0; i--) {
+            final String BtnTxt = btnTextArr[i];
             if (BtnTxt == null) continue;
 
-            final Button btn = new Button(innerPanel, btnW, btnH, BtnTxt, font, null);
+            final Button btn = new Button(innerComp, btnW, btnH, BtnTxt, font, this);
             btn.setAlignment(Alignment.MID);
             btn.setCutStyle(CutStyle.TL_BR);
-            btn.setFont(font);
-            optionsMap.put(btn, var14);
-            innerPanel.addComponent(btn.getPanel());
+            btn.quickMode = true;
+            optionsMap.put(btn, i);
+            innerComp.addComponent(btn.getPanel());
             if (prevBtn == null) {
                 btn.getPos().inBR(opad, opad);
             } else {
@@ -88,16 +88,17 @@ public class DialogPanel extends ModalDialog {
 
             prevBtn = btn;
         }
-
     }
 
     public void createPanel() {
         add(holo);
         holo.getPos().inMid();
         holo.forceFoldIn();
-        setSize(0, 0);
 
-        innerPanel = Global.getSettings().createCustom(0, 0, null);
+        UIComponentAPI innerPanel = holo.getPanel().createCustomPanel(
+            0f, 0f, null
+        );
+
         holo.transitionEnabled = false;
         holo.setNext(innerPanel);
     }
@@ -135,18 +136,14 @@ public class DialogPanel extends ModalDialog {
         holo.flickerNoise(0.0F, 1.25F);
     }
 
-    public UIPanelAPI getInnerPanel() {
-        return innerPanel;
-    }
-
     protected void outsideClickAbsorbed() {
         holo.flickerNoise(0f, 0.5f);
     }
 
-    public void actionPerformed(Object var1, Object var2) {
-        final Integer var3 = optionsMap.get(var2);
-        if (var3 == null) dismiss(1);
-        else dismiss(var3);
+    public void run(Button btn) {
+        final Integer optionValue = optionsMap.get(btn);
+        if (optionValue == null) dismiss(1);
+        else dismiss(optionValue);
     }
 
     public Button getButton(int id) {
@@ -158,11 +155,10 @@ public class DialogPanel extends ModalDialog {
         return null;
     }
 
-    public FoldingPanel getHolo() {
-        return holo;
-    }
+    public UIComponentAPI getInnerPanel() { return holo.getCurr();}
+    public UIPanelAPI getInnerUIPanel() { return (UIPanelAPI) holo.getCurr();}
 
-    public Map<Button, Integer> getOptionMap() {
-        return optionsMap;
-    }
+    public FoldingPanel getHolo() { return holo;}
+
+    public Map<Button, Integer> getOptionMap() { return optionsMap;}
 }

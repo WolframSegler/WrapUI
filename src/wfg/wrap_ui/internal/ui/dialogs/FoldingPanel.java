@@ -39,36 +39,37 @@ public class FoldingPanel extends CustomPanel<FoldingPanelPlugin, FoldingPanel, 
     private int backgroundAlphaMin = 125;
     private int backgroundAlphaMax = 175;
 
-    public FoldingPanel(UIPanelAPI parent, float width, float height, String borderPrefix,
-        float borderThickness
+    public FoldingPanel(UIPanelAPI parent, int width, int height, String borderPrefix,
+        int borderThickness
     ) {
-        super(parent, (int) width, (int) height, new FoldingPanelPlugin());
+        super(parent, width, height, new FoldingPanelPlugin());
+        getPlugin().init(this);
         this.borderThickness = borderThickness;
         borderRenderer = new BorderRenderer(borderPrefix, width, height);
         initializeBackground();
         noiseRenderer.fadeOut(0.5f);
     }
 
-    public FoldingPanel(float width, float height, String borderPrefix, float borderThickness) {
-        this(Attachments.getCoreUI(), width, height, borderPrefix, borderThickness);
+    public FoldingPanel(int width, int height, String borderPrefix, int borderThickness) {
+        this(Attachments.getScreenPanel(), width, height, borderPrefix, borderThickness);
     }
 
-    public FoldingPanel(float width, float height, String borderPrefix) {
-        this(width, height, borderPrefix, 7f);
+    public FoldingPanel(int width, int height, String borderPrefix) {
+        this(width, height, borderPrefix, 7);
     }
 
-    public FoldingPanel(float width, float height) {
-        this(width, height, "ui_border1", 7f);
+    public FoldingPanel(int width, int height) {
+        this(width, height, "ui_border1", 7);
     }
 
     public FoldingPanel() {
-        this(100f, 100f, "ui_border1", 7f);
+        this(100, 100, "ui_border1", 7);
     }
 
     public void createPanel() {}
 
-    public void setBorder(String preix) {
-        borderRenderer = new BorderRenderer(preix, getPos().getWidth(), getPos().getHeight());
+    public void setBorder(String prefix) {
+        borderRenderer = new BorderRenderer(prefix, getPos().getWidth(), getPos().getHeight());
     }
 
     public void setBackgroundAlpha(int min, int max) {
@@ -131,8 +132,8 @@ public class FoldingPanel extends CustomPanel<FoldingPanelPlugin, FoldingPanel, 
         final float w = getContentWidth();
         final float h = getContentHeight();
         remove(currentPanel);
-        addPositionOnly(comp).inTL(w, h);
         comp.getPosition().setSize(w, h);
+        addPositionOnly(comp).inTL(borderThickness, borderThickness);
         if (!transitionEnabled) {
             currentPanel = nextPanel;
             nextPanel = null;
@@ -197,17 +198,18 @@ public class FoldingPanel extends CustomPanel<FoldingPanelPlugin, FoldingPanel, 
     public void renderImpl(float alphaMult) {
         if (fader.getBrightness() == 0f && fader.isIdle()) return;
 
+        final PositionAPI pos = getPos();
         final float brightness = fader.getBrightness();
         final float heightScale = Math.min(1f, brightness / 0.75f);
         final float transitionAlpha = Math.max(0f, (brightness - 0.75f) / 0.25f);
         final float borderAlphaFactor = Math.min(1f, brightness / 0.25f);
-        final float panelWidth = getPos().getWidth();
-        final float panelHeight = getPos().getHeight() * heightScale;
-        borderRenderer.setSize(panelWidth, panelHeight);
+        final float panelWidth = pos.getWidth();
+        final float panelHeight = pos.getHeight() * heightScale;
 
-        final float x = getPos().getX();
-        final float y = getPos().getY() + getPos().getHeight() / 2f - panelHeight / 2f;
+        final float x = pos.getX();
+        final float y = pos.getY() + pos.getHeight() / 2f - panelHeight / 2f;
         if (renderBackground) {
+            borderRenderer.setSize(panelWidth, panelHeight);
             borderRenderer.render(x, y, alphaMult * borderAlphaFactor);
         }
 
@@ -223,7 +225,7 @@ public class FoldingPanel extends CustomPanel<FoldingPanelPlugin, FoldingPanel, 
         }
 
         if (renderBackground) {
-            backgroundLayer.renderVerticalGradient(getPos().getX() + pad, getPos().getY() + pad,
+            backgroundLayer.renderVerticalGradient(pos.getX() + pad, pos.getY() + pad,
                 alphaMult * borderAlphaFactor
             );
         }
@@ -237,10 +239,10 @@ public class FoldingPanel extends CustomPanel<FoldingPanelPlugin, FoldingPanel, 
         }
 
         if (renderBackground) {
-            foregroundLayer.renderVerticalGradient(getPos().getX() + pad, getPos().getY() + pad, 
+            foregroundLayer.renderVerticalGradient(pos.getX() + pad, pos.getY() + pad, 
                 alphaMult * borderAlphaFactor
             );
-            noiseRenderer.render(getPos().getX() + pad, getPos().getY() + pad,
+            noiseRenderer.render(pos.getX() + pad, pos.getY() + pad,
                 alphaMult * noiseAlpha
             );
         }

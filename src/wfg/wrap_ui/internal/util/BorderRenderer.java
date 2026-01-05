@@ -7,24 +7,24 @@ import com.fs.starfarer.api.graphics.SpriteAPI;
 public class BorderRenderer {
     public boolean renderCenter = true;
 
-    private SpriteAPI bottom_left;
-    private SpriteAPI bottom_right;
-    private SpriteAPI bottom_mid;
-    private SpriteAPI center;
-    private SpriteAPI left_mid;
-    private SpriteAPI right_mid;
-    private SpriteAPI top_left;
-    private SpriteAPI top_right;
-    private SpriteAPI top_mid;
+    private final SpriteAPI bottom_left;
+    private final SpriteAPI bottom_right;
+    private final SpriteAPI bottom_mid;
+    private final SpriteAPI center;
+    private final SpriteAPI left_mid;
+    private final SpriteAPI right_mid;
+    private final SpriteAPI top_left;
+    private final SpriteAPI top_right;
+    private final SpriteAPI top_mid;
+    private final float corner_width;
     private float width;
     private float height;
     private float tilesWide;
     private float tilesHigh;
-    private float corner_width;
 
-    public BorderRenderer(String prefix, float var2, float var3) {
+    public BorderRenderer(String prefix, float w, float h) {
         this(prefix);
-        this.setSize(var2, var3);
+        this.setSize(w, h);
     }
 
     /**
@@ -49,7 +49,9 @@ public class BorderRenderer {
         top_left = settings.getSprite("ui", prefix + "_top_left");
         top_right = settings.getSprite("ui", prefix + "_top_right");
         top_mid = settings.getSprite("ui", prefix + "_top");
-        corner_width = bottom_left.getTexWidth();
+        corner_width = bottom_left.getWidth();
+
+        center.setSize(corner_width, corner_width);
     }
 
     public void setSize(float width, float height) {

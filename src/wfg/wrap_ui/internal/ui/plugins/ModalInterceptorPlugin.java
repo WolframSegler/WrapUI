@@ -11,7 +11,7 @@ import wfg.wrap_ui.internal.ui.dialogs.ModalDialog;
 public class ModalInterceptorPlugin implements CustomUIPanelPlugin{
     final ModalDialog dialog;
 
-    public ModalInterceptorPlugin(ModalDialog d) { dialog = d; }
+    public ModalInterceptorPlugin(ModalDialog d) { dialog = d;}
 
     public void processInput(List<InputEventAPI> events) {
         for (InputEventAPI e : events) {

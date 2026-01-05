@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.Map;
 
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.SettingsAPI;
 import com.fs.starfarer.api.campaign.InteractionDialogAPI;
 import com.fs.starfarer.api.campaign.InteractionDialogPlugin;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
@@ -14,10 +13,8 @@ import com.fs.starfarer.api.ui.UIPanelAPI;
 import com.fs.starfarer.campaign.CampaignEngine;
 import com.fs.starfarer.campaign.CampaignState;
 import com.fs.starfarer.combat.CombatState;
-import com.fs.starfarer.loading.ResourceLoaderState;
 import com.fs.starfarer.title.TitleScreenState;
 import com.fs.state.AppDriver;
-import com.fs.state.AppState;
 
 import rolflectionlib.util.RolfLectionUtil;
 // import com.fs.starfarer.ui.oo0O;
