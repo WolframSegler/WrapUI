@@ -5,5 +5,5 @@ v0.2.0-beta
 - Removed old dialog wrappers.
 - Misc. bug fixes
 
-v0.1.0-bet
+v0.1.0-beta
 - Initial release of WrapUI
