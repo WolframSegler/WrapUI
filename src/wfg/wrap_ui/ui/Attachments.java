@@ -3,7 +3,6 @@ package wfg.wrap_ui.ui;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.InteractionDialogAPI;
 import com.fs.starfarer.api.ui.UIPanelAPI;
-import com.fs.starfarer.campaign.CampaignEngine;
 import com.fs.starfarer.campaign.CampaignState;
 import com.fs.starfarer.combat.CombatState;
 import com.fs.starfarer.title.TitleScreenState;
@@ -45,7 +44,7 @@ public class Attachments {
             "getScreenPanel", CampaignState.class
         );
         getCampaignCoreMethod = RolfLectionUtil.getMethod(
-            "getCore", CampaignEngine.class
+            "getCore", CampaignState.class
         );
         coreUIclass = RolfLectionUtil.getReturnType(getCampaignCoreMethod);
         getCoreUIcurrentTabMethod = RolfLectionUtil.getMethod(
