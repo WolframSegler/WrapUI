@@ -1,14 +1,7 @@
 package wfg.wrap_ui.ui;
 
-import java.util.Collections;
-import java.util.Map;
-
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.InteractionDialogAPI;
-import com.fs.starfarer.api.campaign.InteractionDialogPlugin;
-import com.fs.starfarer.api.campaign.SectorEntityToken;
-import com.fs.starfarer.api.campaign.rules.MemoryAPI;
-import com.fs.starfarer.api.combat.EngagementResultAPI;
 import com.fs.starfarer.api.ui.UIPanelAPI;
 import com.fs.starfarer.campaign.CampaignEngine;
 import com.fs.starfarer.campaign.CampaignState;
@@ -17,7 +10,7 @@ import com.fs.starfarer.title.TitleScreenState;
 import com.fs.state.AppDriver;
 
 import rolflectionlib.util.RolfLectionUtil;
-// import com.fs.starfarer.ui.oo0O;
+
 /**
  * Utility class providing access points to UI elements across different game contexts:
  * campaign, interaction, and combat. Allows retrieving core panels, tab panels,
@@ -25,11 +18,50 @@ import rolflectionlib.util.RolfLectionUtil;
  */
 public class Attachments {
 
-    private static final Object getWarRoomObject;
-    private static Object setParentMethod;
+    private static final Object getWarRoomPanelMethod;
+    private static final Object getTitleScreenPanelMethod;
+    private static final Object getTutorialOverlayMethod;
+    private static final Object getCombatScreenPanelMethod;
+    private static final Object getCampaignScreenPanelMethod;
+    private static final Object getCampaignCoreMethod;
+    private static final Object getCoreUIcurrentTabMethod;
+    private static final Object getEncounterDialogMethod;
+    private static final Object getEncounterDialogCoreUIMethod;
+
+    private static final Class<?> coreUIclass;
+    private static final Class<?> encounterDialogClass;
+
+    static {
+        getTitleScreenPanelMethod = RolfLectionUtil.getMethod(
+            "getScreenPanel", TitleScreenState.class
+        );
+        getTutorialOverlayMethod = RolfLectionUtil.getMethod(
+            "getTutorialOverlay", CombatState.class
+        );
+        getCombatScreenPanelMethod = RolfLectionUtil.getMethod(
+            "getWidgetPanel", CombatState.class
+        );
+        getCampaignScreenPanelMethod = RolfLectionUtil.getMethod(
+            "getScreenPanel", CampaignState.class
+        );
+        getCampaignCoreMethod = RolfLectionUtil.getMethod(
+            "getCore", CampaignEngine.class
+        );
+        coreUIclass = RolfLectionUtil.getReturnType(getCampaignCoreMethod);
+        getCoreUIcurrentTabMethod = RolfLectionUtil.getMethod(
+            "getCurrentTab", coreUIclass
+        );
+        getEncounterDialogMethod = RolfLectionUtil.getMethod(
+            "getEncounterDialog", CampaignState.class
+        );
+        encounterDialogClass = RolfLectionUtil.getReturnType(getEncounterDialogMethod);
+        getEncounterDialogCoreUIMethod = RolfLectionUtil.getMethod(
+            "getCoreUI", encounterDialogClass
+        );
+    }
     
     static {
-        getWarRoomObject = RolfLectionUtil.getMethod("getWarroom",
+        getWarRoomPanelMethod = RolfLectionUtil.getMethod("getWarroom",
             CombatState.class);
     }
 
@@ -41,71 +73,24 @@ public class Attachments {
     }
 
     /**
-     * Must be in campaign mode.
-     */
-    public static final InteractionDialogAPI createInteractionDialog() {
-        return createInteractionDialog(Global.getSector().getPlayerFleet());
-    }
-
-    /**
-     * Must be in campaign mode.
-     */
-    public static final InteractionDialogAPI createInteractionDialog(UIPanelAPI parent) {
-        return createInteractionDialog(parent, Global.getSector().getPlayerFleet());
-    }
-
-    /**
-     * Must be in campaign mode.
-     */
-    public static final InteractionDialogAPI createInteractionDialog(SectorEntityToken target) {
-        return createInteractionDialog(getCoreUI(), target);
-    }
-
-    /**
-     * Must be in campaign mode.
-     */
-    public static final InteractionDialogAPI createInteractionDialog(
-        UIPanelAPI parent, SectorEntityToken target
-    ) {
-        final CampaignState state = getCampaignState();
-        final InteractionDialogPlugin plugin = new InteractionDialogPlugin() {
-            public void init(InteractionDialogAPI dialog) {
-                if (setParentMethod == null) {
-                    setParentMethod = RolfLectionUtil.getMethodFromSuperClass(
-                        "setParent", dialog.getClass());
-                }
-                // The default parent is undesirable
-                RolfLectionUtil.invokeMethodDirectly(setParentMethod,
-                    dialog, parent);
-                dialog.setPromptText("");
-            }
-            public void optionSelected(String optionText, Object optionData) {}
-            public void optionMousedOver(String optionText, Object optionData) {}
-            public void advance(float amount) {}
-            public void backFromEngagement(EngagementResultAPI result) {}
-            public Object getContext() { return null;}
-            public Map<String, MemoryAPI> getMemoryMap() { return Collections.emptyMap();}
-        };
-        state.setDialogType(null);
-        state.showInteractionDialog(plugin, target);
-        CampaignEngine.getInstance().getCampaignUI().getCore().getFader().fadeIn();
-        return state.getCurrentInteractionDialog();
-    }
-
-    /**
      * Returns the core UI panel of the current interaction.
      * Must be interacting with an entity.
      */
     public static final UIPanelAPI getInteractionCoreUI() {
-        if (getCampaignState().getEncounterDialog() == null) return null;
-        return getCampaignState().getEncounterDialog().getCoreUI();
+        final UIPanelAPI encounter = (UIPanelAPI) RolfLectionUtil.invokeMethodDirectly(
+            getEncounterDialogMethod, getCampaignState());
+        if (encounter == null) return null;
+
+        return (UIPanelAPI) RolfLectionUtil.invokeMethodDirectly(
+            getEncounterDialogCoreUIMethod, encounter);
     }
 
     /**
      * Must be in campaign mode. Retrieves campaign core UI
      */
     public static final UIPanelAPI getCampaignCoreUI() {
-        return CampaignEngine.getInstance().getCampaignUI().getCore();
+        return (UIPanelAPI) RolfLectionUtil.invokeMethodDirectly(
+            getCampaignCoreMethod, getCampaignState());
     }
 
     /**
@@ -131,9 +116,16 @@ public class Attachments {
      * Must be interacting with an entity.
      */
     public static final UIPanelAPI getInteractionCurrentTab() {
-        if (getCampaignState().getEncounterDialog() == null) return null;
-        if (getCampaignState().getEncounterDialog().getCoreUI() == null) return null;
-        return getCampaignState().getEncounterDialog().getCoreUI().getCurrentTab();
+        final UIPanelAPI encounter = (UIPanelAPI) RolfLectionUtil.invokeMethodDirectly(
+            getEncounterDialogMethod, getCampaignState());
+        if (encounter == null) return null;
+
+        final UIPanelAPI coreUI = (UIPanelAPI) RolfLectionUtil.invokeMethodDirectly(
+            getEncounterDialogCoreUIMethod, encounter);
+        if (coreUI == null) return null;
+
+        return (UIPanelAPI) RolfLectionUtil.invokeMethodDirectly(
+            getCoreUIcurrentTabMethod, coreUI);
     }
 
     /**
@@ -141,7 +133,11 @@ public class Attachments {
      * Must be in campaign mode.
      */
     public static final UIPanelAPI getCampaignCurrentTab() {
-        return CampaignEngine.getInstance().getCampaignUI().getCore().getCurrentTab();
+        final UIPanelAPI core = (UIPanelAPI) RolfLectionUtil.invokeMethodDirectly(
+            getCampaignCoreMethod, getCampaignState());
+
+        return (UIPanelAPI) RolfLectionUtil.invokeMethodDirectly(
+            getCoreUIcurrentTabMethod, core);
     }
 
     /**
@@ -156,21 +152,24 @@ public class Attachments {
      * Must be in campaign mode.
      */
     public static final UIPanelAPI getCampaignScreenPanel() {
-        return CampaignEngine.getInstance().getCampaignUI().getDialogParent();
+        return (UIPanelAPI) RolfLectionUtil.invokeMethodDirectly(
+            getCampaignScreenPanelMethod, getCampaignState());
     }
 
     /**
      * Must be in combat mode.
      */
     public static final UIPanelAPI getCombatScreenPanel() {
-        return getCombatState().getWidgetPanel();
+        return (UIPanelAPI) RolfLectionUtil.invokeMethodDirectly(
+            getCombatScreenPanelMethod, getCombatState());
     }
 
     /**
      * Must be in combat mode.
      */
     public static final UIPanelAPI getTutorialOverlay() {
-        return getCombatState().getTutorialOverlay();
+        return (UIPanelAPI) RolfLectionUtil.invokeMethodDirectly(
+            getTutorialOverlayMethod, getCombatState());
     }
 
     /**
@@ -178,14 +177,15 @@ public class Attachments {
      */
     public static final UIPanelAPI getWarroomPanel() {
         return (UIPanelAPI) RolfLectionUtil.invokeMethodDirectly(
-            getWarRoomObject, getCombatState());
+            getWarRoomPanelMethod, getCombatState());
     }
 
     /**
      * Must be in Title mode.
      */
     public static final UIPanelAPI getTitleScreenPanel() {
-        return (UIPanelAPI) getTitleState().getScreenPanel();
+        return (UIPanelAPI) RolfLectionUtil.invokeMethodDirectly(
+            getTitleScreenPanelMethod, getTitleState());
     }
 
 

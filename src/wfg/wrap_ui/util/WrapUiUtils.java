@@ -18,7 +18,7 @@ import static wfg.wrap_ui.util.UIConstants.*;
 public class WrapUiUtils {
     public static final int APICodexHeight = 28;
 
-    public static Object expandLabelField;
+    public static final Object expandLabelField;
 
     static {
         expandLabelField = RolfLectionUtil.getFieldByName(
