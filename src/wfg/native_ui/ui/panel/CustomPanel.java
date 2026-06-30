@@ -30,6 +30,7 @@ import wfg.native_ui.ui.system.RawInputSystem;
 import wfg.native_ui.ui.system.TooltipSystem;
 import wfg.native_ui.ui.system.UISystemContainer;
 
+// TODO remove after new update
 /**
  * Represents the visual and layout container for a set of components.
  * 

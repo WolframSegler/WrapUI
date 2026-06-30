@@ -112,7 +112,7 @@ public class MultiSelect extends CustomPanel implements UIBuildableAPI {
         clearChildren();
 
         final CallbackRunnable<Button> run = (btn) -> {
-            toggle(buttons.indexOf(btn));
+            toggle((Integer) btn.customData);
             if (onSelected != null) onSelected.run(btn);
         };
 
