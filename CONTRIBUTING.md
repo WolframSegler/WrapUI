@@ -1,8 +1,8 @@
 ## Number Suffixes
 - **int** – no suffix: `42`
-- **long** – always lowercase `l`: `1234567l`
-- **float** – always lowercase `f`, whole numbers without `.0`: `6f` **not** `6.0f`
-- **double** – always lowercase `d`, whole numbers without `.0`: `7d` **not** `7.0d`
+- **long** – always lowercase `l` suffix: `1234567l`
+- **float** – always lowercase `f` suffix, whole numbers without `.0`: `6f` **not** `6.0f`
+- **double** – always lowercase `d` suffix, whole numbers without `.0`: `7d` **not** `7.0d`
 
 ## Conditionals & Early Returns
 Prefer returning early when a condition is **not** met. This avoids unnecessary nesting and keeps the happy path flat.
