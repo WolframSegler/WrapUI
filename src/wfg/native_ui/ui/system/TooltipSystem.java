@@ -35,6 +35,8 @@ public final class TooltipSystem extends BaseSystem {
     public static final Object setMaxShadowHeightMethod;
     public static final Object setUseSimpleShadowsMethod;
 
+    private static final float DELAY = 0.3f; // TODO replace with SettingsAPI.getTooltipDelay()
+
     static {
         final TooltipMakerAPI tp = customPanel.createUIElement(1f, 1f, true);
         customPanel.addUIElement(tp);
@@ -70,7 +72,7 @@ public final class TooltipSystem extends BaseSystem {
 
         if (spec.builder != null && input.hoveredLastFrame && !input.hasLMBClickedBefore) {
             spec.internal_hoverTime += delta;
-            if (spec.internal_hoverTime >= spec.delay) {
+            if (spec.internal_hoverTime > DELAY) {
                 showTooltip(spec);
             }
         } else {

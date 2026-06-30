@@ -1,13 +1,12 @@
 package wfg.native_ui.ui.dialog;
 
-import java.util.Map;
+import java.awt.Color;
+import java.util.ArrayList;
 
 import org.lwjgl.input.Keyboard;
 
 import static wfg.native_ui.util.Globals.settings;
 import static wfg.native_ui.util.UIConstants.*;
-
-import java.awt.Color;
 
 import com.fs.starfarer.api.input.InputEventAPI;
 import com.fs.starfarer.api.ui.Alignment;
@@ -20,7 +19,6 @@ import wfg.native_ui.internal.ui.dialog.ModalDialog;
 import wfg.native_ui.ui.core.UIBuildableAPI;
 import wfg.native_ui.ui.functional.Button;
 import wfg.native_ui.ui.functional.Button.CutStyle;
-import wfg.native_ui.util.ArrayMap;
 import wfg.native_ui.util.CallbackRunnable;
 import wfg.native_ui.util.RunnableWithCode;
 
@@ -32,7 +30,7 @@ A modal, fold-animated dialog panel with a built-in <em>holo</em> ({@link Foldin
 <ul>
 <li><strong>Ownership:</strong> {@link DialogPanel#m_panel} is owned and positioned by {@link DialogPanel#holo}.
 Do <em>not</em> assign {@link DialogPanel#m_panel} to any other parent. Use {@link FoldingPanel#setNext(m_panel)} instead.</li>
-<li><strong>Buttons:</strong> Buttons map to integer options stored in {@link DialogPanel#optionsMap}.</li>
+<li><strong>Buttons:</strong> Buttons map to integer options stored in {@link DialogPanel#buttons}.</li>
 </ul>
 
 <p><strong>Typical usage</strong></p>
@@ -49,11 +47,6 @@ dlg.setConfirmShortcut();
 // show with fade in / out durations (seconds)
 dlg.show(0.5f, 0.5f);
 </code></pre>
-
-<p><strong>Subclassing / customization</strong></p>
-<ul>
-<li>Subclass and populate using {@link #buildUI()}, add labels, tables or other components, and register buttons in {@link DialogPanel#optionsMap}.</li>
-<li>Override {@link #outsideClickAbsorbed(InputEventAPI)} to provide custom functionality.</li>
 
 </ul>
 
@@ -81,7 +74,7 @@ dlg.show(0.5f, 0.5f);
 public class DialogPanel extends ModalDialog implements UIBuildableAPI, CallbackRunnable<Button> {
     public boolean noiseOnConfirmDismiss = true;
     public final FoldingPanel holo;
-    public final Map<Button, Integer> optionsMap = new ArrayMap<>();
+    protected final ArrayList<Button> buttons = new ArrayList<>(4);
 
     public DialogPanel(int w, int h, RunnableWithCode onDismissed) {
         super(w, h + BUTTON_H + pad + opad, onDismissed);
@@ -123,30 +116,26 @@ public class DialogPanel extends ModalDialog implements UIBuildableAPI, Callback
         }
 
         if (btnTextArr != null && btnTextArr.length > 0) {
-            Button prevBtn = null;
-            for(int i = btnTextArr.length - 1; i >= 0; i--) {
+            for(int i = 0; i < btnTextArr.length; i++) {
                 final String BtnTxt = btnTextArr[i];
                 if (BtnTxt == null) continue;
-
-                final CallbackRunnable<Button> run = (btn) -> {
-                    final Integer optionValue = optionsMap.get(btn);
-                    if (optionValue == null) dismiss(1);
-                    else dismiss(optionValue);
-                };
     
                 final Button btn = new Button(m_panel, BUTTON_W, BUTTON_H, BtnTxt,
-                    Fonts.ORBITRON_20AA, run
+                    Fonts.ORBITRON_20AA, this
                 );
                 btn.setAlignment(Alignment.MID);
                 btn.cutStyle = CutStyle.TL_BR;
                 btn.setQuickMode(true);
-                optionsMap.put(btn, i);
+                btn.customData = Integer.valueOf(i);
+                buttons.add(btn);
                 add(btn);
+            }
 
-                if (prevBtn == null) btn.getPos().inBR(pad, pad);
-                else btn.getPos().leftOfMid(prevBtn.getPanel(), pad*2);
-    
-                prevBtn = btn;
+            for (int i = buttons.size() - 1; i >= 0; i--) {
+                final Button btn = buttons.get(i);
+
+                if (i == buttons.size() - 1) btn.getPos().inBR(pad, pad);
+                else btn.getPos().leftOfMid(buttons.get(i + 1).getPanel(), pad*2);
             }
         }
     }
@@ -164,15 +153,11 @@ public class DialogPanel extends ModalDialog implements UIBuildableAPI, Callback
     }
 
     public void setConfirmShortcut() {
-        optionsMap.keySet().forEach(b -> {
-            if (optionsMap.get(b) == 0) { b.setShortcutAndAppendToText(Keyboard.KEY_G);}
-        });
+        buttons.get(0).setShortcutAndAppendToText(Keyboard.KEY_G);
     }
 
-    public void run(Button btn)  {
-        final Integer optionValue = optionsMap.get(btn);
-        if (optionValue == null) dismiss(1);
-        else dismiss(optionValue);
+    public void run(Button btn) {
+        dismiss((Integer) btn.customData);
     }
 
     @Override
@@ -198,10 +183,7 @@ public class DialogPanel extends ModalDialog implements UIBuildableAPI, Callback
         holo.flickerNoise(0f, 0.5f);
     }
 
-    public Button getButton(int id) {
-        for (Map.Entry<Button, Integer> entry : optionsMap.entrySet()) {
-            if (entry.getValue() == id) return entry.getKey();
-        }
-        return null;
+    public final Button getButton(int id) {
+        return buttons.get(id);
     }
 }

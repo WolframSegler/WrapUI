@@ -1,3 +1,6 @@
+Version 0.4.5-beta
+- Removed delay field from TooltipComp.
+
 Version 0.4.4-beta
 - Not compatible with v0.4.3-beta
 - BorderRenderer performance improvements and API changes.

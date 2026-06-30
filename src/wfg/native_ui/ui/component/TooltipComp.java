@@ -10,7 +10,6 @@ import wfg.native_ui.util.NativeUiUtils;
 
 public final class TooltipComp extends BaseComponent {
     public float width = 400f;
-    public float delay = 0.3f;
     public float bgAlpha = 1f;
     public boolean expandable = false;
     public boolean useScroller = false;

@@ -909,12 +909,8 @@ public class Slider extends CustomPanel implements HasInputSnapshot {
 
         final float offset = 6f;
         final float maxBarWidth = pos.getWidth() - offset;
-        float relativeX = mouseX - pos.getX() - offset;
-
-        if (relativeX > maxBarWidth) relativeX = maxBarWidth;
-
-        float minBarWidth = maxBarWidth * cachedMin / (cachedMaxValue - minRange);
-        if (relativeX < minBarWidth) relativeX = minBarWidth;
+        final float minBarWidth = maxBarWidth * cachedMin / (cachedMaxValue - minRange);
+        final float relativeX = Arithmetic.clamp(mouseX - pos.getX() - offset, minBarWidth, maxBarWidth);
 
         float progressValue = relativeX / maxBarWidth * (maxRange - minRange) + minRange;
         if (clampCurrToMax && progressValue > maxValue) progressValue = maxValue;

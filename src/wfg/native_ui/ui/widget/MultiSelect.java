@@ -48,7 +48,7 @@ public class MultiSelect extends CustomPanel implements UIBuildableAPI {
     private final Set<Integer> selectedIndexes = new HashSet<>();
     private final LayoutMode mode;
 
-    public CallbackRunnable<MultiSelect> onSelected;
+    public CallbackRunnable<MultiSelect> onSelected; // TODO switch callback type to Button and pass down the button.
 
     public int checkboxSize = 20;
     public String font = Fonts.DEFAULT_SMALL;
