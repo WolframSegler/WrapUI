@@ -39,9 +39,9 @@ public class PanelFillRenderer {
     public void advance(float delta) {}
 
     public void renderVerticalGradient(float x, float y, float alpha) {
-        renderGradient(topColor, bottomColor, x, y, alpha, 0.0F);
+        renderGradient(topColor, bottomColor, x, y, alpha, 0f);
         if (useOverlay) {
-            renderGradient(topOverlayColor, bottomOverlayColor, x, y + 1.0F, alpha, -1.0F);
+            renderGradient(topOverlayColor, bottomOverlayColor, x, y + 1f, alpha, -1f);
         }
     }
 
@@ -52,12 +52,12 @@ public class PanelFillRenderer {
         float yOffsset
     ) {
         if (useGradient) {
-            if (edgeSize > 0.0F) {
-                drawTexturedQuad(topColor, bottomColor, topColor, bottomColor, alpha, x, y, 0.0F, 0.0F, edgeSize / m_sprite.getWidth(), (panelH + yOffsset) / m_sprite.getHeight());
-                drawTexturedQuad(bottomColor, topColor, bottomColor, topColor, alpha, x + panelW - edgeSize, y, 0.0F, 0.0F, edgeSize / m_sprite.getWidth(), (panelH + yOffsset) / m_sprite.getHeight());
+            if (edgeSize > 0f) {
+                drawTexturedQuad(topColor, bottomColor, topColor, bottomColor, alpha, x, y, 0f, 0f, edgeSize / m_sprite.getWidth(), (panelH + yOffsset) / m_sprite.getHeight());
+                drawTexturedQuad(bottomColor, topColor, bottomColor, topColor, alpha, x + panelW - edgeSize, y, 0f, 0f, edgeSize / m_sprite.getWidth(), (panelH + yOffsset) / m_sprite.getHeight());
             }
 
-            drawTexturedQuad(bottomColor, bottomColor, bottomColor, bottomColor, alpha, x + edgeSize, y, 0.0F, 0.0F, (panelW - edgeSize * 2.0F) / m_sprite.getWidth(), (panelH + yOffsset) / m_sprite.getHeight());
+            drawTexturedQuad(bottomColor, bottomColor, bottomColor, bottomColor, alpha, x + edgeSize, y, 0f, 0f, (panelW - edgeSize * 2f) / m_sprite.getWidth(), (panelH + yOffsset) / m_sprite.getHeight());
         }
     }
 
@@ -68,7 +68,7 @@ public class PanelFillRenderer {
         float y4, float alpha) {
         renderQuadWithColor(bottomColor, alpha, x1, y1, x2, y2, x3, y3, x4, y4);
         if (useOverlay) {
-            renderQuadWithColor(bottomOverlayColor, alpha, x1, y1 + 1.0F, x2, y2 + 1.0F, x3, y3 + 1.0F, x4, y4 + 1.0F);
+            renderQuadWithColor(bottomOverlayColor, alpha, x1, y1 + 1f, x2, y2 + 1f, x3, y3 + 1f, x4, y4 + 1f);
         }
     }
 
@@ -95,8 +95,8 @@ public class PanelFillRenderer {
     public void renderTexturedQuad(Color topLeft, Color bottomLeft, Color bottomRight,
         Color topRight, float alpha, float x, float y, float width, float height
     ) {
-        float uStart = 0.0F;
-        float vStart = 0.0F;
+        float uStart = 0f;
+        float vStart = 0f;
         float uEnd = width / m_sprite.getWidth();
         float vEnd = height / m_sprite.getHeight();
         drawTexturedQuad(topLeft, bottomLeft, bottomRight, topRight, alpha, x, y,
@@ -155,8 +155,8 @@ public class PanelFillRenderer {
         final float spriteWidth = m_sprite.getWidth();
         final float spriteHeight = m_sprite.getHeight();
 
-        final float uOffset = (x3 - x0 + (x2 - x1)) / spriteWidth / 2.0F;
-        final float vOffset = (y1 - y0 + (y2 - y3)) / spriteHeight / 2.0F;
+        final float uOffset = (x3 - x0 + (x2 - x1)) / spriteWidth / 2f;
+        final float vOffset = (y1 - y0 + (y2 - y3)) / spriteHeight / 2f;
 
         GL11.glPushMatrix();
         GL11.glEnable(GL11.GL_TEXTURE_2D);

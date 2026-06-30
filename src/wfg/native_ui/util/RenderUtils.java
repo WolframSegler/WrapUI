@@ -157,7 +157,7 @@ public class RenderUtils {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
         GL11.glColorMask(false, false, false, true);
-        quadWithBlend(x - w / 2f, y - h / 2f, w * 2.0F, h * 2.0F, Color.BLACK, 0.0F);
+        quadWithBlend(x - w / 2f, y - h / 2f, w * 2f, h * 2f, Color.BLACK, 0f);
 
         sprite.setBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
         sprite.setAlphaMult(alpha * 0.75f);

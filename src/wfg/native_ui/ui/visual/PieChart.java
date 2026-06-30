@@ -121,7 +121,7 @@ public class PieChart extends CustomPanel implements
     
         { // Radial Highlight
             final float centerHighlightAlpha = 0.2f;
-            final float edgeAlpha = 0.0f;
+            final float edgeAlpha = 0f;
             final int segments = 56;
 
             GL11.glBegin(GL11.GL_TRIANGLE_FAN);

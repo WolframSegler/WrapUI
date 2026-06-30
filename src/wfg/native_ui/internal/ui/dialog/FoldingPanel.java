@@ -172,7 +172,7 @@ public class FoldingPanel extends CustomPanel {
             }
         }
 
-        if (fader.getBrightness() != 0.0F || !fader.isIdle()) {
+        if (fader.getBrightness() != 0f || !fader.isIdle()) {
             backgroundLayer.advance(delta);
             foregroundLayer.advance(delta);
             noiseRenderer.advance(delta);

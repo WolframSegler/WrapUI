@@ -29,7 +29,7 @@ A modal, fold-animated dialog panel with a built-in <em>holo</em> ({@link Foldin
 <p><strong>Important implementation notes</strong></p>
 <ul>
 <li><strong>Ownership:</strong> {@link DialogPanel#m_panel} is owned and positioned by {@link DialogPanel#holo}.
-Do <em>not</em> assign {@link DialogPanel#m_panel} to any other parent. Use {@link FoldingPanel#setNext(m_panel)} instead.</li>
+Do <em>not</em> assign {@link DialogPanel#m_panel} to any other parent. Use {@link FoldingPanel#setNext()} instead.</li>
 <li><strong>Buttons:</strong> Buttons map to integer options stored in {@link DialogPanel#buttons}.</li>
 </ul>
 

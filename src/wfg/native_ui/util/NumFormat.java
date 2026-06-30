@@ -69,29 +69,29 @@ public class NumFormat {
      * @return a <code>String</code> containing the formatted multiplier.
      */
     public static final String reverseEngNotate(float multiplier) {
-        if (multiplier <= 0 || multiplier >= 1.01) return Float.toString(multiplier);
+        if (multiplier <= 0f || multiplier >= 1.01f) return Float.toString(multiplier);
 
         float delta = multiplier - 1f;
 
         int exp = 0;
         while (Math.abs(delta) < 0.001 && exp < SMALL_SUFFIXES.length - 1) {
-            delta *= 1000.0;
+            delta *= 1000d;
             exp++;
         }
 
-        return String.format("1.%.0f%s", Math.round(delta * 10) / 10.0, SMALL_SUFFIXES[exp]);
+        return String.format("1.%f%s", Math.round(delta * 10) / 10d, SMALL_SUFFIXES[exp]);
     }
 
     public static final String formatAdaptivePrecision(double value) {
-        final double rounded = Math.round(value * 100.0) / 100.0;
+        final double rounded = Math.round(value * 100d) / 100d;
         final String formatted;
 
         // Check if it's basically 1.00 but not exactly
-        if (Math.abs(value - 1.0) < 0.01 && Math.abs(value - 1.0) > 1e-6) {
+        if (Math.abs(value - 1d) < 0.01d && Math.abs(value - 1d) > 1e-6) {
             formatted = "1.00..";
         }
         // Normal formatting: drop second decimal if it's 0
-        else if (Math.abs(rounded * 10 - Math.round(rounded * 10)) < 1e-9) {
+        else if (Math.abs(rounded * 10d - Math.round(rounded * 10d)) < 1e-9) {
             formatted = String.format("%.1f", rounded);
         } else {
             formatted = String.format("%.2f", rounded);
@@ -101,7 +101,7 @@ public class NumFormat {
     }
 
     public static String formatMagnitudeAware(double value) {
-        return Math.abs(value) < 1000.0
+        return Math.abs(value) < 1000d
             ? formatAdaptivePrecision(value)
             : engNotate((long) value);
     }

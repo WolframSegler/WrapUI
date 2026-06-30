@@ -580,7 +580,7 @@ public class Slider extends CustomPanel implements HasInputSnapshot {
 
             if (overflowWidth > 2f) { // Overflow Highlight Bar
                 overAmount = overflowWidth - 1f;
-                highlightIntensity = 0.0f;
+                highlightIntensity = 0f;
                 if (flashOnOverflowFader != null) {
                     highlightIntensity += flashOnOverflowFader.getBrightness();
                 }
@@ -598,13 +598,13 @@ public class Slider extends CustomPanel implements HasInputSnapshot {
             }
 
             RenderUtils.drawGradientSprite(lineTexture, x + progressBarWidth + 5.5f, y,
-                x + progressBarWidth + 5.5f, y + h, 1.0f, widgetColor, false,
+                x + progressBarWidth + 5.5f, y + h, 1f, widgetColor, false,
                 0.5f * alpha, alpha, 0.5f * alpha
             );
 
             if (userAdjustable && showAdjustableIndicator) { // User Adjustable Indicator
                 RenderUtils.drawGradientSprite(lineTexture, x + progressBarWidth + 5.5f, y,
-                    x + progressBarWidth + 5.5f, y + h, 2.0f, Color.white, false, 
+                    x + progressBarWidth + 5.5f, y + h, 2f, Color.white, false, 
                     0f, alpha, 0f
                 );
                 GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -763,7 +763,7 @@ public class Slider extends CustomPanel implements HasInputSnapshot {
         if (maxRange <= 0f) {
             overflowRatio = 10f;
         } else {
-            overflowRatio = (progressValue - minRange) / maxRange - 1.0f;
+            overflowRatio = (progressValue - minRange) / maxRange - 1f;
             if (overflowRatio < 0f) {
                 overflowRatio = 0f;
             }
