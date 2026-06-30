@@ -165,9 +165,9 @@ public final void process(final Player player) {
 
 // ✅ Good – long signature, clean break
 public final void buildUI(
-        final Container parent,
-        final String title,
-        final boolean resizable
+    final Container parent,
+    final String title,
+    final boolean resizable
 ) {
     ...
 }

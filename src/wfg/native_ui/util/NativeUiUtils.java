@@ -15,17 +15,10 @@ import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.PositionAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.ui.UIComponentAPI;
-import com.fs.starfarer.ui.impl.StandardTooltipV2;
-
-import rolflectionlib.util.RolfLectionUtil;
 
 public class NativeUiUtils {
     private NativeUiUtils() {}
     public static final int APICodexHeight = 28;
-
-    public static final Object expandLabelField = RolfLectionUtil.getFieldByName(
-        "expandLabel", StandardTooltipV2.class
-    );
 
     public static final void resetFlowLeft(final TooltipMakerAPI tooltip, float gap) {
         final float prevHeight = tooltip.getHeightSoFar();
