@@ -1,5 +1,8 @@
 package wfg.native_ui.ui.core;
 
+import java.util.List;
+
+import com.fs.starfarer.api.input.InputEventAPI;
 import com.fs.starfarer.api.ui.PositionAPI;
 import com.fs.starfarer.api.ui.UIComponentAPI;
 import com.fs.starfarer.api.ui.UIPanelAPI;
@@ -28,6 +31,10 @@ public interface UIElementAPI extends UIComponentAPI {
 
     default void reportAttached() {};
     default void reportDetached() {};
+
+    default void advanceImpl(float delta) {};
+    default void renderImpl(float alpha) {};
+    default void processInputImpl(List<InputEventAPI> events) {};
 
     void bringToFront();
     void sendToBack();

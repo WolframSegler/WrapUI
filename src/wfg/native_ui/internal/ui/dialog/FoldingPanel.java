@@ -15,13 +15,13 @@ import com.fs.starfarer.api.ui.UIComponentAPI;
 import com.fs.starfarer.api.ui.UIPanelAPI;
 import com.fs.starfarer.api.util.FaderUtil;
 
+import wfg.native_ui.internal.ui.core.UIContainer;
 import wfg.native_ui.internal.util.BorderRenderer;
 import wfg.native_ui.internal.util.NoiseRenderer;
 import wfg.native_ui.internal.util.PanelFillRenderer;
 import wfg.native_ui.ui.Attachments;
-import wfg.native_ui.ui.panel.CustomPanel;
 
-public class FoldingPanel extends CustomPanel {
+public class FoldingPanel extends UIContainer {
     private static final SpriteAPI SCANLINE_11 = settings.getSprite("ui", "scanline11");
     private static final SpriteAPI NOISE = settings.getSprite("ui", "noise");
 
@@ -39,15 +39,15 @@ public class FoldingPanel extends CustomPanel {
     private PanelFillRenderer backgroundLayer;
     private PanelFillRenderer foregroundLayer;
     private NoiseRenderer noiseRenderer;
-    private final FaderUtil fader = new FaderUtil(1f, 0f);
+    private final FaderUtil foldFader = new FaderUtil(1f, 0f);
     private int backgroundAlphaMin = 125;
     private int backgroundAlphaMax = 175;
 
-    public FoldingPanel(UIPanelAPI parent, int width, int height, String borderPrefix,
-        int borderThickness
+    public FoldingPanel(UIPanelAPI parent, float width, float height, String borderPrefix,
+        float borderThickness
     ) {
-        super(parent, width + (borderThickness + opad)*2, height + (borderThickness + opad)*2);
-        m_parent.addComponent(m_panel);
+        super(width + (borderThickness + opad)*2, height + (borderThickness + opad)*2);
+        parent.addComponent(this);
 
         this.borderThickness = borderThickness;
         innerOffset = borderThickness + opad;
@@ -57,15 +57,15 @@ public class FoldingPanel extends CustomPanel {
         noiseRenderer.fadeOut(0.4f);
     }
 
-    public FoldingPanel(int width, int height, String borderPrefix, int borderThickness) {
+    public FoldingPanel(float width, float height, String borderPrefix, float borderThickness) {
         this(Attachments.getScreenPanel(), width, height, borderPrefix, borderThickness);
     }
 
-    public FoldingPanel(int width, int height, String borderPrefix) {
+    public FoldingPanel(float width, float height, String borderPrefix) {
         this(width, height, borderPrefix, 7);
     }
 
-    public FoldingPanel(int width, int height) {
+    public FoldingPanel(float width, float height) {
         this(width, height, UI_BORDER_1, 7);
     }
 
@@ -74,7 +74,7 @@ public class FoldingPanel extends CustomPanel {
     }
 
     public void setBorder(String prefix) {
-        borderRenderer = new BorderRenderer(prefix, false, pos.getWidth(), pos.getHeight());
+        borderRenderer = new BorderRenderer(prefix, false, getWidth(), getHeight());
     }
 
     public void setBackgroundAlpha(int min, int max) {
@@ -84,8 +84,8 @@ public class FoldingPanel extends CustomPanel {
     }
 
     private void initializeBackground() {
-        final float width = pos.getWidth() - borderThickness * 2f;
-        final float height = pos.getHeight() - borderThickness * 2f;
+        final float width = getWidth() - borderThickness * 2f;
+        final float height = getHeight() - borderThickness * 2f;
 
         backgroundLayer = new PanelFillRenderer(SCANLINE_11, width, height);
         backgroundLayer.setColors(
@@ -102,21 +102,21 @@ public class FoldingPanel extends CustomPanel {
     }
 
     public void foldOut(float dur) {
-        fader.setDurationIn(dur);
-        fader.fadeIn();
+        foldFader.setDurationIn(dur);
+        foldFader.fadeIn();
     }
 
     public void forceFoldIn() {
-        fader.forceOut();
+        foldFader.forceOut();
     }
 
     public void forceFoldOut() {
-        fader.forceIn();
+        foldFader.forceIn();
     }
 
     public void foldIn(float dur) {
-        fader.setDurationOut(dur);
-        fader.fadeOut();
+        foldFader.setDurationOut(dur);
+        foldFader.fadeOut();
     }
 
     public void setNext(UIComponentAPI comp) {
@@ -127,9 +127,9 @@ public class FoldingPanel extends CustomPanel {
         nextPanel = comp;
         final float w = getContentWidth();
         final float h = getContentHeight();
-        remove(currentPanel);
+        removePos(currentPanel);
         comp.getPosition().setSize(w, h);
-        addPositionOnly(comp).inBL(innerOffset, innerOffset);
+        addPos(comp).inBL(innerOffset, innerOffset);
         if (!transitionEnabled) {
             currentPanel = nextPanel;
             nextPanel = null;
@@ -138,7 +138,7 @@ public class FoldingPanel extends CustomPanel {
     }
 
     public PositionAPI setSize(float width, float height) {
-        pos.setSize(width, height);
+        setSize(width, height);
         initializeBackground();
 
         if (currentPanel != null) {
@@ -146,15 +146,15 @@ public class FoldingPanel extends CustomPanel {
                 getContentWidth(), getContentHeight()
             );
         }
-        return pos;
+        return mPos;
     }
 
     public float getContentWidth() {
-        return pos.getWidth() - innerOffset * 2f;
+        return getWidth() - innerOffset * 2f;
     }
 
     public float getContentHeight() {
-        return pos.getHeight() - innerOffset * 2f;
+        return getHeight() - innerOffset * 2f;
     }
 
     public void flickerNoise(float inDuration, float outDuration) {
@@ -162,8 +162,7 @@ public class FoldingPanel extends CustomPanel {
     }
 
     @Override
-    public void advance(float delta) {
-        super.advance(delta);
+    public void advanceImpl(float delta) {
         if (nextPanel != null && noiseRenderer.isMaxBrightness()) {
             currentPanel = nextPanel;
             nextPanel = null;
@@ -172,45 +171,43 @@ public class FoldingPanel extends CustomPanel {
             }
         }
 
-        if (fader.getBrightness() != 0f || !fader.isIdle()) {
+        if (foldFader.getBrightness() != 0f || !foldFader.isIdle()) {
             backgroundLayer.advance(delta);
             foregroundLayer.advance(delta);
             noiseRenderer.advance(delta);
-            fader.advance(delta);
+            foldFader.advance(delta);
             if (currentPanel != null) {
                 currentPanel.advance(delta);
             }
         }
     }
 
-    public FaderUtil getFader() {
-        return fader;
+    public FaderUtil getFoldFader() {
+        return foldFader;
     }
 
     @Override
-    public void processInput(List<InputEventAPI> events) {
-        super.processInput(events);
-        if (currentPanel != null && fader.getBrightness() >= 0.75f && nextPanel == null) {
+    public void processInputImpl(List<InputEventAPI> events) {
+        if (currentPanel != null && foldFader.getBrightness() >= 0.75f && nextPanel == null) {
             currentPanel.processInput(events);
         }
     }
 
     @Override
-    public void renderBelow(float alpha) {
-        super.renderBelow(alpha);
-        if (fader.getBrightness() == 0f && fader.isIdle()) return;
+    public void renderBelowImpl(float alpha) {
+        if (foldFader.getBrightness() == 0f && foldFader.isIdle()) return;
 
-        final float brightness = fader.getBrightness() * alpha;
+        final float brightness = foldFader.getBrightness() * alpha;
         final float heightScale = Math.min(1f, brightness / 0.75f);
         final float transitionAlpha = Math.max(0f, (brightness - 0.75f) / 0.25f);
         final float borderAlphaFactor = Math.min(1f, brightness / 0.25f);
 
-        final float maxH = pos.getHeight();
-        final float w = pos.getWidth();
+        final float maxH = getHeight();
+        final float w = getWidth();
         final float h = (maxH * heightScale);
 
-        final float x = pos.getX();
-        final float y = (pos.getY() + (maxH - h) / 2f);
+        final float x = getX();
+        final float y = (getY() + (maxH - h) / 2f);
         final float bx = x + borderThickness;
         final float by = y + borderThickness;
 

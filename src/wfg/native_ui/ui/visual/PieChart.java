@@ -7,15 +7,13 @@ import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 
-import com.fs.starfarer.api.ui.UIPanelAPI;
-
+import wfg.native_ui.internal.ui.core.UIEntity;
 import wfg.native_ui.ui.component.NativeComponents;
 import wfg.native_ui.ui.component.TooltipComp;
 import wfg.native_ui.ui.core.UIElementFlags.HasTooltip;
-import wfg.native_ui.ui.panel.CustomPanel;
 import wfg.native_ui.util.RenderUtils;
 
-public class PieChart extends CustomPanel implements
+public class PieChart extends UIEntity implements
     HasTooltip
 {
     public final TooltipComp tooltip = comp().get(NativeComponents.TOOLTIP);
@@ -25,27 +23,27 @@ public class PieChart extends CustomPanel implements
 
     private final ArrayList<PieSlice> data;
 
-    public PieChart(UIPanelAPI parent, int width, int height, ArrayList<PieSlice> data) {
-        super(parent, width, height);
+    public PieChart(int width, int height, ArrayList<PieSlice> data) {
+        super(width, height);
 
         this.data = data;
     }
 
+    // TODO work on visuals more
     @Override
-    public void render(float alpha) {
-        super.render(alpha);
-        float startDeg = startDirection.direction;
-
-        final float radiusX = pos.getWidth() / 2f;
-        final float radiusY = pos.getHeight() / 2f;
-        final float cx = pos.getX() +radiusX;
-        final float cy = pos.getY() + radiusY;
+    public void renderImpl(float alpha) {
+        super.renderImpl(alpha);
 
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glEnable(GL11.GL_LINE_SMOOTH);
         GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+        
+        final float radiusX = getWidth() / 2f;
+        final float radiusY = getHeight() / 2f;
+        final float cx = getX() +radiusX;
+        final float cy = getY() + radiusY;
 
         final int haloRings = 64;
         final int haloSegments = 30;
@@ -53,6 +51,8 @@ public class PieChart extends CustomPanel implements
         final float minRadiusFactor = 0.9f;
 
         final int startRing = (int) Math.ceil(haloRings * minRadiusFactor);
+
+        float startDeg = startDirection.direction;
 
         for (int r = haloRings; r > startRing; r--) {
             final float ringRadiusX = (radiusX*1.1f) * r / haloRings;

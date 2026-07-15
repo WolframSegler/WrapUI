@@ -8,7 +8,7 @@ import wfg.native_ui.ui.component.HoverGlowComp;
 import wfg.native_ui.ui.component.InputSnapshotComp;
 import wfg.native_ui.ui.component.NativeComponents;
 import wfg.native_ui.ui.component.HoverGlowComp.GlowType;
-import wfg.native_ui.ui.panel.CustomPanel;
+import wfg.native_ui.ui.core.UIEntityAPI;
 import wfg.native_ui.util.RenderUtils;
 
 public final class HoverGlowSystem extends BaseSystem {
@@ -18,13 +18,13 @@ public final class HoverGlowSystem extends BaseSystem {
     private HoverGlowSystem() {}
 
     @Override
-    public void init(CustomPanel element) {
+    public void init(UIEntityAPI element) {
         element.comp().setIfNotPresent(NativeComponents.HOVER_GLOW, new HoverGlowComp());
         element.system().setIfNotPresent(NativeSystems.INPUT_SNAPSHOT, RawInputSystem.get(), element);
     }
 
     @Override
-    public final void advance(final CustomPanel element, float amount) {
+    public final void advance(final UIEntityAPI element, float amount) {
         final var comp = element.comp();
         final HoverGlowComp glow = comp.get(NativeComponents.HOVER_GLOW);
         final InputSnapshotComp input = comp.get(NativeComponents.INPUT_SNAPSHOT);
@@ -40,7 +40,7 @@ public final class HoverGlowSystem extends BaseSystem {
     }
 
     @Override
-    public final void renderBelow(final CustomPanel element, float alpha) {
+    public final void renderBelow(final UIEntityAPI element, float alpha) {
         final var comp = element.comp();
         final HoverGlowComp glow = comp.get(NativeComponents.HOVER_GLOW);
         final InputSnapshotComp input = comp.get(NativeComponents.INPUT_SNAPSHOT);
@@ -57,7 +57,7 @@ public final class HoverGlowSystem extends BaseSystem {
     }
 
     @Override
-    public final void render(final CustomPanel element, float alpha) {
+    public final void renderAbove(final UIEntityAPI element, float alpha) {
         final var comp = element.comp();
         final HoverGlowComp glow = comp.get(NativeComponents.HOVER_GLOW);
         final InputSnapshotComp input = comp.get(NativeComponents.INPUT_SNAPSHOT);
@@ -74,8 +74,8 @@ public final class HoverGlowSystem extends BaseSystem {
             if (sprite != null) {
                 RenderUtils.drawAdditiveGlow(
                     sprite,
-                    element.getPos().getX(),
-                    element.getPos().getY(),
+                    element.getX(),
+                    element.getY(),
                     glow.color,
                     glowAmount
                 );
@@ -89,7 +89,7 @@ public final class HoverGlowSystem extends BaseSystem {
     }
 
     private final void drawGlowLayer(float alpha, InputSnapshotComp input, HoverGlowComp glow,
-        CustomPanel element
+        UIEntityAPI element
     ) {
 
         final float effectiveAlpha = glow.overlayBrightness * glow.fader.getBrightness() * alpha;
@@ -99,7 +99,7 @@ public final class HoverGlowSystem extends BaseSystem {
         if (verts != null) {
             RenderUtils.drawPolygon(verts, glow.color, brightness);
         } else {
-            final PositionAPI pos = element.getPos();
+            final PositionAPI pos = element.pos();
             RenderUtils.drawQuad(
                 pos.getX() + glow.offset.x,
                 pos.getY() + glow.offset.y,

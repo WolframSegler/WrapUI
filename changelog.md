@@ -1,7 +1,11 @@
-Version 0.4.5-beta
+Version 0.5.0-beta
 - Removed delay field from TooltipComp.
 - Cleaned up DialogPanel content.
 - Fixed MultiSelect onSelected listener to pass the Button as a parameter.
+- Removed HeaderPanelWithTooltip as the tooltip is simply a Component.
+- SortableTable has a new field tooltipWidth.
+- Removed BasePanel and CustomPanel
+- Replaced all internals to use the new core elements.
 
 Version 0.4.4-beta
 - Not compatible with v0.4.3-beta

@@ -9,7 +9,6 @@ import com.fs.starfarer.api.graphics.SpriteAPI;
 import com.fs.starfarer.api.input.InputEventAPI;
 import com.fs.starfarer.api.ui.ButtonAPI.UICheckboxSize;
 import com.fs.starfarer.api.ui.Alignment;
-import com.fs.starfarer.api.ui.UIPanelAPI;
 
 import wfg.native_ui.ui.component.HoverGlowComp.GlowType;
 import wfg.native_ui.util.CallbackRunnable;
@@ -46,10 +45,10 @@ public class CheckboxButton extends Button {
      * @param checkboxSizeEnum the vanilla checkbox asset variant to use.
      * @param btnSize the rendered size of the checkbox in pixels. The underlying sprite will be stretched to this size.
      */
-    public CheckboxButton(UIPanelAPI parent, int btnSize, String text, String font,
+    public CheckboxButton(int btnSize, String text, String font,
         CallbackRunnable<Button> onClick, UICheckboxSize type, boolean useGlowTex
     ) {
-        super(parent, btnSize, btnSize, text, font, onClick);
+        super(btnSize, btnSize, text, font, onClick);
         bgAlpha = 0f;
         bgDisabledAlpha = 0f;
         glow.overlayBrightness = 0f;
@@ -78,19 +77,19 @@ public class CheckboxButton extends Button {
     }
 
     @Override
-    public void render(float alpha) {
+    public void renderImpl(float alpha) {
         final SpriteAPI toggleTex = isChecked() ? TOGGLE_ON : TOGGLE_OFF;
         glow.additiveSprite = toggleTex;
 
         toggleTex.setSize(checkboxSize, checkboxSize);
-        toggleTex.render(pos.getX(), pos.getY());
+        toggleTex.render(getX(), getY());
         
         super.render(alpha);
     }
 
     @Override
-    public void processInput(List<InputEventAPI> events) {
-        super.processInput(events);
+    public void processInputImpl(List<InputEventAPI> events) {
+        super.processInputImpl(events);
 
         for (InputEventAPI event : events) {
             if (event.isMouseMoveEvent() && !event.isConsumed()) {
@@ -118,6 +117,6 @@ public class CheckboxButton extends Button {
         setAlignment(Alignment.LMID);
         label.getPosition().setSize(lblSize, checkboxSize);
         label.getPosition().inBL(checkboxSize + hpad, 0f);
-        pos.setSize(checkboxSize + hpad + lblSize, checkboxSize);
+        setSize(checkboxSize + hpad + lblSize, checkboxSize);
     }
 }

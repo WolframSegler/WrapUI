@@ -1,7 +1,8 @@
 package wfg.native_ui.ui.core;
 
-// TODO make this extend UIComponentAPI with the new update
-public interface UIBuildableAPI {
+import com.fs.starfarer.api.ui.UIComponentAPI;
+
+public interface UIBuildableAPI extends UIComponentAPI {
 
     /**
      * Called whenever the panel needs to build or rebuild its child elements.

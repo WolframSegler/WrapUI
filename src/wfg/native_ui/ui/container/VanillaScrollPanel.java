@@ -14,12 +14,13 @@ import com.fs.graphics.util.Fader;
 import com.fs.starfarer.api.input.InputEventAPI;
 import com.fs.starfarer.api.ui.PositionAPI;
 import com.fs.starfarer.api.ui.UIComponentAPI;
-import com.fs.starfarer.api.ui.UIPanelAPI;
 import com.fs.starfarer.api.util.FaderUtil;
 import com.fs.starfarer.ui.O0Oo;
 
 import rolflectionlib.util.RolfLectionUtil;
-import wfg.native_ui.ui.panel.CustomPanel;
+import wfg.native_ui.internal.ui.core.UIContainer;
+import wfg.native_ui.internal.ui.core.UIElement;
+import wfg.native_ui.ui.MethodFields;
 import wfg.native_ui.ui.visual.GridRenderer;
 import wfg.native_ui.util.Arithmetic;
 import wfg.native_ui.util.NativeUiUtils;
@@ -27,7 +28,7 @@ import wfg.native_ui.util.RenderUtils;
 import wfg.native_ui.util.NativeUiUtils.Rect;
 
 /** Not complete yet!!! */
-public class VanillaScrollPanel extends CustomPanel {
+public class VanillaScrollPanel extends UIContainer {
     private static final Color TRANSPARENT_BLACK = new Color(0, 0, 0, 0);
     private static final float BAR_PAD = 6f;
 
@@ -52,7 +53,7 @@ public class VanillaScrollPanel extends CustomPanel {
     private FaderUtil bottomFader = new FaderUtil(0f, 0.1f, 0.1f);
 
     private final ContentContainer contentContainer = new ContentContainer();
-    private UIPanelAPI overlayContainer;
+    private UIElement overlayContainer;
     private GridRenderer gridRenderer = null;
 
     // UNKNOWNS
@@ -71,20 +72,12 @@ public class VanillaScrollPanel extends CustomPanel {
     private FaderUtil someFader4 = new FaderUtil(0f, 0.1f, 0.1f);
     private FaderUtil someFader5 = new FaderUtil(0f, 0.1f, 0.1f);
     
-    public VanillaScrollPanel(UIPanelAPI parent, int width, int height) {
-        super(parent, width, height);
+    public VanillaScrollPanel(int width, int height) {
+        super(width, height);
 
         super.add(contentContainer).inTL(0f, 0f);
-        overlayContainer = new OverlayPanel().getPanel();
+        overlayContainer = new OverlayPanel();
         super.add(overlayContainer);
-    }
-
-    public void addToOverlay(UIComponentAPI comp) {
-        overlayContainer.addComponent(comp);
-    }
-
-    public void removeFromOverlay(UIComponentAPI comp) {
-        overlayContainer.removeComponent(comp);
     }
 
     public ContentContainer getContentContainer() {
@@ -112,17 +105,17 @@ public class VanillaScrollPanel extends CustomPanel {
 
     // TODO fix later
     public void processScrollInputOnly(List<InputEventAPI> events, boolean var2) {
-        final float cw = contentContainer.getPos().getWidth();
-        final float ch = contentContainer.getPos().getHeight();
-        final float pw = pos.getWidth();
-        final float ph = pos.getHeight();
+        final float cw = contentContainer.pos().getWidth();
+        final float ch = contentContainer.pos().getHeight();
+        final float pw = getWidth();
+        final float ph = getHeight();
 
         for (InputEventAPI event : events) {
             if (event.isConsumed()) continue;
             
-            if (event.isMouseEvent() && pos.containsEvent(event)) someFader1.fadeIn();
+            if (event.isMouseEvent() && mPos.containsEvent(event)) someFader1.fadeIn();
 
-            if (useMouseWheel && event.isMouseScrollEvent() && pos.containsEvent(event)) {
+            if (useMouseWheel && event.isMouseScrollEvent() && mPos.containsEvent(event)) {
                 if (ph >= ch && offsetY == 0f) continue;
 
                 float var23 = -100f;
@@ -145,9 +138,10 @@ public class VanillaScrollPanel extends CustomPanel {
                 }
 
                 contentContainer.setOffset(offsetX, offsetY);
-                RolfLectionUtil.invokeMethodDirectly(posSetWithSortRecursiveMethod, pos, false);
-                posRecompute();
-                RolfLectionUtil.invokeMethodDirectly(posSetWithSortRecursiveMethod, pos, true);
+                // TODO after update use public methods to set this
+                RolfLectionUtil.invokeMethodDirectly(posSetWithSortRecursiveMethod, mPos, false);
+                MethodFields.recomputePos(mPos);
+                RolfLectionUtil.invokeMethodDirectly(posSetWithSortRecursiveMethod, mPos, true);
                 event.consume();
                 continue;
             
@@ -180,7 +174,7 @@ public class VanillaScrollPanel extends CustomPanel {
             boolean someLocalBool = false;
 
             if (var11 && !someBool1 && !someBool3 && !someBool2 && eff != null && eff.containsEvent(event) && (var15 == null || !var15.containsEvent(event))) {
-                final float ngp = (Mouse.getY()/uiScale - pos.getY()) / ph;
+                final float ngp = (Mouse.getY()/uiScale - getY()) / ph;
                 offsetY = Math.max(0f, (1f - ((ngp * ph + var14 / 2f) / ph)) * ch);
 
                 if (ph > ch) {
@@ -190,9 +184,10 @@ public class VanillaScrollPanel extends CustomPanel {
                 }
 
                 contentContainer.forceOffset(offsetX, offsetY);
-                RolfLectionUtil.invokeMethodDirectly(posSetWithSortRecursiveMethod, pos, false);
-                posRecompute();
-                RolfLectionUtil.invokeMethodDirectly(posSetWithSortRecursiveMethod, pos, true);
+                // TODO after update use public methods to set this
+                RolfLectionUtil.invokeMethodDirectly(posSetWithSortRecursiveMethod, mPos, false);
+                MethodFields.recomputePos(mPos);
+                RolfLectionUtil.invokeMethodDirectly(posSetWithSortRecursiveMethod, mPos, true);
                 someLocalBool = true;
             }
 
@@ -219,9 +214,10 @@ public class VanillaScrollPanel extends CustomPanel {
                         }
 
                         contentContainer.forceOffset(offsetX, offsetY);
-                        RolfLectionUtil.invokeMethodDirectly(posSetWithSortRecursiveMethod, pos, false);
-                        posRecompute();
-                        RolfLectionUtil.invokeMethodDirectly(posSetWithSortRecursiveMethod, pos, true);
+                        // TODO after update use public methods to set this
+                        RolfLectionUtil.invokeMethodDirectly(posSetWithSortRecursiveMethod, mPos, false);
+                        MethodFields.recomputePos(mPos);
+                        RolfLectionUtil.invokeMethodDirectly(posSetWithSortRecursiveMethod, mPos, true);
                         event.consume();
                     }
                 } else {
@@ -252,7 +248,7 @@ public class VanillaScrollPanel extends CustomPanel {
 
                     someLocalBool = false;
                     if (var11 && !someBool1 && !someBool3 && !someBool2 && uzn != null && uzn.containsEvent(event) && (hitRect == null || !hitRect.containsEvent(event))) {
-                        final float mfc = (Mouse.getX()/uiScale - pos.getX()) / pw;
+                        final float mfc = (Mouse.getX()/uiScale - getX()) / pw;
                         offsetX = ((mfc * pw - var13 / 2f) / pw) * cw;
                         offsetX *= -1f;
                         if (offsetX > 0f) {
@@ -266,9 +262,10 @@ public class VanillaScrollPanel extends CustomPanel {
                         }
 
                         contentContainer.forceOffset(offsetX, offsetY);
-                        RolfLectionUtil.invokeMethodDirectly(posSetWithSortRecursiveMethod, pos, false);
-                        posRecompute();
-                        RolfLectionUtil.invokeMethodDirectly(posSetWithSortRecursiveMethod, pos, true);
+                        // TODO after update use public methods to set this
+                        RolfLectionUtil.invokeMethodDirectly(posSetWithSortRecursiveMethod, mPos, false);
+                        MethodFields.recomputePos(mPos);
+                        RolfLectionUtil.invokeMethodDirectly(posSetWithSortRecursiveMethod, mPos, true);
                         someLocalBool = true;
                     }
 
@@ -295,9 +292,10 @@ public class VanillaScrollPanel extends CustomPanel {
                             }
 
                             contentContainer.forceOffset(offsetX, offsetY);
-                            RolfLectionUtil.invokeMethodDirectly(posSetWithSortRecursiveMethod, pos, false);
-                            posRecompute();
-                            RolfLectionUtil.invokeMethodDirectly(posSetWithSortRecursiveMethod, pos, true);
+                            // TODO after update use public methods to set this
+                            RolfLectionUtil.invokeMethodDirectly(posSetWithSortRecursiveMethod, mPos, false);
+                            MethodFields.recomputePos(mPos);
+                            RolfLectionUtil.invokeMethodDirectly(posSetWithSortRecursiveMethod, mPos, true);
                             event.consume();
                         }
                         } else {
@@ -313,7 +311,7 @@ public class VanillaScrollPanel extends CustomPanel {
                         mouseDown = false;
                         }
 
-                        if (mouseDown && pos.containsEvent(event) && O0Oo.Ó00000() == null) {
+                        if (mouseDown && mPos.containsEvent(event) && O0Oo.Ó00000() == null) {
                         // someEvent1 = event.clone();
                         event.consume();
                         someBool1 = true;
@@ -382,9 +380,10 @@ public class VanillaScrollPanel extends CustomPanel {
                             }
 
                             contentContainer.forceOffset(offsetX, offsetY);
-                            RolfLectionUtil.invokeMethodDirectly(posSetWithSortRecursiveMethod, pos, false);
-                            posRecompute();
-                            RolfLectionUtil.invokeMethodDirectly(posSetWithSortRecursiveMethod, pos, true);
+                            // TODO after update use public methods to set this
+                            RolfLectionUtil.invokeMethodDirectly(posSetWithSortRecursiveMethod, mPos, false);
+                            MethodFields.recomputePos(mPos);
+                            RolfLectionUtil.invokeMethodDirectly(posSetWithSortRecursiveMethod, mPos, true);
                             event.consume();
                         }
                         }
@@ -404,16 +403,15 @@ public class VanillaScrollPanel extends CustomPanel {
         contentContainer.forceOffset(offsetX, offset);
     }
 
-    // TODO with the new update make this override the base processInput method
     @Override
-    public void processInput(List<InputEventAPI> events) {
+    public void processInputImpl(List<InputEventAPI> events) {
         someFader3.fadeOut();
         someFader2.fadeOut();
         processScrollInputOnly(events, false);
         if (!someBool1) {
             final List<InputEventAPI> remainingEvents = new ArrayList<>();
             for (InputEventAPI event : events) {
-                if (event.isConsumed() || event.isMouseEvent() && !event.isMouseMoveEvent() && !pos.containsEvent(event)) continue;
+                if (event.isConsumed() || event.isMouseEvent() && !event.isMouseMoveEvent() && !mPos.containsEvent(event)) continue;
                 remainingEvents.add(event);
             }
             super.processInput(remainingEvents);
@@ -429,8 +427,8 @@ public class VanillaScrollPanel extends CustomPanel {
     }
 
     @Override
-    public void advance(float delta) {
-        super.advance(delta);
+    public void advanceImpl(float delta) {
+        super.advanceImpl(delta);
         someFader1.advance(delta);
         if (!someBool2 && !someBool3 && !someBool1) {
             someFader1.fadeOut();
@@ -445,7 +443,7 @@ public class VanillaScrollPanel extends CustomPanel {
         }
 
         final float bottomShadow = Math.min(shadowHeight,
-            contentContainer.getPos().getHeight() - pos.getHeight() - yOff
+            contentContainer.pos().getHeight() - getHeight() - yOff
         );
         if (bottomShadow > 0f) {
             bottomFader.fadeIn();
@@ -462,8 +460,8 @@ public class VanillaScrollPanel extends CustomPanel {
     }
 
     public void scrollToBottom() {
-        final float outerH = pos.getHeight();
-        final float contentH = contentContainer.getPos().getHeight();
+        final float outerH = getHeight();
+        final float contentH = contentContainer.pos().getHeight();
         offsetX = contentContainer.getXOffset();
         offsetY = contentH - outerH;
         if (outerH > contentH) offsetY = 0f;
@@ -472,8 +470,8 @@ public class VanillaScrollPanel extends CustomPanel {
     }
 
     public void scrollToY(float y) {
-        final float outerH = pos.getHeight();
-        final float contentH = contentContainer.getPos().getHeight();
+        final float outerH = getHeight();
+        final float contentH = contentContainer.pos().getHeight();
         offsetX = contentContainer.getXOffset();
         offsetY = y;
         if (outerH > contentH) {
@@ -495,30 +493,29 @@ public class VanillaScrollPanel extends CustomPanel {
         gridRenderer.setCols(f3);
     }
 
-    // TODO with the new update make this override the base render method
     @Override
-    public void render(float alpha) {
-        GL11.glScissor((int)pos.getX(), (int)pos.getY(), (int)pos.getWidth(), (int)pos.getHeight());
+    public void renderImpl(float alpha) {
+        GL11.glScissor((int) getX(), (int) getY(), (int) getWidth(), (int) getHeight());
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
 
         if (gridRenderer != null) {
-            final PositionAPI contPos = contentContainer.getPos();
+            final PositionAPI contPos = contentContainer.pos();
             gridRenderer.render(contPos.getX(), contPos.getY() - 1f, contPos.getWidth(), contPos.getHeight(), alpha * 0.5f);
         }
 
-        super.render(alpha);
+        super.renderImpl(alpha);
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
     }
 
     private final void renderEdgeFadeShadows(float alpha) {
         if (alpha <= 0f || doNotRenderShadow) return;
 
-        final float px = pos.getX();
-        final float py = pos.getY();
-        final float pw = pos.getWidth();
-        final float ph = pos.getHeight();
+        final float px = getX();
+        final float py = getY();
+        final float pw = getWidth();
+        final float ph = getHeight();
 
-        final float bottomShadowH = Math.min(shadowHeight, contentContainer.getPos().getHeight() - (ph + contentContainer.getYOffset()));
+        final float bottomShadowH = Math.min(shadowHeight, contentContainer.pos().getHeight() - (ph + contentContainer.getYOffset()));
         final float topShadowH = Math.min(shadowHeight, contentContainer.getYOffset());
 
         GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -570,14 +567,12 @@ public class VanillaScrollPanel extends CustomPanel {
     }
 
     private void renderScrollbar(float alpha) {
-        if (alpha <= 0f) return;
-
-        final float px = pos.getX();
-        final float py = pos.getY();
-        final float pw = pos.getWidth();
-        final float ph = pos.getHeight();
-        final float cw = contentContainer.getPos().getWidth();
-        final float ch = contentContainer.getPos().getHeight();
+        final float px = getX();
+        final float py = getY();
+        final float pw = getWidth();
+        final float ph = getHeight();
+        final float cw = contentContainer.pos().getWidth();
+        final float ch = contentContainer.pos().getHeight();
         
         final Color barColor = NativeUiUtils.setAlpha(scrollWidgetColor, 0.66f);
         final float thumbH = ch <= 0f ? ph : ph * ph / ch;
@@ -681,58 +676,58 @@ public class VanillaScrollPanel extends CustomPanel {
     }
 
     private final Rect getVerticalThumbHitRect() {
-        final float ch = contentContainer.getPos().getHeight();
-        final float ph = pos.getHeight();
+        final float ch = contentContainer.pos().getHeight();
+        final float ph = getHeight();
 
         final float barThickness = 4f;
         final float thumbH = ph * ph / ch;
 
         if (thumbH < ph) {
-            final float rectX = isLeftScrollbar ? 5f : pos.getWidth() - barThickness;
+            final float rectX = isLeftScrollbar ? 5f : getWidth() - barThickness;
             final float rectY = ph - (contentContainer.getYOffset() / ch) * ph - thumbH;
 
-            return new Rect(pos.getX() + rectX - BAR_PAD, pos.getY() + rectY, barThickness + BAR_PAD * 2f, thumbH);
+            return new Rect(getX() + rectX - BAR_PAD, getY() + rectY, barThickness + BAR_PAD * 2f, thumbH);
         }
         return null;
     }
 
     private final Rect getVerticalTrackHitRect() {
-        final float ch = contentContainer.getPos().getHeight();
-        final float ph = pos.getHeight();
+        final float ch = contentContainer.pos().getHeight();
+        final float ph = getHeight();
 
         final float barThickness = 4f;
         final float thumbH = ph * ph / ch;
 
         if (thumbH < ph) {
-            final float rectX = isLeftScrollbar ? 5f : pos.getWidth() - barThickness;
+            final float rectX = isLeftScrollbar ? 5f : getWidth() - barThickness;
 
-            return new Rect(pos.getX() + rectX - BAR_PAD, pos.getY(), barThickness + BAR_PAD * 2f, ph);
+            return new Rect(getX() + rectX - BAR_PAD, getY(), barThickness + BAR_PAD * 2f, ph);
         }
         return null;
     }
 
     private final Rect getHorizontalThumbHitRect() {
-        final float panelW = pos.getWidth();
-        final float contentW = contentContainer.getPos().getWidth();
+        final float panelW = getWidth();
+        final float contentW = contentContainer.pos().getWidth();
 
         final float barThickness = 4f;
         final float thumbW = panelW * panelW / contentW;
 
         if (thumbW < panelW) {
             final float localThumbX = -contentContainer.getXOffset() * panelW / contentW;
-            return new Rect(pos.getX() + localThumbX, pos.getY(), thumbW, barThickness);
+            return new Rect(getX() + localThumbX, getY(), thumbW, barThickness);
         }
         return null;
     }
 
     private final Rect getHorizontalTrackHitRect() {
-        final float pw = pos.getWidth();
-        final float cw = contentContainer.getPos().getWidth();
+        final float pw = getWidth();
+        final float cw = contentContainer.pos().getWidth();
         final float barThickness = 4f;
 
         final float thumbW = pw * pw / cw;
         if (thumbW < pw) {
-            return new Rect(pos.getX(), pos.getY(), pw, barThickness);
+            return new Rect(getX(), getY(), pw, barThickness);
         }
         return null;
     }
@@ -741,25 +736,25 @@ public class VanillaScrollPanel extends CustomPanel {
         offsetY = 0f;
         offsetX = 0f;
         contentContainer.forceOffset(offsetX, offsetY);
-        posRecompute();
+        MethodFields.recomputePos(mPos);
     }
 
     public void setOffset(float f2, float f3) {
         offsetX = f2;
         offsetY = f3;
         contentContainer.forceOffset(offsetX, offsetY);
-        posRecompute();
+        MethodFields.recomputePos(mPos);
     }
 
     public void clampOffset() {
-        final PositionAPI contPos = contentContainer.getPos();
-        final float pw = pos.getWidth();
-        final float ph = pos.getHeight();
+        final PositionAPI contPos = contentContainer.pos();
+        final float pw = getWidth();
+        final float ph = getHeight();
         
-        if (pw * pw / contPos.getWidth() >= pos.getWidth()) {
+        if (pw * pw / contPos.getWidth() >= getWidth()) {
             offsetX = 0f;
         }
-        if (ph * ph / contPos.getHeight() >= pos.getHeight()) {
+        if (ph * ph / contPos.getHeight() >= getHeight()) {
             offsetY = 0f;
         }
         setOffset(offsetX, offsetY);
@@ -783,9 +778,9 @@ public class VanillaScrollPanel extends CustomPanel {
 
     public final void ensureVisible(UIComponentAPI comp) {
         final PositionAPI compPos = comp.getPosition();
-        final float pad = Math.min(visibilityPad, (pos.getHeight() - compPos.getHeight() - 20f) / 2f);
-        final float pTop = pos.getY() + pos.getHeight();
-        final float pBot = pos.getY();
+        final float pad = Math.min(visibilityPad, (getHeight() - compPos.getHeight() - 20f) / 2f);
+        final float pTop = getY() + getHeight();
+        final float pBot = getY();
         final float cTop = compPos.getY() + compPos.getHeight() + pad;
         final float cBot = compPos.getY() - pad;
 
@@ -811,36 +806,34 @@ public class VanillaScrollPanel extends CustomPanel {
     }
 
     public final void restoreVerticalScrollState() {
-        final float diff = contentContainer.getPos().getHeight() - pos.getHeight();
+        final float diff = contentContainer.pos().getHeight() - getHeight();
         if (diff > 0) {
             setOffset(0f, Arithmetic.clamp(verticalScrollState, 0f, diff));
         }
     }
 
-    public class ContentContainer extends CustomPanel {
+    public class ContentContainer extends UIContainer {
 
         private PositionAPI visibleArea = null;
         private float offsetX = 0f;
         private float offsetY = 0f;
 
         public ContentContainer() {
-            super(null, 0, 0);
+            super(0f, 0f);
         }
 
         @Override
-        public void render(float alpha) {
-            if (alpha <= 0f) return;
-
+        public void renderImpl(float alpha) {
             if (showScrollbars && !doNotRenderShadow && !isSimpleShadows) {
                 GL11.glColorMask(false, false, false, true);
                 GL11.glEnable(GL11.GL_BLEND);
                 GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ZERO);
-                RenderUtils.quadNoBlend(pos.getX(), pos.getY(), pos.getWidth(), pos.getHeight(), Color.BLACK, 0f);
+                RenderUtils.quadNoBlend(getX(), getY(), getWidth(), getHeight(), Color.BLACK, 0f);
                 GL11.glColorMask(true, true, true, true);
             }
 
             for (UIComponentAPI child : getChildrenCopy()) {
-                if (NativeUiUtils.intersects(child.getPosition(), VanillaScrollPanel.this.getPos())
+                if (NativeUiUtils.intersects(child.getPosition(), VanillaScrollPanel.this.pos())
                     && (visibleArea == null || NativeUiUtils.intersects(child.getPosition(), visibleArea))
                 ) {
                     child.render(alpha);
@@ -859,9 +852,8 @@ public class VanillaScrollPanel extends CustomPanel {
             visibleArea = area;
         }
 
-        // TODO replace with the UIComponentAPI processInput version so that the children don't get the events.
         @Override
-        public void processInput(List<InputEventAPI> events) {
+        public void processInputImpl(List<InputEventAPI> events) {
             if (eventSetXMethod == null || eventSetYMethod == null) {
                 final Class<?> eventClazz = events.get(0).getClass();
                 eventSetXMethod = RolfLectionUtil.getMethod("setX", eventClazz, 1);
@@ -869,12 +861,12 @@ public class VanillaScrollPanel extends CustomPanel {
             }
             
             for (UIComponentAPI child : getChildrenCopy()) {
-                if (!NativeUiUtils.intersects(child.getPosition(), VanillaScrollPanel.this.getPos())) continue;
+                if (!NativeUiUtils.intersects(child.getPosition(), VanillaScrollPanel.this.pos())) continue;
 
                 int mouseX = -1;
                 int mouseY = -1;
                 for (InputEventAPI event : events) {
-                    if (event.isConsumed() || !event.isMouseEvent() || VanillaScrollPanel.this.getPos().containsEvent(event)) continue;
+                    if (event.isConsumed() || !event.isMouseEvent() || VanillaScrollPanel.this.pos().containsEvent(event)) continue;
 
                     if (mouseX < 0) mouseX = event.getX();
                     if (mouseY < 0) mouseY = event.getY();
@@ -886,7 +878,7 @@ public class VanillaScrollPanel extends CustomPanel {
                 child.processInput(events);
 
                 for (InputEventAPI event : events) {
-                    if (event.isConsumed() || !event.isMouseEvent() || VanillaScrollPanel.this.getPos().containsEvent(event) || !event.isMouseEvent()) continue;
+                    if (event.isConsumed() || !event.isMouseEvent() || VanillaScrollPanel.this.pos().containsEvent(event) || !event.isMouseEvent()) continue;
 
                     RolfLectionUtil.invokeMethodDirectly(eventSetXMethod, event, mouseX);
                     RolfLectionUtil.invokeMethodDirectly(eventSetYMethod, event, mouseY);
@@ -900,8 +892,8 @@ public class VanillaScrollPanel extends CustomPanel {
         }
 
         @Override
-        public void advance(float delta) {
-            super.advance(delta);
+        public void advanceImpl(float delta) {
+            super.advanceImpl(delta);
 
             float currentXOffset = getXOffset();
             float currentYOffset = getYOffset();
@@ -936,14 +928,17 @@ public class VanillaScrollPanel extends CustomPanel {
         }
 
         public void updateOffset(float x, float y) {
-            RolfLectionUtil.invokeMethodDirectly(posSetWithSortRecursiveMethod, pos, false);
+            // TODO replace with public method after update
+            RolfLectionUtil.invokeMethodDirectly(posSetWithSortRecursiveMethod, mPos, false);
 
-            RolfLectionUtil.invokeMethodDirectly(posSetOffset, pos,
+            // TODO replace with public method after update
+            RolfLectionUtil.invokeMethodDirectly(posSetOffset, mPos,
                 (roundOffset ? (int) x : x),
                 (roundOffset ? (int) y : y)
             );
 
-            RolfLectionUtil.invokeMethodDirectly(posSetWithSortRecursiveMethod, pos, true);
+            // TODO replace with public method after update
+            RolfLectionUtil.invokeMethodDirectly(posSetWithSortRecursiveMethod, mPos, true);
         }
 
         public void forceOffset(float x, float y) {
@@ -952,23 +947,23 @@ public class VanillaScrollPanel extends CustomPanel {
         }
 
         public float getXOffset() {
-            return (float) RolfLectionUtil.invokeMethodDirectly(posGetOffsetX, pos);
+            // TODO replace with public method after update
+            return (float) RolfLectionUtil.invokeMethodDirectly(posGetOffsetX, mPos);
         }
 
         public float getYOffset() {
-            return (float) RolfLectionUtil.invokeMethodDirectly(posGetOffsetY, pos);
+            // TODO replace with public method after update
+            return (float) RolfLectionUtil.invokeMethodDirectly(posGetOffsetY, mPos);
         }
     }
 
-    public class OverlayPanel extends CustomPanel {
+    public class OverlayPanel extends UIElement {
         public OverlayPanel() {
-            super(null, 0, 0);
+            super(0f, 0f);
         }
 
         @Override
-        public void render(float alpha) {
-            super.render(alpha);
-
+        public void renderImpl(float alpha) {
             if (VanillaScrollPanel.this.showScrollbars) {
                 VanillaScrollPanel.this.renderEdgeFadeShadows(alpha);
 

@@ -7,13 +7,12 @@ import com.fs.graphics.util.GLListManager.GLListToken;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.Fonts;
 import com.fs.starfarer.api.ui.LabelAPI;
-import com.fs.starfarer.api.ui.UIPanelAPI;
 import com.fs.starfarer.api.util.FaderUtil;
 
+import wfg.native_ui.internal.ui.core.UIContainer;
 import wfg.native_ui.ui.component.InputSnapshotComp;
 import wfg.native_ui.ui.component.NativeComponents;
 import wfg.native_ui.ui.core.UIElementFlags.HasInputSnapshot;
-import wfg.native_ui.ui.panel.CustomPanel;
 import wfg.native_ui.util.Arithmetic;
 import wfg.native_ui.util.RenderUtils;
 
@@ -27,7 +26,7 @@ import java.util.function.Supplier;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
-public class Slider extends CustomPanel implements HasInputSnapshot {
+public class Slider extends UIContainer implements HasInputSnapshot {
     protected final InputSnapshotComp input = comp().get(NativeComponents.INPUT_SNAPSHOT);
 
     public float minRange = 0f;
@@ -52,10 +51,9 @@ public class Slider extends CustomPanel implements HasInputSnapshot {
     public int roundingIncrement = 1;
     public Color widgetColor = settings.getColor("widgetBorderColorBright");
     public boolean showAdjustableIndicator = false;
+
     /**
-     * Optional supplier that dynamically provides the label's text.
-     *
-     * Example:
+     * Optional supplier that dynamically provides the label's text. Example:
      * <pre>
      * slider.customText = () -> Misc.getDGSCredits(slider.getProgress());
      * </pre>
@@ -89,10 +87,8 @@ public class Slider extends CustomPanel implements HasInputSnapshot {
     private float cachedAlphaMult = -1f;
     private float cachedHighlightBrightness = -1f;
 
-    public Slider(UIPanelAPI parent, String initialText, float minRange, float maxRange, int width,
-        int height
-    ) {
-        super(parent, width, height);
+    public Slider(String initialText, float minRange, float maxRange, float width, float height) {
+        super(width, height);
 
         this.labelText = initialText;
         this.minRange = minRange;
@@ -206,7 +202,7 @@ public class Slider extends CustomPanel implements HasInputSnapshot {
     }
 
     public float getXCoordinateForProgressValue(float progress) {
-        final float w = pos.getWidth() - 8f;
+        final float w = getWidth() - 8f;
         return w * (cachedProgressValue - minRange) / (maxRange - minRange) +
                 w * (progress - minRange) / (maxRange - minRange) + 4.5f;
     }
@@ -236,8 +232,8 @@ public class Slider extends CustomPanel implements HasInputSnapshot {
     }
 
     @Override
-    public void renderBelow(float alpha) {
-        super.renderBelow(alpha);
+    public void renderBelowImpl(float alpha) {
+        super.renderBelowImpl(alpha);
         float roundedProgress = cachedProgressValue;
         if (roundBarValue) {
             roundedProgress = Math.round(roundedProgress / roundingIncrement) * roundingIncrement;
@@ -262,10 +258,10 @@ public class Slider extends CustomPanel implements HasInputSnapshot {
         shouldInterpolateCachedValues = true;
         final float x = 0;
         final float y = 0;
-        final float w = pos.getWidth();
-        final float h = pos.getHeight();
+        final float w = getWidth();
+        final float h = getHeight();
         GL11.glPushMatrix();
-        GL11.glTranslatef(pos.getX(), pos.getY(), 0f);
+        GL11.glTranslatef(getX(), getY(), 0f);
 
         if (!GLListManager.callList(GLListToken)) {
             GLListToken = GLListManager.beginList();
@@ -718,8 +714,8 @@ public class Slider extends CustomPanel implements HasInputSnapshot {
     }
 
     @Override
-    public void processInput(List<InputEventAPI> events) {
-        super.processInput(events);
+    public void processInputImpl(List<InputEventAPI> events) {
+        super.processInputImpl(events);
         if (!userAdjustable && barHighlightFader == null) return;
 
         if (barHighlightFader != null) {
@@ -740,8 +736,8 @@ public class Slider extends CustomPanel implements HasInputSnapshot {
     }
 
     @Override
-    public void advance(float delta) {
-        super.advance(delta);
+    public void advanceImpl(float delta) {
+        super.advanceImpl(delta);
         if (roundBarValue && roundingIncrement > 0) {
             cachedProgressValue = Math.round(cachedProgressValue / roundingIncrement) * roundingIncrement;
             progressValue = Math.round(progressValue / roundingIncrement) * roundingIncrement;
@@ -788,7 +784,7 @@ public class Slider extends CustomPanel implements HasInputSnapshot {
             scrollSpeed = 100f;
 
             // Compute interpolation scale based on the visible width vs the effective progress range
-            interpolationScale = pos.getWidth() / Math.max(progressValue - minRange, maxRange - minRange);
+            interpolationScale = getWidth() / Math.max(progressValue - minRange, maxRange - minRange);
 
             float effectiveRange = cachedMaxValue - minRange;
             if (cachedProgressValue - minRange > effectiveRange) {
@@ -798,7 +794,7 @@ public class Slider extends CustomPanel implements HasInputSnapshot {
                 effectiveRange = 1f;
             }
 
-            interpolationScale = pos.getWidth() / effectiveRange;
+            interpolationScale = getWidth() / effectiveRange;
 
             cachedProgressValue = Arithmetic.smoothApproach(
                 cachedProgressValue, progressValue,
@@ -908,9 +904,9 @@ public class Slider extends CustomPanel implements HasInputSnapshot {
         }
 
         final float offset = 6f;
-        final float maxBarWidth = pos.getWidth() - offset;
+        final float maxBarWidth = getWidth() - offset;
         final float minBarWidth = maxBarWidth * cachedMin / (cachedMaxValue - minRange);
-        final float relativeX = Arithmetic.clamp(mouseX - pos.getX() - offset, minBarWidth, maxBarWidth);
+        final float relativeX = Arithmetic.clamp(mouseX - getX() - offset, minBarWidth, maxBarWidth);
 
         float progressValue = relativeX / maxBarWidth * (maxRange - minRange) + minRange;
         if (clampCurrToMax && progressValue > maxValue) progressValue = maxValue;

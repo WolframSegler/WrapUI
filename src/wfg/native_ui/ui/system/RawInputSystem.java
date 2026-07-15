@@ -9,7 +9,7 @@ import com.fs.starfarer.api.ui.PositionAPI;
 
 import wfg.native_ui.ui.component.InputSnapshotComp;
 import wfg.native_ui.ui.component.NativeComponents;
-import wfg.native_ui.ui.panel.CustomPanel;
+import wfg.native_ui.ui.core.UIEntityAPI;
 
 public class RawInputSystem extends BaseSystem {
 
@@ -18,12 +18,12 @@ public class RawInputSystem extends BaseSystem {
     private RawInputSystem() {}
 
     @Override
-    public void init(CustomPanel element) {
+    public void init(UIEntityAPI element) {
         element.comp().setIfNotPresent(NativeComponents.INPUT_SNAPSHOT, new InputSnapshotComp());
     }
 
     @Override
-    public void processInput(final CustomPanel element, final List<InputEventAPI> events) {
+    public void processInput(final UIEntityAPI element, final List<InputEventAPI> events) {
         final InputSnapshotComp input = element.comp().get(NativeComponents.INPUT_SNAPSHOT);
 
         input.resetFrameFlags();
@@ -34,7 +34,7 @@ public class RawInputSystem extends BaseSystem {
             if (event.isConsumed()) continue;
             
             if (event.isMouseMoveEvent()) {
-                final PositionAPI pos = element.getPos();
+                final PositionAPI pos = element.pos();
                 final float x = pos.getX();
                 final float y = pos.getY();
                 final float w = pos.getWidth();

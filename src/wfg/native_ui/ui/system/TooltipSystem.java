@@ -14,7 +14,7 @@ import wfg.native_ui.internal.ui.core.UITooltip;
 import wfg.native_ui.ui.component.InputSnapshotComp;
 import wfg.native_ui.ui.component.NativeComponents;
 import wfg.native_ui.ui.component.TooltipComp;
-import wfg.native_ui.ui.panel.CustomPanel;
+import wfg.native_ui.ui.core.UIEntityAPI;
 
 public final class TooltipSystem extends BaseSystem {
 
@@ -23,21 +23,20 @@ public final class TooltipSystem extends BaseSystem {
     private TooltipSystem() {}
 
     @Override
-    public void init(CustomPanel element) {
+    public void init(UIEntityAPI element) {
         element.comp().setIfNotPresent(NativeComponents.TOOLTIP, new TooltipComp());
         element.system().setIfNotPresent(NativeSystems.INPUT_SNAPSHOT, RawInputSystem.get(), element);
     }
 
-    public static final CustomPanelAPI customPanel = settings.createCustom(pad, pad, null);
+    // TODO clean up this workaround by directly getting the scroll panel class.
     public static final Object scrollPanelConstr;
     public static final Object setContentSizeMethod;
     public static final Object setSizeMethod;
     public static final Object setMaxShadowHeightMethod;
     public static final Object setUseSimpleShadowsMethod;
 
-    private static final float DELAY = 0.3f; // TODO replace with SettingsAPI.getTooltipDelay()
-
     static {
+        final CustomPanelAPI customPanel = settings.createCustom(pad, pad, null);
         final TooltipMakerAPI tp = customPanel.createUIElement(1f, 1f, true);
         customPanel.addUIElement(tp);
         final Class<?> scrollClass = tp.getExternalScroller().getClass();
@@ -59,7 +58,7 @@ public final class TooltipSystem extends BaseSystem {
 
     // TODO fix bug causing tooltip to be visible even when its owner is invisible
     @Override
-    public final void advance(final CustomPanel element, float delta) {
+    public final void advance(final UIEntityAPI element, float delta) {
         final var comp = element.comp();
         final TooltipComp spec = comp.get(NativeComponents.TOOLTIP);
         final InputSnapshotComp input = comp.get(NativeComponents.INPUT_SNAPSHOT);
@@ -72,7 +71,7 @@ public final class TooltipSystem extends BaseSystem {
 
         if (spec.builder != null && input.hoveredLastFrame && !input.hasLMBClickedBefore) {
             spec.internal_hoverTime += delta;
-            if (spec.internal_hoverTime > DELAY) {
+            if (spec.internal_hoverTime > 0.3f) { // TODO replace with SettingsAPI.getTooltipDelay()
                 showTooltip(spec);
             }
         } else {
@@ -82,7 +81,7 @@ public final class TooltipSystem extends BaseSystem {
     }
 
     @Override
-    public void processInput(final CustomPanel element, final List<InputEventAPI> events) {
+    public void processInput(final UIEntityAPI element, final List<InputEventAPI> events) {
         for (InputEventAPI event : events) {
             if (event.isMouseScrollEvent()) {
                 final TooltipComp spec = element.comp().get(NativeComponents.TOOLTIP);

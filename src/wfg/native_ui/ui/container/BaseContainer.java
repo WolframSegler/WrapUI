@@ -1,20 +1,17 @@
 package wfg.native_ui.ui.container;
 
-import com.fs.starfarer.api.ui.UIPanelAPI;
-
+import wfg.native_ui.internal.ui.core.UIContainer;
 import wfg.native_ui.ui.component.BackgroundComp;
 import wfg.native_ui.ui.component.NativeComponents;
 import wfg.native_ui.ui.core.UIElementFlags.HasBackground;
-import wfg.native_ui.ui.panel.CustomPanel;
 
-// TODO make this inherit UIContainer
 /**
- * An empty implementation of {@link CustomPanel}
+ * An empty implementation of {@link UIContainer}
  */
-public class BaseContainer extends CustomPanel implements HasBackground {
+public class BaseContainer extends UIContainer implements HasBackground {
     public final BackgroundComp bg = comp().get(NativeComponents.BACKGROUND);
 
-    public BaseContainer(UIPanelAPI parent, int width, int height) {
-        super(parent, width, height);
+    public BaseContainer(float width, float height) {
+        super(width, height);
     }
 }

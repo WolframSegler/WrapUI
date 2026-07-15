@@ -15,8 +15,8 @@ import com.fs.starfarer.api.ui.Fonts;
 import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.ui.UIComponentAPI;
-import com.fs.starfarer.api.ui.UIPanelAPI;
 
+import wfg.native_ui.internal.ui.core.UIContainer;
 import wfg.native_ui.ui.ComponentFactory;
 import wfg.native_ui.ui.component.AudioFeedbackComp;
 import wfg.native_ui.ui.component.BackgroundComp;
@@ -35,16 +35,14 @@ import wfg.native_ui.ui.core.UIElementFlags.HasHoverGlow;
 import wfg.native_ui.ui.core.UIElementFlags.HasInteraction;
 import wfg.native_ui.ui.core.UIElementFlags.HasOutline;
 import wfg.native_ui.ui.core.UIElementFlags.HasTooltip;
-import wfg.native_ui.ui.panel.CustomPanel;
-import wfg.native_ui.ui.visual.SpritePanel;
-import wfg.native_ui.ui.visual.SpritePanel.Base;
+import wfg.native_ui.ui.visual.AbstractSpriteElement;
+import wfg.native_ui.ui.visual.AbstractSpriteElement.SpriteElement;
 import wfg.native_ui.util.NativeUiUtils;
 import wfg.native_ui.util.NativeUiUtils.AnchorType;
 
 /**
- * SortableTable is a customizable, sortable UI table component designed to display
- * tabular data within a custom panel environment. It extends {@link CustomPanel}
- * to integrate smoothly with the NativeUI framework.
+ * SortableTable is a customizable, sortable UI table element designed to display
+ * tabular data within a custom panel environment.
  * <p>
  * <b>This table supports:</b>
  * <ul>
@@ -56,11 +54,11 @@ import wfg.native_ui.util.NativeUiUtils.AnchorType;
  * <p>
  * <b>Accepted row cell types:</b>
  * <ul>
- *   <li>{@link Number} — displayed as a small-font label with optional color.</li>
- *   <li>{@link String} — displayed as a small-font label with optional color.</li>
- *   <li>{@link SpritePanel} — displayed as a sprite panel UI component.</li>
- *   <li>{@link UIComponentAPI} — displayed directly as a UI panel component.</li>
- *   <li>{@link LabelAPI} — displayed as a label UI component with optional color.</li>
+ *   <li>{@link Number} - displayed as a small-font label with optional color.</li>
+ *   <li>{@link String} - displayed as a small-font label with optional color.</li>
+ *   <li>{@link AbstractSpriteElement} - displayed as a sprite panel UI component.</li>
+ *   <li>{@link UIComponentAPI} - displayed directly as a UI panel component.</li>
+ *   <li>{@link LabelAPI} - displayed as a label UI component with optional color.</li>
  * </ul>
  * </p>
  * <b>Typical usage example:</b>
@@ -101,22 +99,21 @@ import wfg.native_ui.util.NativeUiUtils.AnchorType;
  * This component supports tooltips both for headers and rows via {@link TooltipBuilder}.
  * <p>
  */
-public class SortableTable extends CustomPanel implements
-    UIBuildableAPI, HasOutline
-{
-    private final static SpriteAPI sortIconPath = settings.getSprite("ui", "sortIcon");
+public class SortableTable extends UIContainer implements UIBuildableAPI, HasOutline {
+    private final static SpriteAPI SORT_ICON = settings.getSprite("ui", "sortIcon");
 
-    public final OutlineComp outline = comp().get(NativeComponents.OUTLINE);
-
-    private final List<ColumnManager> m_columns = new ArrayList<>();
-    private final List<TableRow> m_rows = new ArrayList<>();
+    private final List<ColumnManager> mColumns = new ArrayList<>();
+    private final List<TableRow> mRows = new ArrayList<>();
 
     private final int HEADER_HEIGHT;
     private final int ROW_HEIGHT;
 
+    public final OutlineComp outline = comp().get(NativeComponents.OUTLINE);
+
     public boolean showSortIcon = true;
     public boolean sortingEnabled = true;
     public int columnGap = 5;
+    public int tooltipWidth = 400;
 
     private int selectedSortColumnIndex = -1;
     private boolean ascending = true;
@@ -125,15 +122,15 @@ public class SortableTable extends CustomPanel implements
 
     public TableRow getPendingRow() { return pendingRow;}
     public TableRow getSelectedRow() { return m_selectedRow;}
-    public List<ColumnManager> getColumns() { return m_columns;}
-    public List<TableRow> getRows() { return m_rows;}
+    public List<ColumnManager> getColumns() { return mColumns;}
+    public List<TableRow> getRows() { return mRows;}
 
-    public SortableTable(UIPanelAPI parent, int width, int height) {
-        this(parent, width, height, 20, 28);
+    public SortableTable(float width, float height) {
+        this(width, height, 20, 28);
     }
 
-    public SortableTable(UIPanelAPI parent, int width, int height, int headerHeight, int rowHeight) {
-        super(parent, width, height);
+    public SortableTable(float width, float height, int headerHeight, int rowHeight) {
+        super(width, height);
         HEADER_HEIGHT = headerHeight;
         ROW_HEIGHT = rowHeight;
 
@@ -146,8 +143,8 @@ public class SortableTable extends CustomPanel implements
 
         // create columns
         int cumulativeXOffset = 0;
-        for (int i = 0; i < m_columns.size(); i++) {
-            final ColumnManager column = m_columns.get(i);
+        for (int i = 0; i < mColumns.size(); i++) {
+            final ColumnManager column = mColumns.get(i);
             if (column.isMerged && !column.isParent) continue;
 
             final int width;
@@ -156,31 +153,24 @@ public class SortableTable extends CustomPanel implements
                 int mergedW = 0;
                 int lastIndex = -1;
 
-                for (int j = 0; j < m_columns.size(); j++) {
-                    final ColumnManager col = m_columns.get(j);
+                for (int j = 0; j < mColumns.size(); j++) {
+                    final ColumnManager col = mColumns.get(j);
                     if (col.isMerged && col.mergeSetID == column.mergeSetID) {
                         mergedW += col.width; lastIndex = j;
                     }
                 }
 
                 width = mergedW;
-                padOffset = (lastIndex == m_columns.size() - 1) ? 0 : columnGap;
+                padOffset = (lastIndex == mColumns.size() - 1) ? 0 : columnGap;
 
             } else {
                 width = column.width;
-                padOffset = (i == m_columns.size() - 1) ? 0 : columnGap;
+                padOffset = (i == mColumns.size() - 1) ? 0 : columnGap;
             }
 
-            final HeaderPanel panel;
-            if (column.tooltip == null) {
-                panel = new HeaderPanel(m_panel, width - padOffset,
-                    HEADER_HEIGHT, column, i
-                );
-            } else {
-                panel = new HeaderPanelWithTooltip(m_panel, width - padOffset,
-                    HEADER_HEIGHT, column, i
-                );
-            }
+            final HeaderPanel panel = new HeaderPanel(width - padOffset,
+                HEADER_HEIGHT, column, i
+            );
             column.headerPanel = panel;
 
             add(panel).inTL(cumulativeXOffset, 0f);
@@ -190,23 +180,23 @@ public class SortableTable extends CustomPanel implements
 
         // create rows
         final TooltipMakerAPI tp = ComponentFactory.createTooltip(
-            pos.getWidth(), true
+            getWidth(), true
         );
 
         int cumulativeYOffset = 0;
-        for (TableRow row : m_rows) {
-            tp.addComponent(row.getPanel()).inTL(pad, cumulativeYOffset);
+        for (TableRow row : mRows) {
+            tp.addComponent(row).inTL(pad, cumulativeYOffset);
 
             cumulativeYOffset += ROW_HEIGHT;
         }
 
         tp.setHeightSoFar(cumulativeYOffset);
-        ComponentFactory.addTooltip(tp, pos.getHeight() - (HEADER_HEIGHT + pad),
-            true, m_panel
+        ComponentFactory.addTooltip(tp, getHeight() - (HEADER_HEIGHT + pad),
+            true, this
         ).inTL(0f, HEADER_HEIGHT + pad);
     }
 
-    private class HeaderPanel extends CustomPanel implements UIBuildableAPI,
+    public class HeaderPanel extends UIContainer implements UIBuildableAPI, HasTooltip,
         HasOutline, HasBackground, HasHoverGlow, HasAudioFeedback, HasInteraction
     {
         public final OutlineComp outline = comp().get(NativeComponents.OUTLINE);
@@ -214,13 +204,13 @@ public class SortableTable extends CustomPanel implements
         public final HoverGlowComp glow = comp().get(NativeComponents.HOVER_GLOW);
         public final AudioFeedbackComp audio = comp().get(NativeComponents.AUDIO_FEEDBACK);
         public final InteractionComp<HeaderPanel> interaction = comp().get(NativeComponents.INTERACTION);
+        public final TooltipComp tooltip = comp().get(NativeComponents.TOOLTIP);
 
         protected final ColumnManager column;
         public int listIndex = -1;
 
-
-        public HeaderPanel(UIPanelAPI parent, int width, int height, ColumnManager column, int listIndex) {
-            super(parent, width, height);
+        public HeaderPanel(int width, int height, ColumnManager column, int listIndex) {
+            super(width, height);
             this.column = column;
             this.listIndex = listIndex;
 
@@ -234,53 +224,48 @@ public class SortableTable extends CustomPanel implements
 
             outline.color = NativeUiUtils.adjustBrightness(new Color(grid.getRed(), grid.getGreen(), grid.getBlue()), 0.3f);
 
+            if (column.tooltip == null) {
+                tooltip.enabled = false;
+            } else {
+                tooltip.width = tooltipWidth;
+                if (column.tooltip instanceof TooltipBuilder builder) {
+                    tooltip.builder = builder;
+                } else if (column.tooltip instanceof String text) {
+                    tooltip.builder = (tooltip, expanded) -> {
+                        tooltip.addPara(text, pad);
+                    };
+                } else {
+                    throw new IllegalArgumentException(
+                        "Tooltip for header '" + column.title + "' has an illegal type: " +
+                        column.tooltip.getClass()
+                    );
+                }
+                tooltip.positioner = (tooltip, expanded) -> {
+                    NativeUiUtils.anchorPanelWithBounds(tooltip, this, AnchorType.TopLeft, 0);
+                };
+            }
+
             buildUI();
         }
 
         @Override
         public void buildUI() {
             final LabelAPI lbl = settings.createLabel(column.title, Fonts.ORBITRON_12);
-            lbl.autoSizeToWidth(pos.getWidth());
+            lbl.autoSizeToWidth(getWidth());
             lbl.setColor(base);
             lbl.setAlignment(Alignment.MID);
             final float lblHeight = lbl.computeTextHeight(lbl.getText());
 
-            add(lbl).inBL(0f, (pos.getHeight() - lblHeight) / 2f );
+            add(lbl).inBL(0f, (getHeight() - lblHeight) / 2f );
 
             if (showSortIcon) {
-                final Base sortIcon = new Base(
-                    m_panel, HEADER_HEIGHT - 3, HEADER_HEIGHT - 3,
-                    sortIconPath, base, null
+                final SpriteElement sortIcon = new SpriteElement(
+                    HEADER_HEIGHT - 3, HEADER_HEIGHT - 3,
+                    SORT_ICON, base, null
                 );
     
                 add(sortIcon).inTR(2, 1);
             }
-        }
-    }
-
-    public class HeaderPanelWithTooltip extends HeaderPanel implements HasTooltip {
-        public final TooltipComp tooltip = comp().get(NativeComponents.TOOLTIP);
-
-        public HeaderPanelWithTooltip(UIPanelAPI parent, int width, int height,
-            ColumnManager column, int listIndex) {
-            super(parent, width, height, column, listIndex);
-
-            tooltip.width = 300;
-            if (column.tooltip instanceof TooltipBuilder builder) {
-                tooltip.builder = builder;
-            } else if (column.tooltip instanceof String text) {
-                tooltip.builder = (tooltip, expanded) -> {
-                    tooltip.addPara(text, pad);
-                };
-            } else {
-                throw new IllegalArgumentException(
-                    "Tooltip for header '" + column.title + "' has an illegal type: " +
-                    column.tooltip.getClass()
-                );
-            }
-            tooltip.positioner = (tooltip, expanded) -> {
-                NativeUiUtils.anchorPanelWithBounds(tooltip, m_panel, AnchorType.TopLeft, 0);
-            };
         }
     }
 
@@ -306,7 +291,7 @@ public class SortableTable extends CustomPanel implements
         }
     }
 
-    public class TableRow extends CustomPanel implements UIBuildableAPI,
+    public class TableRow extends UIContainer implements UIBuildableAPI,
         HasTooltip, HasHoverGlow, HasOutline, HasAudioFeedback, HasInteraction
     {
         public final TooltipComp tooltip = comp().get(NativeComponents.TOOLTIP);
@@ -323,8 +308,8 @@ public class SortableTable extends CustomPanel implements
         protected final List<Object> m_sortValues = new ArrayList<>();
         protected final List<Color> m_useColor = new ArrayList<>();
 
-        public TableRow(UIPanelAPI parent, int width, int height) {
-            super(parent, width, height);
+        public TableRow(float width, float height) {
+            super(width, height);
             outline.enabled = false;
 
             glow.color = dark;
@@ -366,10 +351,10 @@ public class SortableTable extends CustomPanel implements
 
                     label.setColor(useColor != null ? useColor : textColor);
 
-                } else if (cell instanceof SpritePanel sprite) {
-                    comp = (UIComponentAPI) sprite.getPanel();
-                    compWidth = sprite.getPos().getWidth();
-                    compHeight = sprite.getPos().getHeight();
+                } else if (cell instanceof AbstractSpriteElement sprite) {
+                    comp = sprite;
+                    compWidth = sprite.pos().getWidth();
+                    compHeight = sprite.pos().getHeight();
 
                 } else if (cell instanceof LabelAPI label) {
                     comp = (UIComponentAPI) label;
@@ -446,7 +431,7 @@ public class SortableTable extends CustomPanel implements
      * {String, int, null, bool, bool, null}.
      */
     public void addHeaders(Object... headerDatas) {
-        m_columns.clear();
+        mColumns.clear();
         if (headerDatas.length % 6 != 0) {
             throw new IllegalArgumentException(
                 "headerDatas must be sextuplets of {String, int, String, Bool, Bool, int}"
@@ -480,7 +465,7 @@ public class SortableTable extends CustomPanel implements
             }
             final int mergeSetID = mergeSetIdObj != null ? ((Number) mergeSetIdObj).intValue() : -1;
 
-            m_columns.add(new ColumnManager(
+            mColumns.add(new ColumnManager(
                 (String) titleObj,
                 ((Number) widthObj).intValue(),
                 (Object) tooltipObj,
@@ -494,15 +479,11 @@ public class SortableTable extends CustomPanel implements
     /**
      * The call order of addCell must match the order of Columns.
      * Supports the following types:
-     * String, LabelAPI, {@link SpritePanel}, {@link UIComponentAPI}
+     * String, LabelAPI, {@link AbstractSpriteElement}, {@link UIComponentAPI}
      */
     public void addCell(Object cell, cellAlg alg, Object sortValue, Color textColor) {
         if (pendingRow == null) {
-            pendingRow = new TableRow(
-                m_panel,
-                (int) pos.getWidth() - pad*2,
-                ROW_HEIGHT
-            );
+            pendingRow = new TableRow(getWidth() - pad*2, ROW_HEIGHT);
         }
 
         pendingRow.addCell(cell, alg, sortValue, textColor);
@@ -525,7 +506,7 @@ public class SortableTable extends CustomPanel implements
             throw new IllegalStateException("Cannot push row: no cells have been added yet. "
                 + "Call addCell() before pushRow().");
 
-        } else if (pendingRow.m_cellData.size() != m_columns.size()) {
+        } else if (pendingRow.m_cellData.size() != mColumns.size()) {
             throw new IllegalStateException("Cannot push row: cell count mismatch. "
                 + "The number of cells must match the number of columns.");
 
@@ -538,7 +519,7 @@ public class SortableTable extends CustomPanel implements
         if (tp != null) pendingRow.tooltip.builder = tp;
         
         pendingRow.buildUI();
-        m_rows.add(pendingRow);
+        mRows.add(pendingRow);
 
         pendingRow = null;
     }
@@ -552,21 +533,21 @@ public class SortableTable extends CustomPanel implements
     }
 
     public void sortRows(int index, boolean ascending) {
-        if (m_rows.isEmpty()) return;
+        if (mRows.isEmpty()) return;
 
         this.ascending = ascending;
         selectedSortColumnIndex = index;
 
-        final Object value = m_rows.get(0).getSortValue(index);
+        final Object value = mRows.get(0).getSortValue(index);
 
         if (value instanceof String) {
-            Collections.sort(m_rows, stringComparator);
+            Collections.sort(mRows, stringComparator);
 
         } else if (value instanceof Integer ||
                 value instanceof Long ||
                 value instanceof Float ||
                 value instanceof Double) {
-            Collections.sort(m_rows, numberComparator);
+            Collections.sort(mRows, numberComparator);
 
         } else {
             throw new IllegalArgumentException(
@@ -597,8 +578,8 @@ public class SortableTable extends CustomPanel implements
 
     public TableRow selectLastRow() {
         TableRow target = null;
-        for (TableRow row : m_rows) {
-            boolean result = row == m_rows.get(m_rows.size() - 1);
+        for (TableRow row : mRows) {
+            boolean result = row == mRows.get(mRows.size() - 1);
             row.glow.persistent = result;
 
             if (result) {
@@ -610,7 +591,7 @@ public class SortableTable extends CustomPanel implements
     }
 
     public void selectRow(TableRow selectedRow) {
-        for (TableRow row : m_rows) {
+        for (TableRow row : mRows) {
             row.glow.persistent = row == selectedRow;
         }
     }

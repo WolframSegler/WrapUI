@@ -7,7 +7,7 @@ import com.fs.starfarer.api.input.InputEventAPI;
 import wfg.native_ui.ui.component.InputSnapshotComp;
 import wfg.native_ui.ui.component.InteractionComp;
 import wfg.native_ui.ui.component.NativeComponents;
-import wfg.native_ui.ui.panel.CustomPanel;
+import wfg.native_ui.ui.core.UIEntityAPI;
 
 public final class InteractionSystem extends BaseSystem {
 
@@ -16,14 +16,14 @@ public final class InteractionSystem extends BaseSystem {
     private InteractionSystem() {}
 
     @Override
-    public void init(CustomPanel element) {
+    public void init(UIEntityAPI element) {
         element.comp().setIfNotPresent(NativeComponents.INTERACTION, new InteractionComp<>());
         element.system().setIfNotPresent(NativeSystems.INPUT_SNAPSHOT, RawInputSystem.get(), element);
     }
 
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public void processInput(final CustomPanel element, List<InputEventAPI> events) {
+    public void processInput(final UIEntityAPI element, List<InputEventAPI> events) {
         final var comp = element.comp();
         final InteractionComp listen = comp.get(NativeComponents.INTERACTION);
         final InputSnapshotComp input = comp.get(NativeComponents.INPUT_SNAPSHOT);

@@ -6,24 +6,23 @@ import static wfg.native_ui.util.UIConstants.screenW;
 import java.util.List;
 
 import com.fs.starfarer.api.input.InputEventAPI;
-import com.fs.starfarer.api.ui.UIPanelAPI;
 
-import wfg.native_ui.ui.panel.CustomPanel;
+import wfg.native_ui.internal.ui.core.UIElement;
 
-public class ModalInterceptor extends CustomPanel {
+public class ModalInterceptor extends UIElement {
     final ModalDialog dialog;
 
-    public ModalInterceptor(UIPanelAPI parent, ModalDialog dialog) {
-        super(parent, screenW, screenH);
+    public ModalInterceptor(ModalDialog dialog) {
+        super(screenW, screenH);
         this.dialog = dialog;
     }
 
     @Override
-    public void processInput(List<InputEventAPI> events) {
+    public void processInputImpl(List<InputEventAPI> events) {
         for (InputEventAPI e : events) {
             if (e.isConsumed()) continue;
 
-            if (e.isLMBDownEvent() && !dialog.getPos().containsEvent(e)) {
+            if (e.isLMBDownEvent() && !dialog.pos().containsEvent(e)) {
                 dialog.outsideClickAbsorbed(e);
             }
 
@@ -32,11 +31,9 @@ public class ModalInterceptor extends CustomPanel {
     }
 
     @Override
-    public void advance(float delta) {
-        super.advance(delta);
-
+    public void advanceImpl(float delta) {
         if (dialog.isBeingDismissed() && !dialog.suspendEventInterception &&
             dialog.getFaderBrightness() < 0.5f
-        ) { m_parent.removeComponent(m_panel); }
+        ) { detach(); }
     }
 }

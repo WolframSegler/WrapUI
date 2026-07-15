@@ -2,16 +2,14 @@ package wfg.native_ui.ui.functional;
 
 import java.util.function.Supplier;
 
-import com.fs.starfarer.api.ui.UIPanelAPI;
-
 import wfg.native_ui.ui.container.DockPanel;
 
 public class DockButton<T extends DockPanel> extends Button {
     private T dock;
     private final Supplier<T> dockFactory;
 
-    public DockButton(UIPanelAPI parent, int width, int height, String text, String font, Supplier<T> dockFactory) {
-        super(parent, width, height, text, font, null);
+    public DockButton(int width, int height, String text, String font, Supplier<T> dockFactory) {
+        super(width, height, text, font, null);
         this.dockFactory = dockFactory;
         onClicked = btn -> {
             if (dock == null) createDock();

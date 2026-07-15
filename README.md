@@ -16,7 +16,7 @@ Composition-oriented UI framework with use of panels instead of custom plugins.
 - Carbon copy of the vanilla [`Slider`](src/wfg/native_ui/ui/widget/Slider.java) used in settings (the blue one).
 - [`SortableTable`](src/wfg/native_ui/ui/table/SortableTable.java) similar to `UITable` in functionality, avoiding the obfuscated vanilla table.
 - [`GridTable`](src/wfg/native_ui/ui/table/GridTable.java) stacks widgets in a grid with uniform gaps in-between.
-- [`SpritePanel`](src/wfg/native_ui/ui/visual/SpritePanel.java) with optional tooltip; essentially a `SpriteAPI` wrapper.
+- [`SpriteElement`](src/wfg/native_ui/ui/visual/AbstractSpriteElement.java) with optional tooltip; essentially a `SpriteAPI` wrapper.
 - [`ScrollPanel`](src/wfg/native_ui/ui/container/ScrollPanel.java) for vertical and horizontal scroll.
 - [`DialogPanel`](src/wfg/native_ui/ui/dialog/DialogPanel.java) is the vanilla Folding Dialog Panel but without the annoying vanilla API.
 - [`DockPanel`](src/wfg/native_ui/ui/container/DockPanel.java) docks to the specified side of the screen and can move in and out of the viewport.
@@ -24,7 +24,7 @@ Composition-oriented UI framework with use of panels instead of custom plugins.
 - [`IconValuePair`](src/wfg/native_ui/ui/visual/IconValuePair.java) standardizes the formatting of icon-value pairs. Also includes a variant with tooltip support.
 
 # Utils
-- [`CallbackRunnable`](src/wfg/native_ui/util/CallbackRunnable.java) enables access to the panel that called the runnable. Used extensively.
+- [`CallbackRunnable`](src/wfg/native_ui/util/CallbackRunnable.java) enables access to the element that called the runnable. Used extensively.
 - [`NativeUiUtils`](src/wfg/native_ui/util/NativeUiUtils.java) contains miscellaneous helper methods used throughout the framework.
 - [`NumFormat`](src/wfg/native_ui/util/NumFormat.java) formats very large or very small numbers.
 - [`RenderUtils`](src/wfg/native_ui/util/RenderUtils.java) provides helper methods for common OpenGL boilerplate.
@@ -32,12 +32,8 @@ Composition-oriented UI framework with use of panels instead of custom plugins.
 - [`ArrayMap`](src/wfg/native_ui/util/ArrayMap.java) is a lightweight ordered map backed by arrays, intended for cases where a HashMap would be unnecessary.
 
 # Usage
-- All panels that wish to use Systems must extend [`CustomPanel`](src/wfg/native_ui/ui/panel/CustomPanel.java).
-- To access the actual `CustomPanelAPI` instance, the getPanel() method can be used.
+- All panels that wish to use Systems must implement [`UIEntityAPI`](src/wfg/native_ui/ui/core/UIEntityAPI.java).
 
 # Possible Questions
-- Why is it called Wrap UI?
-    - Because [`CustomPanel`](src/wfg/native_ui/ui/panel/CustomPanel.java) is a wrapper for `CustomPanelAPI` and is itself not the actual panel.
-
 - How do I see the java documentation for classes?
     - Make sure to include the src file as a dependency. The JAR file does not contain the documentation.

@@ -10,7 +10,6 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.Fonts;
 import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.PositionAPI;
-import com.fs.starfarer.api.ui.UIPanelAPI;
 import com.fs.starfarer.api.util.FaderUtil;
 
 import wfg.native_ui.ui.component.HoverGlowComp;
@@ -27,10 +26,10 @@ import wfg.native_ui.util.RenderUtils;
  * UI button component with visual enhancements: label, tooltip, hover glow, and custom background.
  *
  * <ul>
- *   <li>Displays an optional text label; the label is rebuilt when text/font/shortcut changes (see {@link #recreateLabel}).</li>
+ *   <li>Displays an optional text label; the label is rebuilt when text/font/shortcut changes (see {@link #recreateLabel()}).</li>
  *   <li>Supports a persistent hover/glow state (driven by {@link #checked}, {@link #quickMode} and {@link #disabled}).</li>
- *   <li>Use {@link #setEnabled} to enable/disable the button. Disabled buttons use {@link #bgDisabledColor}/{@link #bgDisabledAlpha}.</li>
- *   <li>{@link #setShowTooltipWhileInactive} controls whether the tooltip is shown when the button is disabled.</li>
+ *   <li>Use {@link #setEnabled()} to enable/disable the button. Disabled buttons use {@link #bgDisabledColor}/{@link #bgDisabledAlpha}.</li>
+ *   <li>{@link #setShowTooltipWhileInactive()} controls whether the tooltip is shown when the button is disabled.</li>
  * </ul>
  */
 public class Button extends UIClickable<Button> implements UIBuildableAPI,
@@ -58,10 +57,10 @@ public class Button extends UIClickable<Button> implements UIBuildableAPI,
     /**
      * @param onClick if null, clicking toggles the checked state; otherwise, the Runnable handles it.
      */
-    public Button(UIPanelAPI parent, int width, int height, String text, String font,
+    public Button(float width, float height, String text, String font,
         CallbackRunnable<Button> onClick
     ) {
-        super(parent, width, height, onClick);
+        super(width, height, onClick);
 
         labelText = text == null ? "" : text;
         labelFont = font == null ? Fonts.ORBITRON_12 : font;
@@ -73,7 +72,7 @@ public class Button extends UIClickable<Button> implements UIBuildableAPI,
 
         final ShortcutHandler<Button> uiClickableCallback = interaction.onShortcutPressed;
         interaction.onShortcutPressed = (source, event) -> {
-            if (getPanel().getOpacity() > 0f) {
+            if (getOpacity() > 0f) {
                 glow.fader.forceIn();
                 label.flash(0.2f, 0.2f);
             }
@@ -90,7 +89,7 @@ public class Button extends UIClickable<Button> implements UIBuildableAPI,
             " [" + Keyboard.getKeyName(interaction.shortcut) + "]";
 
         newlbl.setText(labelText + shortcutTxt);
-        newlbl.getPosition().setSize(pos.getWidth(), pos.getHeight());
+        newlbl.getPosition().setSize(getWidth(), getHeight());
         newlbl.setColor(label.getColor());
         newlbl.setAlignment(alg);
         if (appendShortcutToText) {
@@ -110,7 +109,7 @@ public class Button extends UIClickable<Button> implements UIBuildableAPI,
             " [" + Keyboard.getKeyName(interaction.shortcut) + "]";
 
         label = settings.createLabel(labelText + shortcutTxt, labelFont);
-        label.getPosition().setSize(pos.getWidth(), pos.getHeight());
+        label.getPosition().setSize(getWidth(), getHeight());
         label.setColor(btnTxtColor);
         label.setAlignment(alg);
         if (appendShortcutToText) {
@@ -198,26 +197,24 @@ public class Button extends UIClickable<Button> implements UIBuildableAPI,
     }
 
     @Override
-    public void positionChanged(PositionAPI pos) {
-        if (m_panel == null) return;
-        
+    public PositionAPI setSize(float w, float h) {
+        setSize(w, h);
+
         glow.faderMaskVertices = getFaderMaskVertices();
         recreateLabel();
+
+        return mPos;
     }
 
     @Override
-    public void renderBelow(float alpha) {
-        super.renderBelow(alpha);
-        
-        final float x = pos.getX();
-        final float y = pos.getY();
-        final float w = pos.getWidth();
-        final float h = pos.getHeight();
+    public void renderBelowImpl(float alpha) {
+        final float w = getWidth();
+        final float h = getHeight();
         final float cutSize = computeCut((int) w, (int) h);
 
         final float[] cuts = cutStyle.toVector4();
         for (int i = 0; i < 4; i++) cuts[i] *= cutSize;
-        final float[] verts = RenderUtils.buildCornersVertices(x, y, w, h, cuts);
+        final float[] verts = RenderUtils.buildCornersVertices(getX(), getY(), w, h, cuts);
 
         RenderUtils.drawPolygon(verts, getBgColor(), alpha * getBgAlpha());
     }
@@ -253,18 +250,54 @@ public class Button extends UIClickable<Button> implements UIBuildableAPI,
         cutStyle = CutStyle.fromVanilla(vanillaStyle);
     }
 
+    public void setClickable(boolean bool) {
+        clickable = bool;
+    }
+
+    public void setCustomData(Object data) {
+        customData = data;
+    }
+
+    public void setMouseOverSound(String sound) {
+        mouseOverSound = sound;
+    }
+
+    public void setRightClicksOkWhenDisabled(boolean bool) {
+        rightClicksOkWhenDisabled = bool;
+    }
+
+    public float getHighlightBrightness() {
+        return glow.overlayBrightness;
+    }
+
+    public boolean isPerformActionWhenDisabled() {
+        return performActionWhenDisabled;
+    }
+
+    public void setButtonDisabledPressedSound(String sound) {
+        disabledSound = sound;
+    }
+
+    public Object getCustomData() {
+        return customData;
+    }
+
+    public void setButtonPressedSound(String sound) {
+        pressedSound = sound;
+    }
+
+    public void setPerformActionWhenDisabled(boolean bool) {
+        performActionWhenDisabled = bool;
+    }
+
     protected float[] getFaderMaskVertices() {
-        final float cutSize = computeCut((int) pos.getWidth(), (int) pos.getHeight());
+        final float cutSize = computeCut((int) getWidth(), (int) getHeight());
 
         final float[] cuts = cutStyle.toVector4();
         for (int i = 0; i < 4; i++) cuts[i] *= cutSize;
 
         return RenderUtils.buildCornersVertices(
-            pos.getX(),
-            pos.getY(),
-            pos.getWidth(),
-            pos.getHeight(),
-            cuts
+            getX(), getY(), getWidth(), getHeight(), cuts
         );
     }
 

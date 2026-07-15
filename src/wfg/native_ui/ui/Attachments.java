@@ -14,7 +14,7 @@ import rolflectionlib.util.RolfLectionUtil;
 
 /**
  * Utility class providing access points to UI elements across different game contexts:
- * campaign, interaction, and combat. Allows retrieving core panels, tab panels,
+ * campaign, title, and combat. Allows retrieving core panels, tab panels,
  * dialogs, and overlays depending on the current mode. Is not null-safe.
  */
 public class Attachments {

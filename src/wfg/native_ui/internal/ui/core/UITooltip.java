@@ -36,7 +36,7 @@ public class UITooltip extends StandardTooltipV2Expandable implements OutisdeEve
         parent.bringComponentToTop(this);
     }
 
-    public PositionAPI getPos() { return ((UIComponentAPI)this).getPosition(); }
+    public PositionAPI pos() { return ((UIComponentAPI)this).getPosition(); }
     public void buttonPressed(int lwjgl_key) {
         detach();
     }

@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.fs.starfarer.api.input.InputEventAPI;
 
-import wfg.native_ui.ui.panel.CustomPanel;
+import wfg.native_ui.ui.core.UIEntityAPI;
 
 /**
  * Base class for all systems operating on a UI element.
@@ -26,11 +26,11 @@ import wfg.native_ui.ui.panel.CustomPanel;
 public abstract class BaseSystem {
 
     /**Adds components or systems to the element that will be needed */
-    public abstract void init(final CustomPanel element);
-    public void onRemove(final CustomPanel element) {}
+    public abstract void init(final UIEntityAPI element);
+    public void onRemove(final UIEntityAPI element) {}
 
-    public void processInput(final CustomPanel element, final List<InputEventAPI> events) {}
-    public void advance(final CustomPanel element, float delta) {}
-    public void renderBelow(final CustomPanel element, float alpha) {}
-    public void render(final CustomPanel element, float alpha) {}
+    public void processInput(final UIEntityAPI element, final List<InputEventAPI> events) {}
+    public void advance(final UIEntityAPI element, float delta) {}
+    public void renderBelow(final UIEntityAPI element, float alpha) {}
+    public void renderAbove(final UIEntityAPI element, float alpha) {}
 }

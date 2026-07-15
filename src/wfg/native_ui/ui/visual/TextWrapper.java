@@ -2,27 +2,26 @@ package wfg.native_ui.ui.visual;
 
 import com.fs.starfarer.api.ui.ButtonAPI;
 import com.fs.starfarer.api.ui.LabelAPI;
-import com.fs.starfarer.api.ui.UIPanelAPI;
 
+import wfg.native_ui.internal.ui.core.UIContainer;
 import wfg.native_ui.ui.component.AudioFeedbackComp;
 import wfg.native_ui.ui.component.NativeComponents;
 import wfg.native_ui.ui.component.TooltipComp;
 import wfg.native_ui.ui.core.UIBuildableAPI;
 import wfg.native_ui.ui.core.UIElementFlags.HasAudioFeedback;
 import wfg.native_ui.ui.core.UIElementFlags.HasTooltip;
-import wfg.native_ui.ui.panel.CustomPanel;
 
 /**
- * A text-based UI panel with tooltip, audio feedback, and UI context support.
+ * A text wrapper with tooltip, audio feedback, and UI context support.
  *
- * <p>This panel is intended to be subclassed anonymously for ad-hoc UI creation. 
+ * <p>This element is intended to be subclassed anonymously for ad-hoc UI creation. 
  * Subclasses override {@link #buildUI()} to define UI elements and layout. 
  * Internal fields (checkbox, labels, text positions) are exposed publicly so that 
- * external code can read panel state from the anonymous subclass.</p>
+ * external code can read element state from the anonymous subclass.</p>
  *
  * <p>Usage example:
  * <pre>{@code
- * TextPanel panel = new TextPanel(parent, 300, 50) {
+ * TextPanel panel = new TextPanel(300, 50) {
  *     @Override
  *     public void buildUI() {
  *         m_checkbox = addCheckbox("Enable", 10, 10);
@@ -41,21 +40,21 @@ import wfg.native_ui.ui.panel.CustomPanel;
  * );
  * }</pre>
  */
-public abstract class TextPanel extends CustomPanel implements
+public abstract class TextWrapper extends UIContainer implements
     HasTooltip, HasAudioFeedback, UIBuildableAPI
 {
     public final TooltipComp tooltip = comp().get(NativeComponents.TOOLTIP);
     public final AudioFeedbackComp audio = comp().get(NativeComponents.AUDIO_FEEDBACK);
 
     // Shared state for anonymous subclasses to modify.
-    public ButtonAPI m_checkbox;
+    public ButtonAPI mCheckbox;
     public float textX1, textX2 = 0;
     public float textY1, textY2 = 0;
     public float textW1, textH1 = 0;
     public LabelAPI label1, label2 = null;
 
-    public TextPanel(UIPanelAPI parent, int width, int height) {
-        super(parent, width, height);
+    public TextWrapper(int width, int height) {
+        super(width, height);
 
         buildUI();
     }

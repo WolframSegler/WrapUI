@@ -10,13 +10,12 @@ import java.util.Set;
 
 import com.fs.starfarer.api.ui.ButtonAPI.UICheckboxSize;
 import com.fs.starfarer.api.ui.Fonts;
-import com.fs.starfarer.api.ui.UIPanelAPI;
 
+import wfg.native_ui.internal.ui.core.UIContainer;
 import wfg.native_ui.ui.core.UIBuildableAPI;
 import wfg.native_ui.ui.functional.Button;
 import wfg.native_ui.ui.functional.CheckboxButton;
 import wfg.native_ui.ui.functional.Button.CutStyle;
-import wfg.native_ui.ui.panel.CustomPanel;
 import wfg.native_ui.ui.widget.RadioPanel.LayoutMode;
 import wfg.native_ui.util.CallbackRunnable;
 
@@ -42,7 +41,7 @@ import wfg.native_ui.util.CallbackRunnable;
  *       to the first and last buttons.</li>
  * </ul>
  */
-public class MultiSelect extends CustomPanel implements UIBuildableAPI {
+public class MultiSelect extends UIContainer implements UIBuildableAPI {
     private final List<String> options = new ArrayList<>();
     private final List<Button> buttons = new ArrayList<>();
     private final Set<Integer> selectedIndexes = new HashSet<>();
@@ -54,8 +53,8 @@ public class MultiSelect extends CustomPanel implements UIBuildableAPI {
     public String font = Fonts.DEFAULT_SMALL;
     public UICheckboxSize checkboxType = UICheckboxSize.SMALL;
 
-    public MultiSelect(UIPanelAPI parent, int width, int height, Iterable<String> options, LayoutMode mode) {
-        super(parent, width, height);
+    public MultiSelect(float width, float height, Iterable<String> options, LayoutMode mode) {
+        super(width, height);
 
         for (String opt : options) this.options.add(opt);
         this.mode = mode;
@@ -120,7 +119,7 @@ public class MultiSelect extends CustomPanel implements UIBuildableAPI {
         default: case VERTICAL:
             for (int i = 0; i < options.size(); i++) {
                 final CheckboxButton checkbox = new CheckboxButton(
-                    m_panel, checkboxSize, options.get(i), font,
+                    checkboxSize, options.get(i), font,
                     run, checkboxType, false
                 );
                 checkbox.customData = i;
@@ -132,11 +131,11 @@ public class MultiSelect extends CustomPanel implements UIBuildableAPI {
         case HORIZONTAL:
             final int count = options.size();
             final float totalGap = pad * (count - 1);
-            final float available = pos.getWidth() - pad * 2 - totalGap;
+            final float available = getWidth() - pad * 2 - totalGap;
             final int buttonWidth = (int) (available / count);
 
             for (int i = 0; i < count; i++) {
-                final Button button = new Button(m_panel, buttonWidth, (int) pos.getHeight(),
+                final Button button = new Button(buttonWidth, (int) getHeight(),
                     options.get(i), font, run
                 );
 

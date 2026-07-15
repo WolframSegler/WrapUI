@@ -31,9 +31,7 @@ public class ComponentFactory {
         UIPanelAPI parent, int btnSize, String text, String font, CallbackRunnable<Button> onClick, 
         Color txtColor, int textAndBtnGap
     ) {
-        final Button checkbox = new Button(
-            parent, btnSize, btnSize, null, null, onClick
-        );
+        final Button checkbox = new Button(btnSize, btnSize, null, null, onClick);
         checkbox.bgAlpha = 1f;
         checkbox.bgDisabledAlpha = 1f;
         checkbox.bgSelectedColor = new Color(60, 230, 250);

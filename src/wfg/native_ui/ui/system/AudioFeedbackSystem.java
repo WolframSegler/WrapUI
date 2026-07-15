@@ -9,7 +9,7 @@ import com.fs.starfarer.api.input.InputEventAPI;
 import wfg.native_ui.ui.component.AudioFeedbackComp;
 import wfg.native_ui.ui.component.InputSnapshotComp;
 import wfg.native_ui.ui.component.NativeComponents;
-import wfg.native_ui.ui.panel.CustomPanel;
+import wfg.native_ui.ui.core.UIEntityAPI;
 
 public final class AudioFeedbackSystem extends BaseSystem {
     private static final SoundPlayerAPI player = Global.getSoundPlayer();
@@ -19,21 +19,21 @@ public final class AudioFeedbackSystem extends BaseSystem {
     private AudioFeedbackSystem() {}
 
     @Override
-    public void init(CustomPanel element) {
+    public void init(UIEntityAPI element) {
         element.comp().setIfNotPresent(NativeComponents.AUDIO_FEEDBACK, new AudioFeedbackComp());
     }
 
     private static final int initCompTicks = 10;
 
     @Override
-    public void processInput(final CustomPanel element, final List<InputEventAPI> events) {
+    public void processInput(final UIEntityAPI element, final List<InputEventAPI> events) {
         final AudioFeedbackComp audio = element.comp().get(NativeComponents.AUDIO_FEEDBACK);
         final InputSnapshotComp input = element.comp().get(NativeComponents.INPUT_SNAPSHOT);
 
         if (audio == null || !audio.enabled) return;
-        audio.accumulatedGameTicks++;
+        audio.internal_accumulatedGameTicks++;
 
-        if (audio.accumulatedGameTicks < initCompTicks) return;
+        if (audio.internal_accumulatedGameTicks < initCompTicks) return;
 
         if (input.hoverStarted) {
             player.playUISound(audio.mouseOverSound, 1f, 1f);

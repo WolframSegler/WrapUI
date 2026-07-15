@@ -55,10 +55,10 @@ public final class Arithmetic {
     /**
      * Smoothly interpolates a value toward a target using a combination of constant speed and proportional acceleration.
      *
-     * @param current   the current value
-     * @param target    the target value
+     * @param current the current value
+     * @param target the target value
      * @param baseSpeed constant interpolation speed factor
-     * @param accel     proportional acceleration factor (scaled by deltaTime)
+     * @param accel proportional acceleration factor (scaled by deltaTime)
      * @param deltaTime frame delta time in seconds
      * @return the updated, smoothed value
      */

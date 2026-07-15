@@ -6,14 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fs.starfarer.api.ui.Fonts;
-import com.fs.starfarer.api.ui.UIPanelAPI;
 import com.fs.starfarer.api.ui.ButtonAPI.UICheckboxSize;
 
+import wfg.native_ui.internal.ui.core.UIContainer;
 import wfg.native_ui.ui.core.UIBuildableAPI;
 import wfg.native_ui.ui.functional.Button;
 import wfg.native_ui.ui.functional.CheckboxButton;
 import wfg.native_ui.ui.functional.Button.CutStyle;
-import wfg.native_ui.ui.panel.CustomPanel;
 import wfg.native_ui.util.CallbackRunnable;
 import wfg.native_ui.util.RunnableWithCode;
 
@@ -22,7 +21,7 @@ import wfg.native_ui.util.RunnableWithCode;
  *
  * <p>Options must be added via {@link #addOption(String)} or {@link #addOption(String, boolean)}
  * before calling {@link #buildUI()}. The selected option can be queried or changed
- * using {@link #getSelectedIndex()} and {@link #setSelectedIndex(int)}.</p>
+ * using {@link #getSelectedIndex()} and {@link #setSelectedIndex()}.</p>
  *
  * <p>The panel supports a callback {@link #optionSelected} which is invoked whenever
  * the user selects a different option. The callback receives the index of the newly
@@ -37,7 +36,7 @@ import wfg.native_ui.util.RunnableWithCode;
  *   <li>{@link LayoutMode#HORIZONTAL} – options are distributed evenly across the panel width.</li>
  * </ul>
  */
-public class RadioPanel extends CustomPanel implements UIBuildableAPI {
+public class RadioPanel extends UIContainer implements UIBuildableAPI {
     public enum LayoutMode {
         HORIZONTAL, VERTICAL
     }
@@ -53,8 +52,8 @@ public class RadioPanel extends CustomPanel implements UIBuildableAPI {
     public String font = Fonts.DEFAULT_SMALL;
     public UICheckboxSize checkboxType = UICheckboxSize.SMALL;
 
-    public RadioPanel(UIPanelAPI parent, int width, int height, LayoutMode mode) {
-        super(parent, width, height);
+    public RadioPanel(float width, float height, LayoutMode mode) {
+        super(width, height);
 
         this.mode = mode;
     }
@@ -98,7 +97,7 @@ public class RadioPanel extends CustomPanel implements UIBuildableAPI {
         default: case VERTICAL:
             for (int i = 0; i < options.size(); i++) {
                 final CheckboxButton checkbox = new CheckboxButton(
-                    m_panel, checkboxSize, options.get(i), font,
+                    checkboxSize, options.get(i), font,
                     run, checkboxType, false
                 );
                 checkbox.customData = i;
@@ -112,11 +111,11 @@ public class RadioPanel extends CustomPanel implements UIBuildableAPI {
         case HORIZONTAL:
             final int count = options.size();
             final float totalGap = pad * (count - 1);
-            final float available = pos.getWidth() - pad * 2 - totalGap;
+            final float available = getWidth() - pad * 2 - totalGap;
             final int buttonWidth = (int) (available / count);
 
             for (int i = 0; i < count; i++) {
-                final Button button = new Button(m_panel, buttonWidth, (int) pos.getHeight(),
+                final Button button = new Button(buttonWidth, getHeight(),
                     options.get(i), font, run
                 );
 

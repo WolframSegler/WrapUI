@@ -5,7 +5,6 @@ import static wfg.native_ui.util.Globals.settings;
 import java.awt.Color;
 
 import com.fs.starfarer.api.graphics.SpriteAPI;
-import com.fs.starfarer.api.ui.UIPanelAPI;
 
 import wfg.native_ui.ui.component.AudioFeedbackComp;
 import wfg.native_ui.ui.component.HoverGlowComp;
@@ -16,11 +15,11 @@ import wfg.native_ui.ui.core.UIElementFlags.HasHoverGlow;
 import wfg.native_ui.ui.core.UIElementFlags.HasTooltip;
 
 /**
- * A sprite panel with tooltip, hover glow, and audio feedback support.
+ * An {@link AbstractSpriteElement} with tooltip, hover glow, and audio feedback support.
  *
  * <p>Usage example:
  * <pre>{@code
- * SpritePanelWithTp panel = new SpritePanelWithTp(parent, 64, 64, "iconPath", null, null);
+ * InteractiveSprite panel = new InteractiveSprite(64, 64, "iconPath", null, null);
  * panel.tooltip.builder = (tooltip, expanded) -> {
  *     tooltip.addPara("...", pad);
  * };
@@ -30,24 +29,24 @@ import wfg.native_ui.ui.core.UIElementFlags.HasTooltip;
  * };
  * }</pre>
  */
-public class SpritePanelWithTp extends SpritePanel<SpritePanelWithTp>
+public class InteractiveSprite extends AbstractSpriteElement<InteractiveSprite>
     implements HasTooltip, HasHoverGlow, HasAudioFeedback
 {
     public final TooltipComp tooltip = comp().get(NativeComponents.TOOLTIP);
     public final HoverGlowComp glow = comp().get(NativeComponents.HOVER_GLOW);
     public final AudioFeedbackComp audio = comp().get(NativeComponents.AUDIO_FEEDBACK);
 
-    public SpritePanelWithTp(UIPanelAPI parent, int width, int height, String spriteID,
+    public InteractiveSprite(float width, float height, String spriteID,
         Color color, Color fillColor
     ) {
-        this(parent, width, height, settings.getSprite(spriteID), color, fillColor);
+        this(width, height, settings.getSprite(spriteID), color, fillColor);
     }
 
-    public SpritePanelWithTp(UIPanelAPI parent, int width, int height, SpriteAPI sprite,
+    public InteractiveSprite(float width, float height, SpriteAPI sprite,
         Color color, Color fillColor
     ) {
-        super(parent, width, height, sprite, color, fillColor);
+        super(width, height, sprite, color, fillColor);
 
-        glow.additiveSprite = m_sprite;
+        glow.additiveSprite = mSprite;
     }
 }

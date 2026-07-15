@@ -2,7 +2,7 @@ package wfg.native_ui.ui.system;
 
 import java.awt.Color;
 
-import wfg.native_ui.ui.panel.CustomPanel;
+import wfg.native_ui.ui.core.UIEntityAPI;
 import wfg.native_ui.util.RenderUtils;
 
 public class DebugBgSystem extends BaseSystem {
@@ -10,11 +10,11 @@ public class DebugBgSystem extends BaseSystem {
     public static DebugBgSystem get() { return INSTANCE;}
     private DebugBgSystem() {}
 
-    public void init(CustomPanel element) {}
+    public void init(UIEntityAPI element) {}
 
     @Override
-    public void renderBelow(final CustomPanel element, float alpha) {
-        final var pos = element.getPos();
+    public void renderBelow(final UIEntityAPI element, float alpha) {
+        final var pos = element.pos();
 
         final int x = (int) pos.getX();
         final int y = (int) pos.getY();

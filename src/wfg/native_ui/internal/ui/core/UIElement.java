@@ -1,5 +1,7 @@
 package wfg.native_ui.internal.ui.core;
 
+import static wfg.native_ui.util.Globals.settings;
+
 import java.util.List;
 
 import com.fs.starfarer.api.input.InputEventAPI;
@@ -11,72 +13,103 @@ import wfg.native_ui.ui.core.UIElementAPI;
 import wfg.native_ui.ui.event.UIEventBus;
 
 public class UIElement implements UIElementAPI {
-    protected PositionAPI pos;
-    protected UIPanelAPI parent;
-    protected FaderUtil fader;
+    private static final float FADE_SPEED_MULT = settings.getFloat("uiFadeSpeedMult");
 
-    public UIElement(PositionAPI initialPos) {
-        pos = initialPos;
+    protected PositionAPI mPos;
+    protected UIPanelAPI mParent;
+    protected FaderUtil mFader;
+
+    protected float mOpacity;
+
+    public UIElement(float width, float height) {
+        this();
+        mPos.setSize(width, height);
     }
 
-    public PositionAPI getPosition() { return pos; }
-    public PositionAPI pos() { return pos; }
-    public float getX() { return pos.getX(); }
-    public float getY() { return pos.getY(); }
-    public float getCenterX() { return pos.getCenterX(); }
-    public float getCenterY() { return pos.getCenterY(); }
-    public float getWidth() { return pos.getWidth(); }
-    public float getHeight() { return pos.getHeight(); }
+    public UIElement() {
+        this(null);
+        // TODO use createPosition() here
+        // this(settings.createPosition()); 
+    }
 
-    public void setPos(PositionAPI pos) { this.pos = pos; }
-    public void setWidth(float w) { pos.setSize(w, pos.getHeight()); }
-    public void setHeight(float h) { pos.setSize(pos.getWidth(), h); }
+    public UIElement(PositionAPI pos) {
+        mPos = pos;
+    }
+
+    public PositionAPI getPosition() { return mPos; }
+    public PositionAPI pos() { return mPos; }
+    public float getX() { return mPos.getX(); }
+    public float getY() { return mPos.getY(); }
+    public float getCenterX() { return mPos.getCenterX(); }
+    public float getCenterY() { return mPos.getCenterY(); }
+    public float getWidth() { return mPos.getWidth(); }
+    public float getHeight() { return mPos.getHeight(); }
+
+    public void setPos(PositionAPI pos) { this.mPos = pos; }
+    public void setWidth(float w) { mPos.setSize(w, mPos.getHeight()); }
+    public void setHeight(float h) { mPos.setSize(mPos.getWidth(), h); }
     public PositionAPI setSize(float w, float h) {
-        return pos.setSize(w, h);
+        return mPos.setSize(w, h);
     }
 
     public void moveBy(float dx, float dy) {
-        final float currX = pos.getX();
-        final float currY = pos.getY();
+        final float currX = mPos.getX();
+        final float currY = mPos.getY();
 
-        pos.setXAlignOffset(0f);
-        pos.setYAlignOffset(0f);
+        mPos.setXAlignOffset(0f);
+        mPos.setYAlignOffset(0f);
 
-        final float offsetX = pos.getX() - currX;
-        final float offsetY = pos.getY() - currY;
+        final float offsetX = mPos.getX() - currX;
+        final float offsetY = mPos.getY() - currY;
 
-        pos.setXAlignOffset(offsetX + dx);
-        pos.setYAlignOffset(offsetY + dy);
+        mPos.setXAlignOffset(offsetX + dx);
+        mPos.setYAlignOffset(offsetY + dy);
     }
 
     public void resizeBy(float dw, float dh) {
-        setWidth(pos.getWidth() + dw);
-        setHeight(pos.getHeight() + dh);
+        setWidth(mPos.getWidth() + dw);
+        setHeight(mPos.getHeight() + dh);
     }
 
-    public UIPanelAPI getParent() { return parent; }
+    public UIPanelAPI getParent() { return mParent; }
     public PositionAPI setParent(UIPanelAPI parent) {
-        this.parent = parent;
+        this.mParent = parent;
+        // TODO
         // pos.setParent(parent.getPosition());
-        return pos;
+        return mPos;
     }
 
-    public void render(float alpha) {}
-    public void processInput(List<InputEventAPI> events) {}
-    public void advance(float delta) {}
+    public final void render(float alpha) {
+        if (alpha <= 0f) return;
 
-    public void setOpacity(float opacity) { fader.setBrightness(opacity); }
-    public float getOpacity() { return fader.getBrightness(); }
+        renderImpl(alpha * mFader.getBrightness());
+    }
+
+    public final void processInput(List<InputEventAPI> events) {
+        if (mFader.isFadedOut() || mOpacity <= 0f) return;
+        
+        processInputImpl(events);
+    }
+
+    public final void advance(float delta) {
+        mFader.advance(delta * FADE_SPEED_MULT);
+
+        advanceImpl(delta);
+    }
+
+    public void setOpacity(float opacity) { mOpacity = opacity; }
+    public float getOpacity() { return mOpacity; }
 
 
     public void bringToFront() {
-        if (parent != null) parent.bringComponentToTop(this);
+        if (mParent != null) mParent.bringComponentToTop(this);
     }
     public void sendToBack() {
-        if (parent != null) parent.sendToBottom(this);
+        if (mParent != null) mParent.sendToBottom(this);
     }
     public void detach() {
-        parent.removeComponent(this);
+        if (mParent == null) return; 
+        mParent.removeComponent(this);
         reportDetached();
     }
 

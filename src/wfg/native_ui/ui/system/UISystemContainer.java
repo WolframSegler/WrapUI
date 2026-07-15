@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import wfg.native_ui.ui.panel.CustomPanel;
+import wfg.native_ui.ui.core.UIEntityAPI;
 
 /**
  * Base container for systems.
@@ -16,7 +16,7 @@ public class UISystemContainer {
     private final List<BaseSystem> customSystems = new ArrayList<>(2);
     private List<BaseSystem> cached = null;
 
-    public final void set(NativeSystems type, BaseSystem system, CustomPanel element) {
+    public final void set(NativeSystems type, BaseSystem system, UIEntityAPI element) {
         nativeSystems[type.ordinal()] = system;
         system.init(element);
         invalidateCache();
@@ -31,12 +31,12 @@ public class UISystemContainer {
         return nativeSystems[type.ordinal()] != null;
     }
 
-    public final void setIfNotPresent(NativeSystems type, BaseSystem system, CustomPanel element) {
+    public final void setIfNotPresent(NativeSystems type, BaseSystem system, UIEntityAPI element) {
         if (!has(type)) set(type, system, element);
     }
 
 
-    public final void addCustom(BaseSystem system, CustomPanel element) {
+    public final void addCustom(BaseSystem system, UIEntityAPI element) {
         customSystems.add(system);
         system.init(element);
         invalidateCache();
@@ -57,7 +57,7 @@ public class UISystemContainer {
         return false;
     }
 
-    public final void addCustomIfNotPresent(BaseSystem system, CustomPanel element) {
+    public final void addCustomIfNotPresent(BaseSystem system, UIEntityAPI element) {
         if (!hasCustom(system.getClass())) addCustom(system, element);
     }
 

@@ -9,11 +9,10 @@ import java.util.List;
 import com.fs.starfarer.api.ui.Fonts;
 import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
-import com.fs.starfarer.api.ui.UIPanelAPI;
 
+import wfg.native_ui.internal.ui.core.UIContainer;
 import wfg.native_ui.ui.ComponentFactory;
 import wfg.native_ui.ui.core.UIBuildableAPI;
-import wfg.native_ui.ui.panel.CustomPanel;
 import wfg.native_ui.util.Arithmetic;
 
 /**
@@ -23,7 +22,7 @@ import wfg.native_ui.util.Arithmetic;
  * @param <T> the data type for each grid cell
  * @param <W> the widget type that displays a {@code T}
  */
-public abstract class GridTable<T, W extends WidgetAPI<W>> extends CustomPanel implements UIBuildableAPI {
+public abstract class GridTable<T, W extends WidgetAPI<W>> extends UIContainer implements UIBuildableAPI {
     
     /** Gap between widgets, both horizontally and vertically. */
     protected final int gap;
@@ -50,12 +49,12 @@ public abstract class GridTable<T, W extends WidgetAPI<W>> extends CustomPanel i
      */
     protected boolean justifyGrid = false;
 
-    public GridTable(UIPanelAPI parent, int width, int height, int widgetW, int widgetH) {
-        this(parent, width, height, widgetW, widgetH, hpad);
+    public GridTable(float width, float height, int widgetW, int widgetH) {
+        this(width, height, widgetW, widgetH, hpad);
     }
 
-    public GridTable(UIPanelAPI parent, int width, int height, int widgetW, int widgetH, int gap) {
-        super(parent, width, height);
+    public GridTable(float width, float height, int widgetW, int widgetH, int gap) {
+        super(width, height);
         this.widgetW = widgetW;
         this.widgetH = widgetH;
         this.gap = gap;
@@ -95,10 +94,10 @@ public abstract class GridTable<T, W extends WidgetAPI<W>> extends CustomPanel i
             return;
         }
 
-        container = ComponentFactory.createTooltip(pos.getWidth(), true);
+        container = ComponentFactory.createTooltip(getWidth(), true);
 
         final float margin = uniformOuterGap ? gap : 0f;
-        final float availableW = pos.getWidth() - 2 * margin;
+        final float availableW = getWidth() - 2 * margin;
         final int cols = calculateColumns();
 
         final float effGap;
@@ -126,15 +125,15 @@ public abstract class GridTable<T, W extends WidgetAPI<W>> extends CustomPanel i
             final float x = margin + col * (widgetW + effGap);
             final float y = margin + row * (widgetH + gap);
 
-            container.addCustom(widget.getElement(), 0f).getPosition().inTL(x, y);
+            container.addCustom(widget, 0f).getPosition().inTL(x, y);
         }
 
         final int rows = (items.size() + cols - 1) / cols;
         final float contentHeight = margin + rows * (widgetH + gap);
         container.setHeightSoFar(contentHeight);
 
-        final float visibleHeight = pos.getHeight() - margin;
-        ComponentFactory.addTooltip(container, visibleHeight, true, m_panel).inTL(0f, margin);
+        final float visibleHeight = getHeight() - margin;
+        ComponentFactory.addTooltip(container, visibleHeight, true, this).inTL(0f, margin);
 
         final float maxScroll = Math.max(0f, contentHeight - visibleHeight);
         container.getExternalScroller().setYOffset(Arithmetic.clamp(scrollOffset, 0f, maxScroll));
@@ -142,14 +141,14 @@ public abstract class GridTable<T, W extends WidgetAPI<W>> extends CustomPanel i
 
     public final void scrollToBottom() {
         if (container == null) return;
-        final float visibleHeight = pos.getHeight() - gap;
+        final float visibleHeight = getHeight() - gap;
         final float maxScroll = Math.max(0f, container.getHeightSoFar() - visibleHeight);
         container.getExternalScroller().setYOffset(maxScroll);
     }
 
     protected final int calculateColumns() {
         final float margin = uniformOuterGap ? gap : 0f;
-        final float availableW = pos.getWidth() - 2 * margin;
+        final float availableW = getWidth() - 2 * margin;
         return Math.max(1, (int) ((availableW + gap) / (widgetW + gap)));
     }
 }

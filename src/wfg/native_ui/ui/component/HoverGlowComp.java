@@ -15,7 +15,7 @@ public final class HoverGlowComp extends BaseComponent {
      */
     public boolean isFaderOwner = true;
 
-    public FaderUtil fader = new FaderUtil(0, 0.1f, 0.2f, false, true);
+    public FaderUtil fader = new FaderUtil(0f, 0.1f, 0.2f, false, true);
     public GlowType type = GlowType.OVERLAY;
     public boolean persistent = false;
     public float overlayBrightness = 0.25f;
@@ -32,8 +32,8 @@ public final class HoverGlowComp extends BaseComponent {
 
     /**
      * <ul>
-     *     <li>{@link Glow#OVERLAY} or {@link Glow#UNDERLAY}: supports polygon-shaped glow.</li>
-     *     <li>{@link Glow#ADDITIVE}: works with convex/polygon shapes too; a sprite texture is optional.
+     *     <li>{@link GlowType#OVERLAY} or {@link GlowType#UNDERLAY} supports polygon-shaped glow.</li>
+     *     <li>{@link GlowType#ADDITIVE} works with convex/polygon shapes too; a sprite texture is optional.
      *         If a sprite is provided via {@link #additiveSprite}, it will be used for rendering,
      *         otherwise a colored quad will be drawn.</li>
      * </ul>

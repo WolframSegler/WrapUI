@@ -7,7 +7,7 @@ import com.fs.starfarer.api.ui.PositionAPI;
 import wfg.native_ui.ui.component.NativeComponents;
 import wfg.native_ui.ui.component.OutlineComp;
 import wfg.native_ui.ui.component.UIComponentContainer;
-import wfg.native_ui.ui.panel.CustomPanel;
+import wfg.native_ui.ui.core.UIEntityAPI;
 import wfg.native_ui.util.RenderUtils;
 
 public final class OutlineSystem extends BaseSystem {
@@ -17,18 +17,18 @@ public final class OutlineSystem extends BaseSystem {
     private OutlineSystem() {}
 
     @Override
-    public void init(CustomPanel element) {
+    public void init(UIEntityAPI element) {
         final UIComponentContainer comp = element.comp();
         comp.setIfNotPresent(NativeComponents.OUTLINE, new OutlineComp());
     }
 
     @Override
-    public final void renderBelow(final CustomPanel element, float alpha) {
+    public final void renderBelow(final UIEntityAPI element, float alpha) {
         final OutlineComp outline = element.comp().get(NativeComponents.OUTLINE);
 
         if (!outline.enabled) return;
 
-        final PositionAPI pos = element.getPos();
+        final PositionAPI pos = element.pos();
 
         String textureID = null;
         int textureSize = 4;

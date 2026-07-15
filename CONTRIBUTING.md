@@ -50,7 +50,7 @@ private static final int CONTAINER_WIDTH = 240;
 ```
 
 ## Switch over if-else
-Prefer `switch` statements (or switch expressions) wherever possible.
+Prefer `switch` expressions wherever possible.
 
 ```java
 // ❌
@@ -103,7 +103,7 @@ Code used in multiple places should be extracted into reusable `static` methods.
 - If a variable must be set inside branches, refactor to a single assignment so it can be declared `final`.
 
 ```java
-// ❌ Avoid: manual bound checking prevents final
+// ❌ Avoid: manual bound checking, prevents final
 int clamped = rawValue;
 if (rawValue < min) {
     clamped = min;
@@ -114,7 +114,7 @@ if (rawValue < min) {
 // ✅ Using clamp for a final variable
 final int clamped = Math.clamp(rawValue, min, max);
 
-// ❌ Avoid: if-else chain with eager initialization prevents final
+// ❌ Avoid: if-else chain with eager initialization, prevents final
 String display = "Unknown";
 if (state == ACTIVE) {
     display = "Active";

@@ -28,8 +28,8 @@ A modal, fold-animated dialog panel with a built-in <em>holo</em> ({@link Foldin
 
 <p><strong>Important implementation notes</strong></p>
 <ul>
-<li><strong>Ownership:</strong> {@link DialogPanel#m_panel} is owned and positioned by {@link DialogPanel#holo}.
-Do <em>not</em> assign {@link DialogPanel#m_panel} to any other parent. Use {@link FoldingPanel#setNext()} instead.</li>
+<li><strong>Ownership:</strong> {@link DialogPanel} is owned and positioned by {@link DialogPanel#holo}.
+Do <em>not</em> assign {@link DialogPanel} to any other parent. Use {@link FoldingPanel#setNext()} instead.</li>
 <li><strong>Buttons:</strong> Buttons map to integer options stored in {@link DialogPanel#buttons}.</li>
 </ul>
 
@@ -76,29 +76,29 @@ public class DialogPanel extends ModalDialog implements UIBuildableAPI, Callback
     public final FoldingPanel holo;
     protected final ArrayList<Button> buttons = new ArrayList<>(4);
 
-    public DialogPanel(int w, int h, RunnableWithCode onDismissed) {
+    public DialogPanel(float w, float h, RunnableWithCode onDismissed) {
         super(w, h + BUTTON_H + pad + opad, onDismissed);
 
         holo = new FoldingPanel(w, h + BUTTON_H + pad + opad,
-            UI_BORDER_1, 7
+            UI_BORDER_1, 7f
         );
 
-        holo.getPos().inMid();
+        holo.pos().inMid();
         holo.forceFoldIn();
 
         holo.transitionEnabled = false;
-        holo.setNext(m_panel);
+        holo.setNext(this);
     }
 
     public DialogPanel(RunnableWithCode onDismissed, String txt, String... btnText) {
-        this(500, 200, onDismissed, txt, btnText);
+        this(500f, 200f, onDismissed, txt, btnText);
     }
 
-    public DialogPanel(int w, int h, RunnableWithCode onDismissed,
+    public DialogPanel(float w, float h, RunnableWithCode onDismissed,
         String txt, String... btnText
     ) { this(w, h, text_color, btnBgColorDark, onDismissed, txt, btnText); }
 
-    public DialogPanel(int w, int h, Color btnTxtColor, Color btnBgColor,
+    public DialogPanel(float w, float h, Color btnTxtColor, Color btnBgColor,
         RunnableWithCode onDismissed, String txt, String... btnTextArr
     ) {
         this(w, h, onDismissed);
@@ -109,10 +109,8 @@ public class DialogPanel extends ModalDialog implements UIBuildableAPI, Callback
             );
             add(txtLbl);
             txtLbl.setColor(btnTxtColor);
-            txtLbl.getPosition().setSize(
-                pos.getWidth(), pos.getHeight() - BUTTON_H
-            ).inTL(0f, 0f);
             txtLbl.setAlignment(Alignment.TL);
+            txtLbl.getPosition().setSize(getWidth(), getHeight() - BUTTON_H).inTL(0f, 0f);
         }
 
         if (btnTextArr != null && btnTextArr.length > 0) {
@@ -120,7 +118,7 @@ public class DialogPanel extends ModalDialog implements UIBuildableAPI, Callback
                 final String BtnTxt = btnTextArr[i];
                 if (BtnTxt == null) continue;
     
-                final Button btn = new Button(m_panel, BUTTON_W, BUTTON_H, BtnTxt,
+                final Button btn = new Button(BUTTON_W, BUTTON_H, BtnTxt,
                     Fonts.ORBITRON_20AA, this
                 );
                 btn.setAlignment(Alignment.MID);
@@ -134,8 +132,8 @@ public class DialogPanel extends ModalDialog implements UIBuildableAPI, Callback
             for (int i = buttons.size() - 1; i >= 0; i--) {
                 final Button btn = buttons.get(i);
 
-                if (i == buttons.size() - 1) btn.getPos().inBR(pad, pad);
-                else btn.getPos().leftOfMid(buttons.get(i + 1).getPanel(), pad*2);
+                if (i == buttons.size() - 1) btn.pos().inBR(pad, pad);
+                else btn.pos().leftOfMid(buttons.get(i + 1), pad*2);
             }
         }
     }
@@ -145,11 +143,11 @@ public class DialogPanel extends ModalDialog implements UIBuildableAPI, Callback
 
     public PositionAPI setSize(float w, float h) {
         holo.setSize(w, h);
-        return pos.setSize(w, h);
+        return mPos.setSize(w, h);
     }
 
     public PositionAPI sizeToInner(float w, float h) {
-        return setSize(w + holo.borderThickness * 3, h + holo.borderThickness * 3);
+        return setSize(w + holo.borderThickness * 3f, h + holo.borderThickness * 3f);
     }
 
     public void setConfirmShortcut() {
@@ -173,7 +171,6 @@ public class DialogPanel extends ModalDialog implements UIBuildableAPI, Callback
     public void show(float durIn, float durOut) {
         super.show(durIn, durOut);
 
-        holo.getParent().bringComponentToTop(holo.getPanel());
         holo.foldOut(fader.getDurationIn() * 0.5f);
         holo.flickerNoise(0f, 1f);
     }

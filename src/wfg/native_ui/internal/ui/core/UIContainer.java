@@ -4,17 +4,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fs.starfarer.api.input.InputEventAPI;
+import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.PositionAPI;
+import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.ui.UIComponentAPI;
-import com.fs.starfarer.api.ui.UIPanelAPI;
 
+import wfg.native_ui.ui.ComponentFactory;
 import wfg.native_ui.ui.core.UIContainerAPI;
-import wfg.native_ui.ui.core.UIEntityAPI;
+import wfg.native_ui.ui.core.UIElementAPI;
 import wfg.native_ui.ui.event.IdentifiedPanel;
 import wfg.native_ui.ui.system.BaseSystem;
 
 public class UIContainer extends UIEntity implements UIContainerAPI {
-    private final List<UIComponentAPI> children = new ArrayList<>();
+    private final ArrayList<UIComponentAPI> children = new ArrayList<>();
+
+    public UIContainer(float width, float height) {
+        super(width, height);
+    }
+
+    public UIContainer() {
+        super();
+    }
 
     public UIContainer(PositionAPI pos) {
         super(pos);
@@ -23,25 +33,32 @@ public class UIContainer extends UIEntity implements UIContainerAPI {
     public PositionAPI add(UIComponentAPI comp) {
         if (!children.contains(comp)) {
             children.add(comp);
-            
-            // pos.add(comp.getPosition());
-            // comp.getPosition().setParent(pos);
+            final PositionAPI compPos = comp.getPosition();
+            // TODO
+            // mPos.add(compPos);
+            // compPos.setParent(mPos);
             // comp.setParent(this);
 
-            if (comp instanceof UIEntityAPI element) {
+            if (comp instanceof UIElementAPI element) {
                 element.reportAttached();
             }
         }
         return comp.getPosition();
     }
 
+    public PositionAPI add(TooltipMakerAPI tooltip) {
+        return ComponentFactory.addTooltip(tooltip, 0f, false, this);
+    }
+
     public void remove(UIComponentAPI comp) {
         if (children.remove(comp)) {
-            // pos.remove(comp.getPosition());
-            // comp.getPosition().setParent(null);
+            final PositionAPI compPos = comp.getPosition();
+            // TODO
+            // mPos.remove(compPos);
+            // compPos.setParent(null);
             // comp.setParent(null);
 
-            if (comp instanceof UIEntityAPI element) {
+            if (comp instanceof UIElementAPI element) {
                 element.reportDetached();
             }
         }
@@ -79,73 +96,88 @@ public class UIContainer extends UIEntity implements UIContainerAPI {
         return null;
     }
 
-    public PositionAPI addComponent(UIComponentAPI var1) { return add(var1);}
-    public void removeComponent(UIComponentAPI var1) { remove(var1); }
+    public PositionAPI addComponent(UIComponentAPI comp) { return add(comp); }
+    public void removeComponent(UIComponentAPI comp) { remove(comp); }
 
-    public PositionAPI addPos(UIComponentAPI element) {
-        // pos.addChild(element.getPosition());
-        return element.getPosition();
+    public PositionAPI addPos(UIComponentAPI comp) {
+        final PositionAPI compPos = comp.getPosition();
+        // mPos.addChild(compPos);
+        // compPos.setParent(mPos);
+
+        return comp.getPosition();
     }
 
-    public void removePos(UIComponentAPI element) {
-        // pos.removeChild(element.getPosition());
+    public void removePos(UIComponentAPI comp) {
+        final PositionAPI compPos = comp.getPosition();
+        // TODO
+        // mPos.removeChild(compPos);
+        // compPos.setParent(null);
     }
 
-    public void bringComponentToTop(UIComponentAPI element) { bringToTop(element);}
-    public void bringToTop(UIComponentAPI element) {
-        if (children.remove(element)) {
-            children.add(element);
-            UIPanelAPI parent = getParent();
-            if (parent != null) parent.bringComponentToTop(this);
+    public void bringComponentToTop(UIComponentAPI comp) { bringToTop(comp); }
+    public void bringToTop(UIComponentAPI comp) {
+        if (children.remove(comp)) {
+            children.add(comp);
+            if (mParent != null) mParent.bringComponentToTop(this);
         }
     }
 
-    public void bringToTopWithinItself(UIComponentAPI element) {
-        if (children.remove(element)) {
-            children.add(element);
+    public void bringToTopWithinItself(UIComponentAPI comp) {
+        if (children.remove(comp)) {
+            children.add(comp);
         }
     }
 
-    public void sendToBottom(UIComponentAPI element) {
-        if (children.remove(element)) {
-            children.add(0, element);
-            UIPanelAPI parent = getParent();
-            if (parent != null) parent.sendToBottom(this);
+    public void sendToBottom(UIComponentAPI comp) {
+        if (children.remove(comp)) {
+            children.add(0, comp);
+            sendToBack();
         }
     }
 
-    public void sendToBottomWithinItself(UIComponentAPI element) {
-        if (children.remove(element)) {
-            children.add(0, element);
+    public void sendToBottomWithinItself(UIComponentAPI comp) {
+        if (children.remove(comp)) {
+            children.add(0, comp);
         }
     }
 
     @Override
-    public final void render(float alpha) {
+    public void renderImpl(float alpha) {
         for (BaseSystem system : system().getAll()) {
-            // system.renderBelow(this, alpha);
+            system.renderBelow(this, alpha);
         }
         renderBelowImpl(alpha);
 
         children.forEach(c -> c.render(alpha));
 
         for (BaseSystem system : system().getAll()) {
-            // system.render(this, alpha);
+            system.renderAbove(this, alpha);
         }
         renderAboveImpl(alpha);
     }
 
     @Override
-    public final void advance(float delta) {
-        super.advance(delta);
-        advanceImpl(delta);
+    public void advanceImpl(float delta) {
+        super.advanceImpl(delta);
         children.forEach(c -> c.advance(delta));
     }
 
     @Override
-    public final void processInput(List<InputEventAPI> events) {
-        super.processInput(events);
-        processInputImpl(events);
+    public void processInputImpl(List<InputEventAPI> events) {
+        super.processInputImpl(events);
         children.forEach(c -> c.processInput(events));
+    }
+
+
+    // TODO remove after update
+    @Deprecated
+    public PositionAPI add(LabelAPI comp) {
+        return add((UIComponentAPI) comp);
+    }
+
+    // TODO remove after update
+    @Deprecated
+    public void remove(LabelAPI comp) {
+        remove((UIComponentAPI) comp);
     }
 }

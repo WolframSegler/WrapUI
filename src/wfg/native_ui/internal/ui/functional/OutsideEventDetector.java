@@ -8,10 +8,10 @@ import java.util.List;
 import com.fs.starfarer.api.input.InputEventAPI;
 import com.fs.starfarer.api.ui.PositionAPI;
 
+import wfg.native_ui.internal.ui.core.UIElement;
 import wfg.native_ui.ui.Attachments;
-import wfg.native_ui.ui.panel.CustomPanel;
 
-public class OutsideEventDetector extends CustomPanel {
+public class OutsideEventDetector extends UIElement {
     private final OutisdeEventListener listener;
 
     public boolean consumeMouseMove = true;
@@ -21,21 +21,18 @@ public class OutsideEventDetector extends CustomPanel {
     public boolean triggerOnKeyUp = false;
     
     public OutsideEventDetector(OutisdeEventListener owner) {
-        super(Attachments.getScreenPanel(), screenW, screenH);
+        super(screenW, screenH);
+        setParent(Attachments.getScreenPanel());
         listener = owner;
     }
 
     public final void attach() {
-        m_parent.addComponent(m_panel);
-        m_parent.bringComponentToTop(m_panel);
-    }
-
-    public final void detach() {
-        m_parent.removeComponent(m_panel);
+        mParent.addComponent(this);
+        mParent.bringComponentToTop(this);
     }
 
     @Override
-    public void processInput(List<InputEventAPI> events) {
+    public void processInputImpl(List<InputEventAPI> events) {
         for (InputEventAPI event : events) {
             if (event.isConsumed()) continue;
 
@@ -44,7 +41,7 @@ public class OutsideEventDetector extends CustomPanel {
                     (event.isMouseScrollEvent() && consumeMouseScroll)
                 ) { event.consume(); continue; }
                 if ((event.isMouseDownEvent() || event.isMouseUpEvent()) &&
-                    !listener.getPos().containsEvent(event)
+                    !listener.pos().containsEvent(event)
                 ) {
                     listener.outsideClicked(event.isLMBEvent());
                     if (isRemoveOnAction) {
@@ -71,6 +68,6 @@ public class OutsideEventDetector extends CustomPanel {
     public static interface OutisdeEventListener {
         void outsideClicked(boolean isLeft);
         void buttonPressed(int lwjgl_key);
-        PositionAPI getPos();
+        PositionAPI pos();
     }
 }
