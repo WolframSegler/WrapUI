@@ -19,12 +19,12 @@ public class NoiseRenderer {
     public float renderW;
     public float renderH;
 
-    private final SpriteAPI m_sprite;
+    private final SpriteAPI mSprite;
     private final NoiseGenerator noise = new NoiseGenerator();
     private long randomNum = 0L;
 
     public NoiseRenderer(SpriteAPI sprite, float width, float height) {
-        m_sprite = sprite;
+        mSprite = sprite;
         renderW = width;
         renderH = height;
     }
@@ -70,7 +70,7 @@ public class NoiseRenderer {
         if (intensity > 0f) {
             final Random rand = randomNum == 0L ? new Random() : new Random(randomNum);
 
-            render(m_sprite, intensity, x, y, rand.nextFloat(), rand.nextFloat(), 1f * renderW / m_sprite.getWidth(), 1f * renderH / m_sprite.getHeight());
+            render(mSprite, intensity, x, y, rand.nextFloat(), rand.nextFloat(), 1f * renderW / mSprite.getWidth(), 1f * renderH / mSprite.getHeight());
         }
     }
 

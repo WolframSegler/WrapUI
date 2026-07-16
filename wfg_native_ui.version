@@ -1,6 +1,6 @@
 {
 	"masterVersionFile":"https://raw.githubusercontent.com/WolframSegler/NativeUI/main/wfg_native_ui.version",
-	"modName":"WrapUI",
+	"modName":"NativeUI",
 	"modThreadId":-1,
 	"modVersion":
 	{
@@ -9,6 +9,6 @@
 		"patch":0
 	},
 	"starsectorVersion":"0.98a-RC8",
-	"directDownloadURL":"https://github.com/WolframSegler/NativeUI/releases/latest/download/WrapUI.zip",
+	"directDownloadURL":"https://github.com/WolframSegler/NativeUI/releases/latest/download/NativeUI.zip",
 	"changelogURL":"https://raw.githubusercontent.com/WolframSegler/NativeUI/main/changelog.md"
 }

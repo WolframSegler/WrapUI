@@ -10,6 +10,7 @@ import com.fs.starfarer.api.input.InputEventAPI;
 import com.fs.starfarer.api.input.InputEventType;
 import com.fs.starfarer.api.ui.UIComponentAPI;
 
+import wfg.native_ui.example.container.ScrollPanelExample;
 import wfg.native_ui.internal.ui.core.UIContainer;
 import wfg.native_ui.ui.component.BackgroundComp;
 import wfg.native_ui.ui.component.InputSnapshotComp;
@@ -20,6 +21,7 @@ import wfg.native_ui.util.Arithmetic;
 
 /**
  * Do not add children directly to ScrollPanel, but to the contentPanel
+ * <p><strong>Example: </strong> {@link ScrollPanelExample}</p>
  */
 public class ScrollPanel extends UIContainer implements HasBackground, HasInputSnapshot {
     public final BackgroundComp bg = comp().get(NativeComponents.BACKGROUND);

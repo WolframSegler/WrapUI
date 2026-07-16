@@ -1,6 +1,6 @@
 {
 	"id":"wfg_native_ui",
-	"name":"WrapUI",
+	"name":"NativeUI",
 	"author":"WolframSegler",
 	"version": "0.5.0",
 	"description":"Composition oriented UI Framework with a native allure",

@@ -24,7 +24,7 @@ import wfg.native_ui.ui.core.UIElementFlags.HasTooltip;
  * TextPanel panel = new TextPanel(300, 50) {
  *     @Override
  *     public void buildUI() {
- *         m_checkbox = addCheckbox("Enable", 10, 10);
+ *         mCheckbox = addCheckbox("Enable", 10, 10);
  *         label1 = addLabel("Hello", 20, 10);
  *         textX1 = 0; textY1 = 0; textW1 = 100; textH1 = 20;
  *     }

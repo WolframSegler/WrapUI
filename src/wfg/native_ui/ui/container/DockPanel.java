@@ -10,6 +10,7 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.ui.UIComponentAPI;
 import com.fs.starfarer.api.ui.UIPanelAPI;
 
+import wfg.native_ui.example.container.DockPanelExample;
 import wfg.native_ui.internal.ui.Side;
 import wfg.native_ui.internal.ui.core.UIContainer;
 import wfg.native_ui.internal.ui.functional.OutsideEventDetector;
@@ -43,6 +44,8 @@ import wfg.native_ui.util.UIConstants;
  *   <li>If {@link #removeWhenClosed} is true the panel will remove itself from the parent when its
  *   close animation finishes.</li>
  * </ul>
+ * 
+ * <p><strong>Example: </strong> {@link DockPanelExample}</p>
  */
 public abstract class DockPanel extends UIContainer implements
     OutisdeEventListener, UIBuildableAPI

@@ -1,4 +1,4 @@
-# WrapUI
+# NativeUI
 Composition-oriented UI framework with use of panels instead of custom plugins.
 
 # Features

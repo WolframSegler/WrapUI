@@ -118,10 +118,10 @@ public class SortableTable extends UIContainer implements UIBuildableAPI, HasOut
     private int selectedSortColumnIndex = -1;
     private boolean ascending = true;
     private TableRow pendingRow = null;
-    private TableRow m_selectedRow;
+    private TableRow mSelectedRow;
 
     public TableRow getPendingRow() { return pendingRow;}
-    public TableRow getSelectedRow() { return m_selectedRow;}
+    public TableRow getSelectedRow() { return mSelectedRow;}
     public List<ColumnManager> getColumns() { return mColumns;}
     public List<TableRow> getRows() { return mRows;}
 
@@ -303,10 +303,10 @@ public class SortableTable extends UIContainer implements UIBuildableAPI, HasOut
         public Color textColor = base;
         public Object customData = null;
         
-        protected final List<Object> m_cellData = new ArrayList<>();
-        protected final List<cellAlg> m_cellAlignment = new ArrayList<>();
-        protected final List<Object> m_sortValues = new ArrayList<>();
-        protected final List<Color> m_useColor = new ArrayList<>();
+        protected final List<Object> mCellData = new ArrayList<>();
+        protected final List<cellAlg> mCellAlignment = new ArrayList<>();
+        protected final List<Object> mSortValues = new ArrayList<>();
+        protected final List<Color> mUseColor = new ArrayList<>();
 
         public TableRow(float width, float height) {
             super(width, height);
@@ -318,18 +318,18 @@ public class SortableTable extends UIContainer implements UIBuildableAPI, HasOut
 
             interaction.onClicked = (source, isLeftClick) -> {
                 SortableTable.this.selectRow(this);
-                m_selectedRow = this;
+                mSelectedRow = this;
             };
         }
 
         public void buildUI() {
             int cumulativeXOffset = 0;
-            for (int i = 0; i < m_cellData.size(); i++) {
-                final Object cell = m_cellData.get(i);
-                final cellAlg alignment = m_cellAlignment.get(i);
-                final Color useColor = m_useColor.get(i);
+            for (int i = 0; i < mCellData.size(); i++) {
+                final Object cell = mCellData.get(i);
+                final cellAlg alignment = mCellAlignment.get(i);
+                final Color useColor = mUseColor.get(i);
                 final float logicalW = getColumns().get(i).width;
-                final float visualW = logicalW - (i == m_cellData.size() - 1 ? 0 : columnGap);
+                final float visualW = logicalW - (i == mCellData.size() - 1 ? 0 : columnGap);
 
                 final UIComponentAPI comp;
                 final float compWidth;
@@ -401,11 +401,11 @@ public class SortableTable extends UIContainer implements UIBuildableAPI, HasOut
         }
 
         public Object getSortValue(int columnIndex) {
-            if (m_sortValues.get(columnIndex) == null) {
-                return m_cellData.get(columnIndex);
+            if (mSortValues.get(columnIndex) == null) {
+                return mCellData.get(columnIndex);
             }
 
-            return m_sortValues.get(columnIndex);
+            return mSortValues.get(columnIndex);
         }
 
         public void setTextColor(Color color) {
@@ -413,12 +413,12 @@ public class SortableTable extends UIContainer implements UIBuildableAPI, HasOut
         }
         
         public void addCell(Object cell, cellAlg alg, Object sort, Color textColor) {
-            m_cellData.add(cell);
-            m_cellAlignment.add(alg);
-            m_sortValues.add(sort);
-            m_useColor.add(textColor);
+            mCellData.add(cell);
+            mCellAlignment.add(alg);
+            mSortValues.add(sort);
+            mUseColor.add(textColor);
         }
-        public List<Object> getCellData() { return m_cellData; }
+        public List<Object> getCellData() { return mCellData; }
     }
 
     /**
@@ -502,11 +502,11 @@ public class SortableTable extends UIContainer implements UIBuildableAPI, HasOut
     public void pushRow(Object customData, TooltipBuilder tp, ClickHandler<TableRow> onRowClicked,
         String codexID, Color textColor, Color highlight
     ) {
-        if (pendingRow == null || pendingRow.m_cellData.isEmpty()) {
+        if (pendingRow == null || pendingRow.mCellData.isEmpty()) {
             throw new IllegalStateException("Cannot push row: no cells have been added yet. "
                 + "Call addCell() before pushRow().");
 
-        } else if (pendingRow.m_cellData.size() != mColumns.size()) {
+        } else if (pendingRow.mCellData.size() != mColumns.size()) {
             throw new IllegalStateException("Cannot push row: cell count mismatch. "
                 + "The number of cells must match the number of columns.");
 

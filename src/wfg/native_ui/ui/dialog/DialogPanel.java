@@ -14,6 +14,7 @@ import com.fs.starfarer.api.ui.Fonts;
 import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.PositionAPI;
 
+import wfg.native_ui.example.dialog.DialogPanelExample;
 import wfg.native_ui.internal.ui.dialog.FoldingPanel;
 import wfg.native_ui.internal.ui.dialog.ModalDialog;
 import wfg.native_ui.ui.core.UIBuildableAPI;
@@ -31,45 +32,11 @@ A modal, fold-animated dialog panel with a built-in <em>holo</em> ({@link Foldin
 <li><strong>Ownership:</strong> {@link DialogPanel} is owned and positioned by {@link DialogPanel#holo}.
 Do <em>not</em> assign {@link DialogPanel} to any other parent. Use {@link FoldingPanel#setNext()} instead.</li>
 <li><strong>Buttons:</strong> Buttons map to integer options stored in {@link DialogPanel#buttons}.</li>
+<li>Dismissing the dialog with confirmation keys exit with code <code>0</code>, while dismissing with cancel keys exit with code <code>1</code>.
+See {@link ModalDialog#optionOnKeyboardConfirm} and {@link ModalDialog#optionOnKeyboardCancel} for changing the defaults.</li>
 </ul>
 
-<p><strong>Typical usage</strong></p>
-<pre><code>
-final DialogPanel dlg = new DialogPanel(
-    (code) -&gt; {...},
-    "Confirm action", // default text
-    "Confirm", "Cancel" // button texts (0 = Confirm, 1 = Cancel)
-);
-
-// optionally set keyboard shortcut for the "confirm" button (index 0)
-dlg.setConfirmShortcut();
-
-// show with fade in / out durations (seconds)
-dlg.show(0.5f, 0.5f);
-</code></pre>
-
-</ul>
-
-<p><strong>Subclass example</strong></p>
-<pre><code>public class MyConfirmDialog extends DialogPanel {
-    public MyConfirmDialog(RunnableWithCode done) {
-        super(420, 220, done);
-    }
-
-    &#64;Override
-    public void buildUI() {
-        final LabelAPI text2 = Global.getSettings().createLabel(
-            "Extra info", Fonts.INSIGNIA_LARGE
-        );
-        add(text2).inTL(opad, 50);
-    }
-
-    &#64;Override
-    public void outsideClickAbsorbed(InputEventAPI e) {
-        getHolo().flickerNoise(0f, 0.5f);
-    }
-}
-</code></pre>
+<p><strong>Example: </strong> {@link DialogPanelExample}</p>
 */
 public class DialogPanel extends ModalDialog implements UIBuildableAPI, CallbackRunnable<Button> {
     public boolean noiseOnConfirmDismiss = true;

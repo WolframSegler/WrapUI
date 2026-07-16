@@ -6,6 +6,7 @@ Version 0.5.0-beta
 - SortableTable has a new field tooltipWidth.
 - Removed BasePanel and CustomPanel
 - Replaced all internals to use the new core elements.
+- Renamed framework to NativeUI, as it no longer wraps vanilla UI elements.
 
 Version 0.4.4-beta
 - Not compatible with v0.4.3-beta
