@@ -89,7 +89,7 @@ public class DialogPanel extends ModalDialog implements UIBuildableAPI, Callback
                     Fonts.ORBITRON_20AA, this
                 );
                 btn.setAlignment(Alignment.MID);
-                btn.cutStyle = CutStyle.TL_BR;
+                btn.setCutStyle(CutStyle.TL_BR);
                 btn.setQuickMode(true);
                 btn.customData = Integer.valueOf(i);
                 buttons.add(btn);

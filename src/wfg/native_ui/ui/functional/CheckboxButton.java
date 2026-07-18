@@ -51,7 +51,6 @@ public class CheckboxButton extends Button {
         super(btnSize, btnSize, text, font, onClick);
         bgAlpha = 0f;
         bgDisabledAlpha = 0f;
-        glow.overlayBrightness = 0f;
         glow.type = GlowType.ADDITIVE;
 
         switch (type) {
@@ -108,7 +107,7 @@ public class CheckboxButton extends Button {
     }
 
     @Override
-    public boolean isPersistentGlow() {
+    protected boolean isPersistentGlow() {
         return false;
     }
 

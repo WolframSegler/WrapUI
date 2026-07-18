@@ -314,7 +314,7 @@ public class SortableTable extends UIContainer implements UIBuildableAPI, HasOut
 
             glow.color = dark;
             glow.type = GlowType.UNDERLAY;
-            glow.overlayBrightness = 0.5f;
+            glow.glowBrightness = 1.1f;
 
             interaction.onClicked = (source, isLeftClick) -> {
                 SortableTable.this.selectRow(this);
