@@ -12,6 +12,7 @@ import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.PositionAPI;
 import com.fs.starfarer.api.util.FaderUtil;
 
+import wfg.native_ui.example.functional.ButtonExample;
 import wfg.native_ui.ui.component.HoverGlowComp;
 import wfg.native_ui.ui.component.NativeComponents;
 import wfg.native_ui.ui.component.TooltipComp;
@@ -31,6 +32,8 @@ import wfg.native_ui.util.RenderUtils;
  *   <li>Use {@link #setEnabled()} to enable/disable the button. Disabled buttons use {@link #bgDisabledColor}/{@link #bgDisabledAlpha}.</li>
  *   <li>{@link #setShowTooltipWhileInactive()} controls whether the tooltip is shown when the button is disabled.</li>
  * </ul>
+ * 
+ * <p><strong>Example: </strong> {@link ButtonExample}</p>
  */
 public class Button extends UIClickable<Button> implements UIBuildableAPI,
     HasHoverGlow, HasTooltip
