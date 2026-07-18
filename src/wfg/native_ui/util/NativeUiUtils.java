@@ -16,7 +16,7 @@ import com.fs.starfarer.api.ui.PositionAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.ui.UIComponentAPI;
 
-public class NativeUiUtils {
+public final class NativeUiUtils {
     private NativeUiUtils() {}
     public static final int APICodexHeight = 28;
 

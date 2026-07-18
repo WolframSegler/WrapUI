@@ -34,7 +34,7 @@ import wfg.native_ui.internal.ui.core.UIElement;
 import wfg.native_ui.ui.core.UIElementAPI;
 import wfg.native_ui.ui.event.UIEventBus;
 
-public class UIElementTest {
+public final class UIElementTest {
 
     private static MockedStatic<com.fs.starfarer.api.Global> globalMock;
     private static MockedStatic<UIEventBus> eventBusMock;

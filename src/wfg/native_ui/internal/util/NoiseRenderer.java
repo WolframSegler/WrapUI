@@ -13,7 +13,7 @@ import com.fs.starfarer.api.util.Misc;
 
 import wfg.native_ui.util.RenderUtils;
 
-public class NoiseRenderer {
+public final class NoiseRenderer {
     public final FaderUtil fader = new FaderUtil(0f, 1f, 1f, false, true);
     public Color noiseColor = settings.getColor("noiseColor");
     public float renderW;

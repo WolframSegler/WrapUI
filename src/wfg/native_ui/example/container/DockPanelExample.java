@@ -30,7 +30,7 @@ import wfg.native_ui.ui.visual.AbstractSpriteElement.SpriteElement;
 /**
  * In this example, the {@link DockPanel} comes from the bottom side of the screen and reveals a list of factions to select from.
  */
-public class DockPanelExample extends DockPanel {
+public final class DockPanelExample extends DockPanel {
     private static final int ROW_H = 32;
     
     private final UIBuildableAPI content;

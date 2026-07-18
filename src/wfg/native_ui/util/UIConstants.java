@@ -7,7 +7,7 @@ import java.awt.Color;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.util.Misc;
 
-public class UIConstants {
+public final class UIConstants {
     private UIConstants() {}
 
     public static final int pad = 3;

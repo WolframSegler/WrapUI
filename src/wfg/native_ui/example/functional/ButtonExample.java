@@ -20,7 +20,7 @@ import wfg.native_ui.ui.visual.AbstractSpriteElement.SpriteElement;
 import wfg.native_ui.util.NativeUiUtils;
 import wfg.native_ui.util.NativeUiUtils.AnchorType;
 
-public class ButtonExample extends UIContainer implements UIBuildableAPI {
+public final class ButtonExample extends UIContainer implements UIBuildableAPI {
     public ButtonExample(float width, float height) {
         super(width, height);
 

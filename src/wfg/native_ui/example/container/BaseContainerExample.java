@@ -14,7 +14,7 @@ import wfg.native_ui.ui.functional.Button;
 /**
  * In the following example, {@link BaseContainer} is used to draw a gray separator line between UI elements.
  */
-public class BaseContainerExample extends UIContainer implements UIBuildableAPI {
+public final class BaseContainerExample extends UIContainer implements UIBuildableAPI {
     public BaseContainerExample(float width, float height) {
         super(width, height);
 

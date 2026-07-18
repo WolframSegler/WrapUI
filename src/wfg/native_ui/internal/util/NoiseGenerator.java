@@ -1,6 +1,6 @@
 package wfg.native_ui.internal.util;
 
-public class NoiseGenerator {
+public final class NoiseGenerator {
     public float startTime = 0f;
     public float baseDuration = 0.25f;
     public float amplitude = (float)Math.min(Math.random() * 0.75f + 0.5f, 1f);

@@ -25,7 +25,7 @@ import wfg.native_ui.ui.event.IdentifiedPanel;
 import wfg.native_ui.ui.event.UIEventBus;
 import wfg.native_ui.ui.system.*;
 
-public class UIContainerTest {
+public final class UIContainerTest {
 
     // ---- Static mocks for environment ----
     private static MockedStatic<Global> globalMock;

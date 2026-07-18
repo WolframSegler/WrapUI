@@ -21,7 +21,7 @@ import wfg.native_ui.ui.functional.CheckboxButton;
 import wfg.native_ui.ui.system.TooltipSystem;
 import wfg.native_ui.util.CallbackRunnable;
 
-public class ComponentFactory {
+public final class ComponentFactory {
     private ComponentFactory() {}
 
     /**

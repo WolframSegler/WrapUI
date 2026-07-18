@@ -11,7 +11,7 @@ import wfg.native_ui.ui.component.InputSnapshotComp;
 import wfg.native_ui.ui.component.NativeComponents;
 import wfg.native_ui.ui.core.UIEntityAPI;
 
-public class RawInputSystem extends BaseSystem {
+public final class RawInputSystem extends BaseSystem {
 
     private static final RawInputSystem INSTANCE = new RawInputSystem();
     public static RawInputSystem get() { return INSTANCE;}

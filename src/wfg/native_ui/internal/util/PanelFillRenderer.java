@@ -8,7 +8,7 @@ import wfg.native_ui.util.RenderUtils;
 
 import java.awt.Color;
 
-public class PanelFillRenderer {
+public final class PanelFillRenderer {
     public boolean useOverlay = false;
     public boolean useAdditiveBlend = true;
     public boolean useGradient = true;

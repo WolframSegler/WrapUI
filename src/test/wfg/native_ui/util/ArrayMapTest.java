@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class ArrayMapTest {
+public final class ArrayMapTest {
     private ArrayMap<String, Integer> map;
 
     @BeforeEach

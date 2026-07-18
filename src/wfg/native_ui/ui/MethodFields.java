@@ -15,7 +15,7 @@ import rolflectionlib.util.RolfLectionUtil;
 /**
  * Method fields for obfuscated vanilla UI classes.
  */
-public class MethodFields {
+public final class MethodFields {
     private MethodFields() {};
     private static final Object clearChildrenMethod;
     private static final Object getChildrenCopyMethod;

@@ -19,7 +19,7 @@ import wfg.native_ui.util.UIConstants;
  *  <li>{@link UIConstants#UI_BORDER_4}</li>
  * </ul>
  */
-public class BorderRenderer {
+public final class BorderRenderer {
     private static final int HIDE_LEFT = 1;   // 0001
     private static final int HIDE_RIGHT = 2;  // 0010
     private static final int HIDE_TOP = 4;    // 0100

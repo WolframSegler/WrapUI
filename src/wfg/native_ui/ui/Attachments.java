@@ -17,7 +17,7 @@ import rolflectionlib.util.RolfLectionUtil;
  * campaign, title, and combat. Allows retrieving core panels, tab panels,
  * dialogs, and overlays depending on the current mode. Is not null-safe.
  */
-public class Attachments {
+public final class Attachments {
     private Attachments() {}
 
     private static final Object getWarRoomPanelMethod = RolfLectionUtil.getMethod(

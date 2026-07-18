@@ -16,7 +16,7 @@ import wfg.native_ui.ui.visual.AbstractSpriteElement.SpriteElement;
 /** 
  * In this example, the dialog is used for instant text display and subclassed for an additional UI element.
  */
-public class DialogPanelExample extends UIContainer implements UIBuildableAPI {
+public final class DialogPanelExample extends UIContainer implements UIBuildableAPI {
 
     public DialogPanelExample(float width, float height) {
         super(width, height);

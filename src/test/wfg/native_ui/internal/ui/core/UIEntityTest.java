@@ -16,7 +16,7 @@ import wfg.native_ui.ui.component.UIComponentContainer;
 import wfg.native_ui.ui.system.*;
 import wfg.native_ui.ui.event.UIEventBus;
 
-public class UIEntityTest {
+public final class UIEntityTest {
 
     private static MockedStatic<Global> globalMock;
     private static MockedStatic<UIEventBus> eventBusMock;

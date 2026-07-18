@@ -41,6 +41,9 @@ private final void helper() { … }
 public static final int calculate() { … }
 ```
 
+## Making Classes `final`
+Classes that are not explicitly designed for extension (such as utility classes) must be declared `final`. This enforces design intent, prevents unintended inheritance, and keeps auto-completion clean in the IDE.
+
 ## Constants
 Values used multiple times inside a method should be extracted to `private static final` fields at the top of the class.
 
@@ -186,3 +189,4 @@ public void buildUI(
     ...
 }
 ```
+

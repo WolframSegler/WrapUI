@@ -19,7 +19,7 @@ import wfg.native_ui.ui.core.UIBuildableAPI;
  * In this example, widgets are created from a list of data and stacked horizontally.
  * Should the total width of the widgets exceed the height, the panel will use the scroll input to move the content panel. 
  */
-public class ScrollPanelExample extends UIContainer implements UIBuildableAPI {
+public final class ScrollPanelExample extends UIContainer implements UIBuildableAPI {
     
     public ScrollPanelExample(float width, float height) {
         super(width, height);

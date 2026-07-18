@@ -5,7 +5,7 @@ import java.awt.Color;
 import wfg.native_ui.ui.core.UIEntityAPI;
 import wfg.native_ui.util.RenderUtils;
 
-public class DebugBgSystem extends BaseSystem {
+public final class DebugBgSystem extends BaseSystem {
     private static final DebugBgSystem INSTANCE = new DebugBgSystem();
     public static DebugBgSystem get() { return INSTANCE;}
     private DebugBgSystem() {}
