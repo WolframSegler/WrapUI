@@ -7,6 +7,7 @@ import static wfg.native_ui.util.Globals.settings;
 import static wfg.native_ui.util.UIConstants.*;
 
 import com.fs.starfarer.api.ui.Alignment;
+import com.fs.starfarer.api.ui.ButtonAPI;
 import com.fs.starfarer.api.ui.Fonts;
 import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.PositionAPI;
@@ -35,24 +36,29 @@ import wfg.native_ui.util.RenderUtils;
  * 
  * <p><strong>Example: </strong> {@link ButtonExample}</p>
  */
-public class Button extends UIClickable<Button> implements UIBuildableAPI,
+public class Button extends UIClickable<Button> implements UIBuildableAPI, ButtonAPI,
     HasHoverGlow, HasTooltip
 {
+    private static final float GLOW_BRIGHTNESS = 0.2f;
+    private static final float FLASH_BRIGHTNESS = 0.3f;
+
     public final TooltipComp tooltip = comp().get(NativeComponents.TOOLTIP);
     protected final HoverGlowComp glow = comp().get(NativeComponents.HOVER_GLOW);
 
     public float bgAlpha = 0.9f;
     public float bgDisabledAlpha = 0.8f;
+    public float highlightBrightness = 0.85f; // override for general brightness
     public Color bgSelectedColor = dark;
     public Color bgColor = dark;
     public Color bgDisabledColor = new Color(17, 52, 62);
-    public CutStyle cutStyle = CutStyle.NONE;
     public int overrideCutSize = 0;
-
+    
+    protected CutStyle cutStyle = CutStyle.NONE;
     protected LabelAPI label = null;
     protected String labelText;
     protected String labelFont;
     protected Alignment alg = Alignment.MID;
+    protected FaderUtil highlightFader = new FaderUtil(0f, 0.05f, 0.25f);
     
     private boolean appendShortcutToText = false;
     private boolean showTooltipWhileInactive = false;
@@ -68,15 +74,16 @@ public class Button extends UIClickable<Button> implements UIBuildableAPI,
         labelText = text == null ? "" : text;
         labelFont = font == null ? Fonts.ORBITRON_12 : font;
 
-        glow.fader = new FaderUtil(0, 0, 0.2f, false, true);
+        glow.fader = new FaderUtil(0f, 0.05f, 0.25f, false, true);
         glow.color = base;
-        glow.overlayBrightness = 0.2f;
+        glow.glowBrightness = GLOW_BRIGHTNESS;
+        glow.flashBrightness = FLASH_BRIGHTNESS;
         glow.faderMaskVertices = getFaderMaskVertices();
 
         final ShortcutHandler<Button> uiClickableCallback = interaction.onShortcutPressed;
         interaction.onShortcutPressed = (source, event) -> {
             if (getOpacity() > 0f) {
-                glow.fader.forceIn();
+                flash(false);
                 label.flash(0.2f, 0.2f);
             }
             uiClickableCallback.run(source, event);
@@ -178,14 +185,6 @@ public class Button extends UIClickable<Button> implements UIBuildableAPI,
         recreateLabel();
     }
 
-    public void setHighlightBounceDown(boolean bool) {
-        glow.fader.setBounceDown(bool);
-    }
-
-    public void setHighlightBrightness(float brightness) {
-        glow.overlayBrightness = brightness;
-    }
-
     public Color getLabelColor() {
         return label.getColor();
     }
@@ -201,7 +200,7 @@ public class Button extends UIClickable<Button> implements UIBuildableAPI,
 
     @Override
     public PositionAPI setSize(float w, float h) {
-        setSize(w, h);
+        super.setSize(w, h);
 
         glow.faderMaskVertices = getFaderMaskVertices();
         recreateLabel();
@@ -247,14 +246,21 @@ public class Button extends UIClickable<Button> implements UIBuildableAPI,
 
     public void setCutStyle(CutStyle style) {
         cutStyle = style;
+        glow.faderMaskVertices = getFaderMaskVertices();
     }
 
     public void setCutStyle(com.fs.starfarer.api.ui.CutStyle vanillaStyle) {
         cutStyle = CutStyle.fromVanilla(vanillaStyle);
+        if (cutStyle == null) cutStyle = CutStyle.NONE;
+        glow.faderMaskVertices = getFaderMaskVertices();
     }
 
     public void setClickable(boolean bool) {
         clickable = bool;
+    }
+
+    public Object getCustomData() {
+        return customData;
     }
 
     public void setCustomData(Object data) {
@@ -265,12 +271,17 @@ public class Button extends UIClickable<Button> implements UIBuildableAPI,
         mouseOverSound = sound;
     }
 
+    public boolean isRightClicksOkWhenDisabled() {
+        return rightClicksOkWhenDisabled;
+    }
+
+    @Override
     public void setRightClicksOkWhenDisabled(boolean bool) {
         rightClicksOkWhenDisabled = bool;
     }
 
-    public float getHighlightBrightness() {
-        return glow.overlayBrightness;
+    public void setShortcut(int lwjgl_key, boolean putLast) {
+        setShortcut(lwjgl_key);
     }
 
     public boolean isPerformActionWhenDisabled() {
@@ -281,16 +292,82 @@ public class Button extends UIClickable<Button> implements UIBuildableAPI,
         disabledSound = sound;
     }
 
-    public Object getCustomData() {
-        return customData;
-    }
-
     public void setButtonPressedSound(String sound) {
         pressedSound = sound;
     }
 
     public void setPerformActionWhenDisabled(boolean bool) {
         performActionWhenDisabled = bool;
+    }
+
+    public float getGlowBrightness() {
+        return glow.glowBrightness;
+    }
+
+    public float getFlashBrightness() {
+        return glow.flashBrightness;
+    }
+
+    public float getHighlightBrightness() {
+        return highlightBrightness;
+    }
+
+    public void setGlowBrightness(float brightness) {
+        glow.glowBrightness = brightness;
+    }
+
+    public void setFlashBrightness(float brightness) {
+        glow.flashBrightness = brightness;
+    }
+
+    public void setHighlightBrightness(float brightness) {
+        highlightBrightness = brightness;
+    }
+
+    public void highlight() {
+        this.highlightFader.fadeIn();
+    }
+
+    public boolean isHighlighted() {
+        return this.highlightFader.isFadedIn() || this.highlightFader.isFadingIn();
+    }
+
+    public void unhighlight() {
+        this.highlightFader.fadeOut();
+    }
+    
+    public void setHighlightBounceDown(boolean bool) {
+        highlightFader.setBounceDown(bool);
+    }
+
+    @Override
+    public void flash() {
+        flash(true);
+    }
+
+    @Override
+    public void flash(boolean withSound) {
+        flash(withSound, 0.05f, 0.25f);
+    }
+
+    @Override
+    public void flash(boolean withSound, float in, float out) {
+        glow.fader.fadeIn();
+
+        if (withSound) playPressSound();
+    }
+
+    @Deprecated
+    public void setSkipPlayingPressedSoundOnce(boolean bool) {}
+    @Deprecated
+    public boolean isSkipPlayingPressedSoundOnce() { return false; }
+
+    @Override
+    public void renderImpl(float alpha) {
+        final float highlight = highlightFader.getBrightness() * highlightBrightness;
+        glow.overrideBrightness = (highlight > 0f) ? highlight : -1f;
+
+        super.renderImpl(alpha);
     }
 
     protected float[] getFaderMaskVertices() {

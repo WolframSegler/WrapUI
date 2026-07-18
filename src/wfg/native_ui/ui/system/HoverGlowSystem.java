@@ -31,9 +31,7 @@ public final class HoverGlowSystem extends BaseSystem {
 
         if (!glow.enabled || !glow.isFaderOwner) return;
 
-        State target = input.hoveredLastFrame ? State.IN : State.OUT;
-        
-        if (glow.persistent) target = State.IN;
+        final State target = (input.hoveredLastFrame || glow.persistent) ? State.IN : State.OUT;
 
         glow.fader.setState(target);
         glow.fader.advance(amount);
@@ -61,7 +59,7 @@ public final class HoverGlowSystem extends BaseSystem {
         final var comp = element.comp();
         final HoverGlowComp glow = comp.get(NativeComponents.HOVER_GLOW);
         final InputSnapshotComp input = comp.get(NativeComponents.INPUT_SNAPSHOT);
-        if (glow.fader.getBrightness() <= 0) return;
+        if (glow.fader.getBrightness() <= 0f) return;
 
         switch (glow.type) {
         case OVERLAY:
@@ -69,15 +67,14 @@ public final class HoverGlowSystem extends BaseSystem {
             break;
 
         case ADDITIVE:
-            final float glowAmount = glow.additiveBrightness * glow.fader.getBrightness() * alpha;
+            final float brightness = getEffectiveBrightness(glow, input) * alpha;
             final SpriteAPI sprite = glow.additiveSprite;
             if (sprite != null) {
                 RenderUtils.drawAdditiveGlow(
-                    sprite,
-                    element.getX(),
+                    sprite, element.getX(),
                     element.getY(),
                     glow.color,
-                    glowAmount
+                    brightness
                 );
             } else {
                 drawGlowLayer(alpha, input, glow, element);
@@ -92,8 +89,7 @@ public final class HoverGlowSystem extends BaseSystem {
         UIEntityAPI element
     ) {
 
-        final float effectiveAlpha = glow.overlayBrightness * glow.fader.getBrightness() * alpha;
-        final float brightness = input.hasLMBClickedBefore ? effectiveAlpha * 1.5f : effectiveAlpha;
+        final float brightness = getEffectiveBrightness(glow, input) * alpha;
         final float[] verts = glow.faderMaskVertices != null ? glow.faderMaskVertices.clone() : null;
 
         if (verts != null) {
@@ -108,5 +104,21 @@ public final class HoverGlowSystem extends BaseSystem {
                 glow.color, brightness, glow.type == GlowType.ADDITIVE
             );
         }
+    }
+
+    private static final float getEffectiveBrightness(HoverGlowComp glow, InputSnapshotComp input) {
+        final float scalar = switch(glow.type) {
+            default -> 1f;
+            case ADDITIVE -> 1f;
+            case OVERLAY, UNDERLAY -> 0.45f;
+        };
+
+        if (glow.overrideBrightness >= 0f) {
+            return glow.overrideBrightness * scalar;
+        }
+
+        final float base = input.hasLMBClickedBefore ? glow.flashBrightness : glow.glowBrightness;
+
+        return base * scalar * glow.fader.getBrightness();
     }
 }

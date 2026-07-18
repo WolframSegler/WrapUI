@@ -17,16 +17,15 @@ public final class TooltipComp extends BaseComponent {
     public String expandTxt = null;
     public String unexpandTxt = null;
 
-    /** Builds or updates the tooltip contents. REQUIRED. */
+    /** Builds or updates the tooltip contents. */
     public TooltipBuilder builder;
 
-    /** Positions the tooltip after it has been attached. OPTIONAL. */
+    /** Positions the tooltip after it has been attached. */
     public TooltipPositioner positioner = TooltipPositioner.DEFAULT;
 
-
-    /** Internal: only used by {@link TooltipSystem}, do not access */
+    /** Internal: only used by {@link TooltipSystem} */
     public UITooltip internal_tp;
-    /** Internal: only used by {@link TooltipSystem}, do not access */
+    /** Internal: only used by {@link TooltipSystem} */
     public float internal_hoverTime = 0f;
 
     

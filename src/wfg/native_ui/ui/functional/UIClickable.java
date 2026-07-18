@@ -65,12 +65,8 @@ public class UIClickable<T extends UIClickable<T>> extends UIContainer implement
             if (getOpacity() <= 0f && disabledWhileInvisible) return;
             if (event != null) event.consume();
 
-            if (disabled && !performActionWhenDisabled) {
-                if (soundEnabled) Global.getSoundPlayer().playUISound(disabledSound, 1, 1);
-                return;
-            } else if (soundEnabled) {
-                Global.getSoundPlayer().playUISound(pressedSound, 1, 1);
-            }
+            playPressSound();
+            if (disabled && !performActionWhenDisabled) return;
 
             if (onClicked != null) {
                 onClicked.run(self());
@@ -107,5 +103,11 @@ public class UIClickable<T extends UIClickable<T>> extends UIContainer implement
     @SuppressWarnings("unchecked")
     protected final T self() {
         return (T) this;
+    }
+
+    protected final void playPressSound() {
+        if (!soundEnabled) return;
+        final String audio = disabled && !performActionWhenDisabled ? disabledSound : pressedSound;
+        Global.getSoundPlayer().playUISound(audio, 1, 1);
     }
 }

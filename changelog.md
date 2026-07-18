@@ -4,9 +4,12 @@ Version 0.5.0-beta
 - Fixed MultiSelect onSelected listener to pass the Button as a parameter.
 - Removed HeaderPanelWithTooltip as the tooltip is simply a Component.
 - SortableTable has a new field tooltipWidth.
-- Removed BasePanel and CustomPanel
+- Removed BasePanel and CustomPanel.
 - Replaced all internals to use the new core elements.
 - Renamed framework to NativeUI, as it no longer wraps vanilla UI elements.
+- Renamed SpritePanel to AbstractSpriteElement, renamed Base to SpriteElement and renamed SpritePanelTp to InteractiveSprite.
+- Made many classes not meant for subclassing final.
+- Added flashBrightness to HoverGlowComp and refactored it to use the same brightness fields despite different glow types.
 
 Version 0.4.4-beta
 - Not compatible with v0.4.3-beta

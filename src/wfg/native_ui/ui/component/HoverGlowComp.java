@@ -4,29 +4,36 @@ import java.awt.Color;
 
 import com.fs.starfarer.api.graphics.SpriteAPI;
 import com.fs.starfarer.api.util.FaderUtil;
+import com.fs.starfarer.api.util.FaderUtil.State;
 
 public final class HoverGlowComp extends BaseComponent {
 
     /**
-     * Indicates whether this panel controls its own {@link HoverGlowComp#fader} instance.
+     * Indicates whether this panel controls its own {@link #fader} instance.
      * <p>
      * Some panels may instead synchronize their fading behavior with another panel's fader.
-     * In such cases, this should return {@code false}.
+     * In such cases, this should be {@code false}.
      */
     public boolean isFaderOwner = true;
 
     public FaderUtil fader = new FaderUtil(0f, 0.1f, 0.2f, false, true);
+    /** Determines draw call and base brightness */
     public GlowType type = GlowType.OVERLAY;
+    /** Forces fader state to {@link State#IN} */
     public boolean persistent = false;
-    public float overlayBrightness = 0.25f;
-    public float additiveBrightness = 0.6f;
+    /** Used when element is hovered over */
+    public float glowBrightness = 0.6f;
+    /** Used when element is LMB pressed */
+    public float flashBrightness = 0.9f;
+    /** If >= 0f, overrides the brightness directly and bypasses the fader and flash logic. */
+    public float overrideBrightness = -1f;
     public Color color = Color.WHITE;
+    /** The sprite is binded if glow type is {@link GlowType#ADDITIVE} */
     public SpriteAPI additiveSprite = null;
     public final LayoutOffset offset = new LayoutOffset();
 
     /**
-     * The polygon vertices of the background shape in CCW order.
-     * Value of null defaults to a rectangle.
+     * The polygon vertices of the glow shape in CCW order, {@code null} defaults to a rectangle.
      */
     public float[] faderMaskVertices = null;
 
