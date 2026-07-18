@@ -39,6 +39,6 @@ public interface UIEntityAPI extends UIElementAPI {
     /** Short-hand alias for {@link #getUISystemContainer()} */
     UISystemContainer system();
 
-    /** Uses {@link UIElementFlags} to attach native systems. */
+    /** Uses {@link UIElementFlags} to attach native systems by doing instanceof checks. */
     void initSystems();
 }

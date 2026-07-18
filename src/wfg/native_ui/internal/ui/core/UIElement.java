@@ -15,9 +15,9 @@ import wfg.native_ui.ui.event.UIEventBus;
 public class UIElement implements UIElementAPI {
     private static final float FADE_SPEED_MULT = settings.getFloat("uiFadeSpeedMult");
 
+    protected FaderUtil mFader = new FaderUtil(1f, 0.05f, 0.25f);
     protected PositionAPI mPos;
     protected UIPanelAPI mParent;
-    protected FaderUtil mFader;
 
     protected float mOpacity;
 
@@ -59,16 +59,15 @@ public class UIElement implements UIElementAPI {
         mPos.setXAlignOffset(0f);
         mPos.setYAlignOffset(0f);
 
-        final float offsetX = mPos.getX() - currX;
-        final float offsetY = mPos.getY() - currY;
+        final float oldOffsetX = currX - mPos.getX();
+        final float oldOffsetY = currY - mPos.getY();
 
-        mPos.setXAlignOffset(offsetX + dx);
-        mPos.setYAlignOffset(offsetY + dy);
+        mPos.setXAlignOffset(oldOffsetX + dx);
+        mPos.setYAlignOffset(oldOffsetY + dy);
     }
 
     public void resizeBy(float dw, float dh) {
-        setWidth(mPos.getWidth() + dw);
-        setHeight(mPos.getHeight() + dh);
+        mPos.setSize(mPos.getWidth() + dw, mPos.getHeight() + dh);
     }
 
     public UIPanelAPI getParent() { return mParent; }

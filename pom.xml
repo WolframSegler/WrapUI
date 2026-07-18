@@ -32,6 +32,13 @@
           <includes>
             <include>**/*Test.java</include>
           </includes>
+          <argLine>
+            --add-opens java.base/java.lang=ALL-UNNAMED
+            --add-opens java.base/java.util=ALL-UNNAMED
+            --add-opens java.base/java.lang.invoke=ALL-UNNAMED
+            --add-opens java.base/java.lang.reflect=ALL-UNNAMED
+            --add-opens java.base/sun.misc=ALL-UNNAMED
+          </argLine>
         </configuration>
       </plugin>
 
@@ -145,6 +152,12 @@
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
       <version>5.10.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>5.11.0</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
