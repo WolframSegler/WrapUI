@@ -28,7 +28,7 @@ public final class ComponentFactory {
      * Use {@link CheckboxButton} if you want the checkbox sprite.
      */
     public static final Button createCheckboxWithText(
-        UIPanelAPI parent, int btnSize, String text, String font, CallbackRunnable<Button> onClick, 
+        int btnSize, String text, String font, CallbackRunnable<Button> onClick, 
         Color txtColor, int textAndBtnGap
     ) {
         final Button checkbox = new Button(btnSize, btnSize, null, null, onClick);
