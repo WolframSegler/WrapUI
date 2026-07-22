@@ -1,20 +1,20 @@
-package wfg.native_ui.ui.functional;
+package wfg.native_ui.ui.widget;
 
 import java.util.function.Supplier;
 
 import wfg.native_ui.ui.container.DockPanel;
 
-public class DockClickable<T extends DockPanel> extends UIClickable<DockClickable<T>> {
+public class DockButton<T extends DockPanel> extends Button {
     private T dock;
     private final Supplier<T> dockFactory;
 
-    public DockClickable(int width, int height, Supplier<T> dockFactory) {
-        super(width, height, null);
+    public DockButton(int width, int height, String text, String font, Supplier<T> dockFactory) {
+        super(width, height, text, font, null);
         this.dockFactory = dockFactory;
         onClicked = btn -> {
             if (dock == null) createDock();
             if (dock == null) return;
-
+            
             if (dock.isOpen()) dock.close();
             else dock.open(true);
         };

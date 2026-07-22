@@ -14,9 +14,9 @@ import com.fs.starfarer.api.ui.Fonts;
 import wfg.native_ui.internal.ui.core.UIContainer;
 import wfg.native_ui.ui.component.HoverGlowComp.GlowType;
 import wfg.native_ui.ui.core.UIBuildableAPI;
-import wfg.native_ui.ui.functional.Button;
-import wfg.native_ui.ui.functional.Button.CutStyle;
 import wfg.native_ui.ui.visual.AbstractSpriteElement.SpriteElement;
+import wfg.native_ui.ui.widget.Button;
+import wfg.native_ui.ui.widget.Button.CutStyle;
 import wfg.native_ui.util.NativeUiUtils;
 import wfg.native_ui.util.NativeUiUtils.AnchorType;
 

@@ -18,10 +18,10 @@ import wfg.native_ui.example.dialog.DialogPanelExample;
 import wfg.native_ui.internal.ui.dialog.FoldingPanel;
 import wfg.native_ui.internal.ui.dialog.ModalDialog;
 import wfg.native_ui.ui.core.UIBuildableAPI;
-import wfg.native_ui.ui.functional.Button;
-import wfg.native_ui.ui.functional.Button.CutStyle;
-import wfg.native_ui.util.CallbackRunnable;
-import wfg.native_ui.util.RunnableWithCode;
+import wfg.native_ui.ui.functional.CallbackRunnable;
+import wfg.native_ui.ui.functional.RunnableWithCode;
+import wfg.native_ui.ui.widget.Button;
+import wfg.native_ui.ui.widget.Button.CutStyle;
 
 /**
 <p>

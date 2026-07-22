@@ -10,6 +10,7 @@ Version 0.5.0-beta
 - Renamed SpritePanel to AbstractSpriteElement, renamed Base to SpriteElement and renamed SpritePanelTp to InteractiveSprite.
 - Made many classes not meant for subclassing final.
 - Added flashBrightness to HoverGlowComp and refactored it to use the same brightness fields despite different glow types.
+- Moved elements out of ui/functional/ for better convention.
 
 Version 0.4.4-beta
 - Not compatible with v0.4.3-beta

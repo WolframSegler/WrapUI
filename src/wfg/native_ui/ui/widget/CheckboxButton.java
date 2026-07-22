@@ -1,4 +1,4 @@
-package wfg.native_ui.ui.functional;
+package wfg.native_ui.ui.widget;
 
 import static wfg.native_ui.util.Globals.settings;
 import static wfg.native_ui.util.UIConstants.hpad;
@@ -11,7 +11,7 @@ import com.fs.starfarer.api.ui.ButtonAPI.UICheckboxSize;
 import com.fs.starfarer.api.ui.Alignment;
 
 import wfg.native_ui.ui.component.HoverGlowComp.GlowType;
-import wfg.native_ui.util.CallbackRunnable;
+import wfg.native_ui.ui.functional.CallbackRunnable;
 
 /**
  * A UI Component consisting of a toggleable checkbox and an optional text label.

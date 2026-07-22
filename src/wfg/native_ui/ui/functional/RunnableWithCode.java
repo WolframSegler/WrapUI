@@ -1,4 +1,4 @@
-package wfg.native_ui.util;
+package wfg.native_ui.ui.functional;
 
 @FunctionalInterface
 public interface RunnableWithCode {

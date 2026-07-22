@@ -9,7 +9,7 @@ import com.fs.starfarer.api.ui.Fonts;
 import wfg.native_ui.internal.ui.core.UIContainer;
 import wfg.native_ui.ui.container.BaseContainer;
 import wfg.native_ui.ui.core.UIBuildableAPI;
-import wfg.native_ui.ui.functional.Button;
+import wfg.native_ui.ui.widget.Button;
 
 /**
  * In the following example, {@link BaseContainer} is used to draw a gray separator line between UI elements.

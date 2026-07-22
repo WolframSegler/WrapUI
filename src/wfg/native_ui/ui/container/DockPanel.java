@@ -19,7 +19,7 @@ import wfg.native_ui.internal.util.BorderRenderer;
 import wfg.native_ui.ui.Attachments;
 import wfg.native_ui.ui.ComponentFactory;
 import wfg.native_ui.ui.core.UIBuildableAPI;
-import wfg.native_ui.util.CallbackRunnable;
+import wfg.native_ui.ui.functional.CallbackRunnable;
 import wfg.native_ui.util.UIConstants;
 
 /**

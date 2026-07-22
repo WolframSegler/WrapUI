@@ -1,4 +1,4 @@
-package wfg.native_ui.ui.functional;
+package wfg.native_ui.ui.interaction;
 
 import com.fs.starfarer.api.Global;
 
@@ -6,7 +6,7 @@ import wfg.native_ui.internal.ui.core.UIContainer;
 import wfg.native_ui.ui.component.InteractionComp;
 import wfg.native_ui.ui.component.NativeComponents;
 import wfg.native_ui.ui.core.UIElementFlags.HasInteraction;
-import wfg.native_ui.util.CallbackRunnable;
+import wfg.native_ui.ui.functional.CallbackRunnable;
 
 /**
  * Base clickable component with interaction support, sound, shortcut, and checked state.

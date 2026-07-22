@@ -2,10 +2,11 @@ package wfg.native_ui.ui.component;
 
 import org.lwjgl.input.Keyboard;
 
-import com.fs.starfarer.api.input.InputEventAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI.ActionListenerDelegate;
 
-import wfg.native_ui.util.CallbackRunnable;
+import wfg.native_ui.ui.functional.CallbackRunnable;
+import wfg.native_ui.ui.functional.ClickHandler;
+import wfg.native_ui.ui.functional.ShortcutHandler;
 
 /**
  * Component describing interaction behavior for a panel.
@@ -35,17 +36,4 @@ public final class InteractionComp<SourceType> extends BaseComponent {
 
     /** Called once when the panel is clicked. */
     public ClickHandler<SourceType> onClicked;
-
-    @FunctionalInterface
-    public static interface ClickHandler<SourceType> {
-        void handle(SourceType source, boolean isLeftClick);
-    }
-
-    @FunctionalInterface
-    public interface ShortcutHandler<CallerType> {
-        /**
-         * @param event nullable
-         */
-        void run(CallerType caller, InputEventAPI event);
-    }
 }

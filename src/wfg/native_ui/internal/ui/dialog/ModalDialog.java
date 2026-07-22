@@ -20,8 +20,8 @@ import com.fs.starfarer.codex2.CodexDialog;
 
 import wfg.native_ui.internal.ui.core.UIContainer;
 import wfg.native_ui.ui.Attachments;
+import wfg.native_ui.ui.functional.RunnableWithCode;
 import wfg.native_ui.util.RenderUtils;
-import wfg.native_ui.util.RunnableWithCode;
 
 public class ModalDialog extends UIContainer {
     public RunnableWithCode delegate;
