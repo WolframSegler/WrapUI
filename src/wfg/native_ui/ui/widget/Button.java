@@ -17,11 +17,11 @@ import wfg.native_ui.example.functional.ButtonExample;
 import wfg.native_ui.ui.component.HoverGlowComp;
 import wfg.native_ui.ui.component.NativeComponents;
 import wfg.native_ui.ui.component.TooltipComp;
-import wfg.native_ui.ui.component.InteractionComp.ShortcutHandler;
 import wfg.native_ui.ui.core.UIBuildableAPI;
 import wfg.native_ui.ui.core.UIElementFlags.HasHoverGlow;
 import wfg.native_ui.ui.core.UIElementFlags.HasTooltip;
 import wfg.native_ui.ui.functional.CallbackRunnable;
+import wfg.native_ui.ui.functional.ShortcutHandler;
 import wfg.native_ui.ui.interaction.UIClickable;
 import wfg.native_ui.util.RenderUtils;
 
