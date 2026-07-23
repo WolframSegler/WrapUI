@@ -6,7 +6,6 @@ import com.fs.starfarer.api.ui.PositionAPI;
 
 import wfg.native_ui.ui.component.NativeComponents;
 import wfg.native_ui.ui.component.OutlineComp;
-import wfg.native_ui.ui.component.UIComponentContainer;
 import wfg.native_ui.ui.core.UIEntityAPI;
 import wfg.native_ui.util.RenderUtils;
 
@@ -18,8 +17,7 @@ public final class OutlineSystem extends BaseSystem {
 
     @Override
     public void init(UIEntityAPI element) {
-        final UIComponentContainer comp = element.comp();
-        comp.setIfNotPresent(NativeComponents.OUTLINE, new OutlineComp());
+        element.comp().setIfNotPresent(NativeComponents.OUTLINE, new OutlineComp());
     }
 
     @Override

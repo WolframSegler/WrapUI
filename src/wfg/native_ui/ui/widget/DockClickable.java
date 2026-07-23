@@ -5,6 +5,9 @@ import java.util.function.Supplier;
 import wfg.native_ui.ui.container.DockPanel;
 import wfg.native_ui.ui.interaction.UIClickable;
 
+/**
+ * <p><strong>Example: </strong> {@link DockButtonExample}</p>
+ */
 public class DockClickable<T extends DockPanel> extends UIClickable<DockClickable<T>> {
     private T dock;
     private final Supplier<T> dockFactory;

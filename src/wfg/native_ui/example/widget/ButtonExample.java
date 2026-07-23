@@ -1,4 +1,4 @@
-package wfg.native_ui.example.functional;
+package wfg.native_ui.example.widget;
 
 import static wfg.native_ui.util.UIConstants.highlight;
 

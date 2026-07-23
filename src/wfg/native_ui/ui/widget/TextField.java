@@ -27,13 +27,17 @@ import com.fs.starfarer.api.util.FaderUtil;
 import com.fs.starfarer.api.util.Misc;
 
 import rolflectionlib.util.RolfLectionUtil;
+import wfg.native_ui.example.widget.TextFieldExample;
 import wfg.native_ui.internal.ui.core.UIContainer;
 import wfg.native_ui.ui.MethodFields;
 import wfg.native_ui.util.NativeUiUtils;
 import wfg.native_ui.util.RenderUtils;
 
 // TODO release TextField after new update.
-/** Not complete yet!!! */
+/**
+ * Not complete yet!!!
+ * <p><strong>Example: </strong> {@link TextFieldExample}</p>
+ */
 public class TextField extends UIContainer implements TextFieldAPI {
     private static final char NULL_CHAR = '\u0000';
     private static final String TYPER_BUZZER_SOUND_ID = "ui_typer_buzz";

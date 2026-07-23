@@ -1,4 +1,4 @@
-package wfg.native_ui.internal.ui.functional;
+package wfg.native_ui.internal.ui.interaction;
 
 import static wfg.native_ui.util.UIConstants.screenH;
 import static wfg.native_ui.util.UIConstants.screenW;

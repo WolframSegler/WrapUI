@@ -15,15 +15,16 @@ public final class AudioFeedbackSystem extends BaseSystem {
     private static final SoundPlayerAPI player = Global.getSoundPlayer();
 
     private static final AudioFeedbackSystem INSTANCE = new AudioFeedbackSystem();
-    public static AudioFeedbackSystem get() { return INSTANCE;}
+    public static AudioFeedbackSystem get() { return INSTANCE; }
     private AudioFeedbackSystem() {}
 
     @Override
     public void init(UIEntityAPI element) {
         element.comp().setIfNotPresent(NativeComponents.AUDIO_FEEDBACK, new AudioFeedbackComp());
+        element.comp().setIfNotPresent(NativeComponents.INPUT_SNAPSHOT, new InputSnapshotComp());
     }
 
-    private static final int initCompTicks = 10;
+    private static final int INIT_COMP_TICKS = 10;
 
     @Override
     public void processInput(final UIEntityAPI element, final List<InputEventAPI> events) {
@@ -33,7 +34,7 @@ public final class AudioFeedbackSystem extends BaseSystem {
         if (audio == null || !audio.enabled) return;
         audio.internal_accumulatedGameTicks++;
 
-        if (audio.internal_accumulatedGameTicks < initCompTicks) return;
+        if (audio.internal_accumulatedGameTicks < INIT_COMP_TICKS) return;
 
         if (input.hoverStarted) {
             player.playUISound(audio.mouseOverSound, 1f, 1f);

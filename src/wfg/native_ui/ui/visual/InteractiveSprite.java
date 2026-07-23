@@ -16,18 +16,6 @@ import wfg.native_ui.ui.core.UIElementFlags.HasTooltip;
 
 /**
  * An {@link AbstractSpriteElement} with tooltip, hover glow, and audio feedback support.
- *
- * <p>Usage example:
- * <pre>{@code
- * InteractiveSprite panel = new InteractiveSprite(64, 64, "iconPath", null, null);
- * panel.tooltip.builder = (tooltip, expanded) -> {
- *     tooltip.addPara("...", pad);
- * };
- * panel.tooltip.positioner = (tooltip, expanded) -> {
- *     // default if not overridden is NativeUiUtils.mouseCornerPos(tooltip)
- *     NativeUiUtils.anchorPanel(tooltip, anchor, AnchorType.LeftTop, pad);
- * };
- * }</pre>
  */
 public class InteractiveSprite extends AbstractSpriteElement<InteractiveSprite>
     implements HasTooltip, HasHoverGlow, HasAudioFeedback

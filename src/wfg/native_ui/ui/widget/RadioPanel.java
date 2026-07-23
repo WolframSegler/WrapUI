@@ -8,6 +8,7 @@ import java.util.List;
 import com.fs.starfarer.api.ui.Fonts;
 import com.fs.starfarer.api.ui.ButtonAPI.UICheckboxSize;
 
+import wfg.native_ui.example.widget.RadioPanelExample;
 import wfg.native_ui.internal.ui.core.UIContainer;
 import wfg.native_ui.ui.core.UIBuildableAPI;
 import wfg.native_ui.ui.functional.CallbackRunnable;
@@ -33,6 +34,8 @@ import wfg.native_ui.ui.widget.Button.CutStyle;
  *   <li>{@link LayoutMode#VERTICAL} – options are stacked vertically using checkbox buttons.</li>
  *   <li>{@link LayoutMode#HORIZONTAL} – options are distributed evenly across the panel width.</li>
  * </ul>
+ * 
+ * <p><strong>Example: </strong> {@link RadioPanelExample}</p>
  */
 public class RadioPanel extends UIContainer implements UIBuildableAPI {
     public enum LayoutMode {

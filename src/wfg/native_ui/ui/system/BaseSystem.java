@@ -9,19 +9,19 @@ import wfg.native_ui.ui.core.UIEntityAPI;
 /**
  * Base class for all systems operating on a UI element.
  * 
- * <p>Design note:</p>
+ * <br><br>
+ * 
  * Systems should not hold per-element state. All element-specific state should live in components.
  * Systems may have static utility members.
  * 
- * <p>Component contract:</p>
  * Each system is responsible for registering its corresponding component and system (for example {@link RawInputSystem}).
- * In the constructor of the system, you should call:
+ * In the {@link #init()} method of the system, you should call:
  * <pre>
  * element.comp().addCustomIfNotPresent(new CustomComp());
- * element.system().addCustomIfNotPresent(new CustomSystem()); // needed by the initializing system.
+ * element.system().addCustomIfNotPresent(new CustomSystem()); // if the system needs other systems.
  * </pre>
  * This makes the system the authority for component creation, and ensures the element always has the
- * correct component instance. Element code and other systems may then safely access this component.
+ * correct component instance. {@link UIEntityAPI} code and other systems may then safely access this component.
  */
 public abstract class BaseSystem {
 

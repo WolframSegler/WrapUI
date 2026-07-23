@@ -16,6 +16,7 @@ import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.ui.UIComponentAPI;
 
+import wfg.native_ui.example.table.SortableTableExample;
 import wfg.native_ui.internal.ui.core.UIContainer;
 import wfg.native_ui.ui.ComponentFactory;
 import wfg.native_ui.ui.component.AudioFeedbackComp;
@@ -46,7 +47,7 @@ import wfg.native_ui.util.NativeUiUtils.AnchorType;
  * <p>
  * <b>This table supports:</b>
  * <ul>
- *   <li>Dynamic column headers with customizable width, tooltip, alignment, and sorting behavior.</li>
+ *   <li>Column headers with customizable width, tooltip, alignment, and sorting behavior.</li>
  *   <li>Adding rows with multiple typed cells (text, icons, UIComponent, numeric values).</li>
  *   <li>Sorting rows by any sortable column (e.g., numeric or text columns).</li>
  *   <li>Row selection events via a listener callback for interactive behavior.</li>
@@ -61,43 +62,10 @@ import wfg.native_ui.util.NativeUiUtils.AnchorType;
  *   <li>{@link LabelAPI} - displayed as a label UI component with optional color.</li>
  * </ul>
  * </p>
- * <b>Typical usage example:</b>
- * <pre>{
- * SortableTable table = new SortableTable(...);
- *
- * // Setup headers with labels, widths, tooltips, merge flags and merge group
- * table.addHeaders(
- *     "", 40, null, true, false, 1, // Icon header
- *     "Colony", 200, "Colony name", true, true, 1,
- *     "Size", 100, "Colony size", false, false, -1,
- *     "Faction", 150, "Controlling faction", false, false, -1,
- *     // etc.
- * );
- * ...
  * 
- * // Add rows with multiple typed cells and associated tooltips
- * table.addCell(iconPanel, cellAlg.LEFT, null, null);
- * table.addCell(colonyName, cellAlg.LEFT, null, textColor);
- * table.addCell(colonySize, cellAlg.MID, null, textColor);
- * ...
+ * <p>This component supports tooltips both for headers and rows via {@link TooltipBuilder}.<p>
  * 
- * // Register a listener for row selection
- * final CallbackRunnable<RowManager> rowSelectedRunnable = (row) -> {
- *      ...
- * };
- *
- * table.pushRow(customData, tpBuilder, onRowClicked, codexID, textColor, highlight);
- *
- * // Add table to UI panel and initialize it
- * parentPanel.addComponent(table.getPanel()).inTL(0, 0);
- * table.buildUI();
- *
- * // Enable sorting by a particular column index. Calls buildUI() internally
- * table.sortRows(columnIndex);
- * }</pre>
- * <p>
- * This component supports tooltips both for headers and rows via {@link TooltipBuilder}.
- * <p>
+ * <p><strong>Example: </strong> {@link SortableTableExample}</p>
  */
 public class SortableTable extends UIContainer implements UIBuildableAPI, HasOutline {
     private final static SpriteAPI SORT_ICON = settings.getSprite("ui", "sortIcon");

@@ -11,6 +11,7 @@ import java.util.Set;
 import com.fs.starfarer.api.ui.ButtonAPI.UICheckboxSize;
 import com.fs.starfarer.api.ui.Fonts;
 
+import wfg.native_ui.example.widget.MultiSelectExample;
 import wfg.native_ui.internal.ui.core.UIContainer;
 import wfg.native_ui.ui.core.UIBuildableAPI;
 import wfg.native_ui.ui.functional.CallbackRunnable;
@@ -38,6 +39,8 @@ import wfg.native_ui.ui.widget.RadioPanel.LayoutMode;
  *       across the panel width as toggle buttons with cut styles applied
  *       to the first and last buttons.</li>
  * </ul>
+ * 
+ * <p><strong>Example: </strong> {@link MultiSelectExample}</p>
  */
 public class MultiSelect extends UIContainer implements UIBuildableAPI {
     private final List<String> options = new ArrayList<>();

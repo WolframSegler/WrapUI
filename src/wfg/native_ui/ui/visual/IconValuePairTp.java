@@ -4,10 +4,14 @@ import java.awt.Color;
 
 import com.fs.starfarer.api.graphics.SpriteAPI;
 
+import wfg.native_ui.example.visual.IconValuePairExample;
 import wfg.native_ui.ui.component.NativeComponents;
 import wfg.native_ui.ui.component.TooltipComp;
 import wfg.native_ui.ui.core.UIElementFlags.HasTooltip;
 
+/**
+ * <p><strong>Example: </strong> {@link IconValuePairExample}</p>
+ */
 public class IconValuePairTp extends IconValuePair implements HasTooltip {
 
     public final TooltipComp tooltip = comp().get(NativeComponents.TOOLTIP);

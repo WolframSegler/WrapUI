@@ -2,6 +2,7 @@ package wfg.native_ui.ui.interaction;
 
 import com.fs.starfarer.api.Global;
 
+import wfg.native_ui.example.interaction.UIClickableExample;
 import wfg.native_ui.internal.ui.core.UIContainer;
 import wfg.native_ui.ui.component.InteractionComp;
 import wfg.native_ui.ui.component.NativeComponents;
@@ -29,6 +30,8 @@ import wfg.native_ui.ui.functional.CallbackRunnable;
  *   <li>Providing an {@link #onClicked} callback means you are responsible for changing {@link #checked} if you want
  *   toggle semantics.</li>
  * </ul>
+ * 
+ * <p><strong>Example: </strong> {@link UIClickableExample}</p>
  */
 public class UIClickable<T extends UIClickable<T>> extends UIContainer implements HasInteraction {
 

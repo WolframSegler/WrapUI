@@ -9,6 +9,7 @@ import com.fs.starfarer.api.ui.Fonts;
 import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.util.FaderUtil;
 
+import wfg.native_ui.example.widget.SliderExample;
 import wfg.native_ui.internal.ui.core.UIContainer;
 import wfg.native_ui.ui.component.InputSnapshotComp;
 import wfg.native_ui.ui.component.NativeComponents;
@@ -26,6 +27,9 @@ import java.util.function.Supplier;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
+/**
+ * <p><strong>Example: </strong> {@link SliderExample}</p>
+ */
 public class Slider extends UIContainer implements HasInputSnapshot {
     protected final InputSnapshotComp input = comp().get(NativeComponents.INPUT_SNAPSHOT);
 
@@ -160,9 +164,7 @@ public class Slider extends UIContainer implements HasInputSnapshot {
     }
 
     public void setProgress(float progress) {
-        if (progress < minRange) {
-            progress = minRange;
-        }
+        progress = Math.max(minRange, progress);
 
         if (progressValue != progress) {
             GLListManager.invalidateList(GLListToken);

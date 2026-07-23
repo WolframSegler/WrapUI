@@ -18,6 +18,7 @@ import com.fs.starfarer.api.util.FaderUtil;
 import com.fs.starfarer.ui.O0Oo;
 
 import rolflectionlib.util.RolfLectionUtil;
+import wfg.native_ui.example.container.VanillaScrollPanelExample;
 import wfg.native_ui.internal.ui.core.UIContainer;
 import wfg.native_ui.internal.ui.core.UIElement;
 import wfg.native_ui.ui.MethodFields;
@@ -27,7 +28,11 @@ import wfg.native_ui.util.NativeUiUtils;
 import wfg.native_ui.util.RenderUtils;
 import wfg.native_ui.util.NativeUiUtils.Rect;
 
-/** Not complete yet!!! */
+/**
+ * Not complete yet!!!
+ * 
+ * <p><strong>Example: </strong> {@link VanillaScrollPanelExample}</p>
+ */
 public class VanillaScrollPanel extends UIContainer {
     private static final Color TRANSPARENT_BLACK = new Color(0, 0, 0, 0);
     private static final float BAR_PAD = 6f;

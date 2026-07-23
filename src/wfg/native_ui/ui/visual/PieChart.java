@@ -7,12 +7,16 @@ import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 
+import wfg.native_ui.example.visual.PieChartExample;
 import wfg.native_ui.internal.ui.core.UIEntity;
 import wfg.native_ui.ui.component.NativeComponents;
 import wfg.native_ui.ui.component.TooltipComp;
 import wfg.native_ui.ui.core.UIElementFlags.HasTooltip;
 import wfg.native_ui.util.RenderUtils;
 
+/**
+ * <p><strong>Example: </strong> {@link PieChartExample}</p>
+ */
 public class PieChart extends UIEntity implements
     HasTooltip
 {
@@ -29,11 +33,15 @@ public class PieChart extends UIEntity implements
         this.data = data;
     }
 
-    // TODO work on visuals more
     @Override
     public void renderImpl(float alpha) {
         super.renderImpl(alpha);
 
+        render(alpha, getX(), getY());
+    }
+
+    // TODO work on visuals more
+    public void render(float alpha, float px, float py) {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glEnable(GL11.GL_LINE_SMOOTH);
         GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST);
@@ -42,8 +50,8 @@ public class PieChart extends UIEntity implements
         
         final float radiusX = getWidth() / 2f;
         final float radiusY = getHeight() / 2f;
-        final float cx = getX() +radiusX;
-        final float cy = getY() + radiusY;
+        final float cx = px +radiusX;
+        final float cy = py + radiusY;
 
         final int haloRings = 64;
         final int haloSegments = 30;

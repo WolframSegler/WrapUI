@@ -11,10 +11,14 @@ import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.Fonts;
 import com.fs.starfarer.api.ui.LabelAPI;
 
+import wfg.native_ui.example.visual.IconValuePairExample;
 import wfg.native_ui.internal.ui.core.UIContainer;
 import wfg.native_ui.ui.visual.AbstractSpriteElement.SpriteElement;
 import wfg.native_ui.util.NumFormat;
 
+/**
+ * <p><strong>Example: </strong> {@link IconValuePairExample}</p>
+ */
 public class IconValuePair extends UIContainer {
     private final SpriteElement iconBase;
     private final LabelAPI valueLbl;

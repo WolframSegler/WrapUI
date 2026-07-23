@@ -10,19 +10,22 @@ import com.fs.starfarer.api.input.InputEventAPI;
 import com.fs.starfarer.api.ui.ButtonAPI.UICheckboxSize;
 import com.fs.starfarer.api.ui.Alignment;
 
+import wfg.native_ui.example.widget.CheckboxButtonExample;
 import wfg.native_ui.ui.component.HoverGlowComp.GlowType;
 import wfg.native_ui.ui.functional.CallbackRunnable;
 
 /**
  * A UI Component consisting of a toggleable checkbox and an optional text label.
  *
- * <p>The visual size of the checkbox is determined by {@code checkboxSize}, while the
+ * <p>The visual size of the checkbox is determined by {@link #checkboxSize}, while the
  * {@link UICheckboxSize} enum selects which vanilla sprite set is used as the base asset.
  * The sprite is stretched to the desired size when rendered.</p>
  *
  * <p>The checkbox can be clicked to toggle its state. A callback can be attached to react
  * to state changes. The label, if present, is rendered next to the checkbox and is
  * automatically repositioned if the checkbox size changes.</p>
+ * 
+ *  * <p><strong>Example: </strong> {@link CheckboxButtonExample}</p>
  */
 public class CheckboxButton extends Button {
     private static final SpriteAPI S_TOGGLE_OFF = settings.getSprite("ui", "toggle12_off");

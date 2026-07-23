@@ -10,6 +10,7 @@ import com.fs.starfarer.api.ui.Fonts;
 import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
+import wfg.native_ui.example.table.GridTableExample;
 import wfg.native_ui.internal.ui.core.UIContainer;
 import wfg.native_ui.ui.ComponentFactory;
 import wfg.native_ui.ui.core.UIBuildableAPI;
@@ -18,9 +19,12 @@ import wfg.native_ui.util.Arithmetic;
 /**
  * Arranges uniform-sized widgets in a responsive grid with scroll support.
  * Handles scroll position restoration, empty state, and optional widget selection.
+ * 
+ * <p><strong>Example: </strong> {@link GridTableExample}</p>
  *
- * @param <T> the data type for each grid cell
- * @param <W> the widget type that displays a {@code T}
+ * @param <T> the data type for each grid cell.
+ * @param <W> the widget type that displays a {@link T}.
+ * 
  */
 public abstract class GridTable<T, W extends WidgetAPI<W>> extends UIContainer implements UIBuildableAPI {
     
@@ -80,8 +84,6 @@ public abstract class GridTable<T, W extends WidgetAPI<W>> extends UIContainer i
 
     @Override
     public void buildUI() {
-        if (container != null) scrollOffset = container.getExternalScroller().getYOffset();
-
         clearChildren();
         widgets.clear();
         selectedWidget = null;
@@ -94,6 +96,7 @@ public abstract class GridTable<T, W extends WidgetAPI<W>> extends UIContainer i
             return;
         }
 
+        if (container != null) scrollOffset = container.getExternalScroller().getYOffset();
         container = ComponentFactory.createTooltip(getWidth(), true);
 
         final float margin = uniformOuterGap ? gap : 0f;

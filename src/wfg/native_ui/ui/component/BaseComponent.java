@@ -16,7 +16,6 @@ package wfg.native_ui.ui.component;
  * Components may provide <b>derived or convenience queries</b> that operate solely on their own
  * state. Such queries are encouraged when they simplify system logic, but components should
  * not observe other components or perform side effects.
- * Example: <code>isValid()</code> on a UIContext component.
  * </p>
  *
  * <p>

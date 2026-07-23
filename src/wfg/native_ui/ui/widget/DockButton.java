@@ -2,8 +2,12 @@ package wfg.native_ui.ui.widget;
 
 import java.util.function.Supplier;
 
+import wfg.native_ui.example.widget.DockButtonExample;
 import wfg.native_ui.ui.container.DockPanel;
 
+/**
+ * <p><strong>Example: </strong> {@link DockButtonExample}</p>
+ */
 public class DockButton<T extends DockPanel> extends Button {
     private T dock;
     private final Supplier<T> dockFactory;

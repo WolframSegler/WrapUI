@@ -7,7 +7,7 @@ import wfg.native_ui.util.RenderUtils;
 
 public final class DebugBgSystem extends BaseSystem {
     private static final DebugBgSystem INSTANCE = new DebugBgSystem();
-    public static DebugBgSystem get() { return INSTANCE;}
+    public static DebugBgSystem get() { return INSTANCE; }
     private DebugBgSystem() {}
 
     public void init(UIEntityAPI element) {}

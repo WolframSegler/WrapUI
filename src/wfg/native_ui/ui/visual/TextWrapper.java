@@ -3,6 +3,7 @@ package wfg.native_ui.ui.visual;
 import com.fs.starfarer.api.ui.ButtonAPI;
 import com.fs.starfarer.api.ui.LabelAPI;
 
+import wfg.native_ui.example.visual.TextWrapperExample;
 import wfg.native_ui.internal.ui.core.UIContainer;
 import wfg.native_ui.ui.component.AudioFeedbackComp;
 import wfg.native_ui.ui.component.NativeComponents;
@@ -14,31 +15,7 @@ import wfg.native_ui.ui.core.UIElementFlags.HasTooltip;
 /**
  * A text wrapper with tooltip, audio feedback, and UI context support.
  *
- * <p>This element is intended to be subclassed anonymously for ad-hoc UI creation. 
- * Subclasses override {@link #buildUI()} to define UI elements and layout. 
- * Internal fields (checkbox, labels, text positions) are exposed publicly so that 
- * external code can read element state from the anonymous subclass.</p>
- *
- * <p>Usage example:
- * <pre>{@code
- * TextPanel panel = new TextPanel(300, 50) {
- *     @Override
- *     public void buildUI() {
- *         mCheckbox = addCheckbox("Enable", 10, 10);
- *         label1 = addLabel("Hello", 20, 10);
- *         textX1 = 0; textY1 = 0; textW1 = 100; textH1 = 20;
- *     }
- * };
- *
- * // External code can now inspect the fields:
- * if (panel.m_checkbox.isChecked()) { ... }
- *
- * // Tooltip setup:
- * panel.tooltip.builder = (tooltip, expanded) -> tooltip.addPara("Example text", 3f);
- * panel.tooltip.positioner = (tooltip, expanded) -> NativeUiUtils.anchorPanel(
- *     tooltip, anchorPanel, AnchorType.LeftTop, pad
- * );
- * }</pre>
+ * <p><strong>Example: </strong> {@link TextWrapperExample}</p>
  */
 public abstract class TextWrapper extends UIContainer implements
     HasTooltip, HasAudioFeedback, UIBuildableAPI

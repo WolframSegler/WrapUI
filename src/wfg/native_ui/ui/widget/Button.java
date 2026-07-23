@@ -13,7 +13,7 @@ import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.ui.PositionAPI;
 import com.fs.starfarer.api.util.FaderUtil;
 
-import wfg.native_ui.example.functional.ButtonExample;
+import wfg.native_ui.example.widget.ButtonExample;
 import wfg.native_ui.ui.component.HoverGlowComp;
 import wfg.native_ui.ui.component.NativeComponents;
 import wfg.native_ui.ui.component.TooltipComp;
