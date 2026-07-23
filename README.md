@@ -45,7 +45,7 @@ Composition-oriented UI framework with use of panels instead of custom plugins.
 - I want to contribute, what conventions should I follow?
     - Please consult [`CONTRIBUTING`](CONTRIBUTING.md).
 - How can I make my agent write more competent NativeUI code?
-    - All the extra details about the framework an agent needs to know is contained within [`AGENTS`](AGENTS.md).
+    - All the extra details about the framework an agent needs to know is contained within [`AGENTS`](AGENTS.md). Point your agent to it.
 
 ## Credits
 rolfosian - for providing the [reflection library](https://github.com/rolfosian/RolflectionLib-SS).
