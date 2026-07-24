@@ -62,7 +62,7 @@ public class UISystemContainer {
     }
 
 
-    public final void invalidateCache() { cached = null;}
+    public final void invalidateCache() { cached = null; }
     public final List<BaseSystem> getCustomSystems() { return Collections.unmodifiableList(customSystems); }
     public final List<BaseSystem> getAll() {
         if (cached == null) {

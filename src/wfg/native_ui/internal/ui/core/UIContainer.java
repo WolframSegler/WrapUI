@@ -16,7 +16,7 @@ import wfg.native_ui.ui.event.IdentifiedPanel;
 import wfg.native_ui.ui.system.BaseSystem;
 
 public class UIContainer extends UIEntity implements UIContainerAPI {
-    private final ArrayList<UIComponentAPI> children = new ArrayList<>();
+    private final ArrayList<UIComponentAPI> children = new ArrayList<>(4);
 
     public UIContainer(float width, float height) {
         super(width, height);
