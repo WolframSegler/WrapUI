@@ -1,6 +1,6 @@
 # Using NativeUI in Your Mod - AI Rules
 
-# Setup & Initialization
+## Setup & Initialization
 Declare the dependency in `mod_info.json` (for the mod loader), version might change:
 
 ```json
@@ -8,7 +8,7 @@ Declare the dependency in `mod_info.json` (for the mod loader), version might ch
     {
         "id": "wfg_native_ui",
         "name": "NativeUI",
-        "version": "0.5.0"
+        "version": "prompt user to provide the latest version"
     }
 ]
 ```
@@ -26,15 +26,15 @@ The IDE needs to know the path to `native_ui.jar`. Assuming the parent dir of th
 
 Source files are under `NativeUI/src/wfg/native_ui/`.
 
-# Style Rules
+## Style Rules
 
-## Number Suffixes
+### Number Suffixes
 - **int** – no suffix: `42`
 - **long** – always lowercase `l` suffix: `1234567l`
 - **float** – always lowercase `f` suffix, whole numbers without `.0`: `6f` **not** `6.0f`
 - **double** – always lowercase `d` suffix, whole numbers without `.0`: `7d` **not** `7.0d`
 
-## Early Returns
+### Early Returns
 Return immediately when a precondition fails. Keep the happy path unindented.
 
 ```java
@@ -45,7 +45,7 @@ public final void process(final Player player) {
 }
 ```
 
-## Single-Line Conditionals
+### Single-Line Conditionals
 If the body is short, omit braces and keep it on one line:
 
 ```java
@@ -53,7 +53,7 @@ if (value == 0) return;
 if (list.isEmpty()) throw new IllegalStateException();
 ```
 
-## `final` on Everything Possible
+### `final` on Everything Possible
 - **Methods**: always mark as `final`, even `private` or `static`.
 - **Classes**: declare `final` unless explicitly designed for extension (utility classes are `final`).
 - **Local variables**: mark as `final` whenever possible (except loop indices). Refactor to allow single assignment. Use `switch` expressions or `Math.clamp()` to avoid mutable intermediates.
@@ -84,25 +84,25 @@ final String display = switch (state) {
 };
 ```
 
-## Constants
+### Constants
 - Extract reused values into `private static final` fields at the top of the class.
 - Use `UPPER_SNAKE_CASE`: `BG_COLOR`, `MAX_HEALTH`.
 - Compute compile-time constants (`static final` strings, math) in the field declaration.
 
-## Naming
+### Naming
 - **Members**: `camelCase`. Use prefixes: `m` for instance, `s` for static, `g` for global (e.g., `mPanel`, `gPanel`, `sPanel`). No underscore after prefix.
 - **Constants**: `UPPER_SNAKE_CASE`.
 
-## Encapsulation
+### Encapsulation
 Make fields `public` unless they need side-effect logic. **No** trivial getters/setters.
 
-## Lambdas
+### Lambdas
 Always use lambdas over anonymous classes:
 ```java
 list.forEach(item -> process(item));
 ```
 
-## Switch Expressions
+### Switch Expressions
 Prefer `switch` expressions over `if-else` chains for value assignments:
 ```java
 final String name = switch (type) {
@@ -112,17 +112,17 @@ final String name = switch (type) {
 };
 ```
 
-## DRY
+### DRY
 Extract reused logic into reusable `static final` methods.
 
-## Modifier Order
+### Modifier Order
 Follow this exact sequence: `visibility` `static` `final` `abstract` `volatile` `synchronized`
 ```java
 private static final int TIMEOUT = 5000;
 public final synchronized void reset() { … }
 ```
 
-## Method Header Formatting
+### Method Header Formatting
 - Opening brace on same line as closing parenthesis.
 - For long signatures: break after `(`, align parameters on next line, and keep `)` `{` together.
 ```java
@@ -144,14 +144,13 @@ public final void buildUI(
 - Never put brace on its own line.
 - Never leave a closing parenthesis orphaned at the end of the last parameter line.
 
-## UIContants
+### UIConstants
 Always import all constants statically:
 ```java
 import static wfg.native_ui.util.UIConstants.*;
 ```
 Then use the constants directly by name—no qualification.
 
-### Spacing (mandatory)
 Never hardcode 3, 5, or 10 for layout; always use these constants.
 - `pad` (3) - tight spacing, often used for paragraphs or dense grids.
 - `hpad` (5) – half of opad. Used when doing layout calculations.
@@ -171,21 +170,14 @@ public void buildUI() {
 }
 ```
 
-### Button defaults
 - `BUTTON_W` and `BUTTON_H` are suggested defaults. Use them if no explicit size is specified by the user.
-
-### Colors
 Always use the precomputed color constants (if present). Do not call `Misc.getTextColor()` etc. directly in UI code:
 - `text_color`, `highlight`, `positive`, `negative`, `base`, `dark`, `grid`, `bright`, `gray`, `glowHighlight`, `btnTxtColor`, `btnBgColorDark`
 - `bgAlpha` (0.85f) – standard background opacity.
-
-### Screen dimensions & scale
 - `screenW`, `screenH` are the current screen size (pixels).
-
-### Not exhaustive
 - The class contains additional constants (e.g.,`UI_BORDER_1–4`). If you need a value that isn't listed here, check the UIConstants source before hardcoding anything.
 
-## NumFormat
+### NumFormat
 
 Use the `NumFormat` utility class for all number formatting. Import the class normally:
 ```java
@@ -215,9 +207,9 @@ Then call the methods directly on the class:
 
 **Never** write your own number‑to‑string logic, delegate to `NumFormat`.
 
-# Core Elements
+## Core Elements
 
-## `UIElementAPI` and `UIElement`
+### `UIElementAPI` and `UIElement`
 - Use `PositionAPI pos()` instead of `getPosition()`.
 - Use the convenience methods instead of first querying the position: `getX()`, `getY()`, `getCenterX()`, `getCenterY()`, `getWidth()`, `getHeight()`,
 - `UIElementAPI` implements `UIComponentAPI`.
@@ -227,7 +219,7 @@ Then call the methods directly on the class:
 - Convenience methods for parent interaction (null safe) `bringToFront()`, `sendToBack()` and `detach()`.
 - Three constructors for `UIElement`: empty, `(float width, float height)` and `(PositionAPI pos)`.
 
-## `UIEntityAPI` and `UIEntity`
+### `UIEntityAPI` and `UIEntity`
 - Extends `UIElementAPI` and adds 3 new methods: `getUIComponentContainer()`, `getUISystemContainer()` and `initSystems()`.
 - Use Short-hand alias methods `comp()` and `system()` instead of the `getUIComponentContainer()` and `getUISystemContainer()`.
 - `initSystems()` uses `UIElementFlags` the class implements to automatically attach native systems. Custom systems must be attached manually by child constructor.
@@ -235,7 +227,7 @@ Then call the methods directly on the class:
 - Same constructors as `UIElement`.
 - Overrides `advanceImpl`, `renderImpl` and `processInputImpl` to call the equivalent methods of `System`s. Classes that extend `UIEntity` must call `super` when overriding these.
 
-## `UIContainerAPI` and `UIContainer`
+### `UIContainerAPI` and `UIContainer`
 - `UIContainerAPI` extends `UIPanelAPI`, but use `add()` and `remove()` instead of `addComponent()` and `removeComponent()`.
 - New methods `getChildren()`, `getChildrenCopy()` and `clearChildren()`.
 - Methods `addPos(UIComponentAPI)` and `removePos(UIComponentAPI)` adds/removes the component to/from PositionAPI hierarchy only.
@@ -244,17 +236,17 @@ Then call the methods directly on the class:
 - `UIContainer` adds one new private field `ArrayList<UIComponentAPI> children`.
 - Same constructors as `UIElement`.
 
-# PositionAPI
+## PositionAPI
 - `PositionAPI` has no `setX()` or `setY()` methods; coordinates are always computed from the relative alignment parameters.
-- The `getX` and `getY` methods return absolute screen coordinates fit for OpenGL draw calls.
+- The `getX` and `getY` methods return absolute screen coordinates fit for OpenGL draw calls (origin bottom left).
 - When the size or the offsets of the `PositionAPI` changes, it triggers the internal `recompute` method, which updates its position and calls `recompute` on all children and sister `PositionAPI`'s that are positioned relative to it. `recompute` is an expensive method.
-- When a position method is called `inTL`, `inBR`, `inBMid` etc., they all call the internal `relativeTo`.
+- When a position method is called `inTL`, `inBR`, `inBMid` etc., they all call the internal `relativeTo` method.
 
 ### The recompute formula
 For each element, posX and posY (the bottom‑left corner) are calculated as:
 ```java
-posX = base.posX + (baseAnchorX * base.width) + (selfAlignX * ownWidth) + marginX + offsetX
-posY = base.posY + (baseAnchorY * base.height) + (selfAlignY * ownHeight) + marginY + offsetY
+posX = base.posX + (baseAnchorX * base.width) + (selfAlignX * width) + marginX + offsetX
+posY = base.posY + (baseAnchorY * base.height) + (selfAlignY * width) + marginY + offsetY
 ```
 - **`base`**: The reference `PositionAPI` instance. If `null`, the element's `parent` is used. All positioning is relative to the base's bottom-left corner (base.posX, base.posY).
 - **`baseAnchorX`, `baseAnchorY`**: Fractions (0 to 1) that define an anchor point on the base's bounding box. Multiplying by the base's width/height converts these fractions into pixel coordinates relative to the base's origin.
@@ -276,11 +268,11 @@ relativeTo(target, baseAnchorX, baseAnchorY, selfAlignX, selfAlignY, marginX, ma
     - `inBMid(gapY)` -> `relativeTo(null, 0.5f, 0f, -0.5f, 0f, 0f, gapY)`.
 - You cannot call `relativeTo` directly, as it is not present inside `PositionAPI`.
 
-# Components
+## Components
 NativeUI uses a composition‑oriented, ECS‑inspired model. Every `UIEntity` holds a `UIComponentContainer`, which stores components; systems provide behaviour.
 If a feature is reused by many different elements, it should be a **component + system** pair (e.g., tooltips, hover glow). UIElement-specific logic stays as local code.
 
-## UIComponentContainer
+### UIComponentContainer
 - **Native components**: fixed set defined by the `NativeComponents` enum (e.g., `BACKGROUND`, `TOOLTIP`, `INTERACTION`). Accessed via `get(NativeComponents.TYPE)` and `set(NativeComponents.TYPE, comp)`.
 - **Custom components**: an open list for user-added logic. Accessed via `getCustom(Class<T>)` and `addCustom(comp)`.
 - Check existence with `has()` / `hasCustom()`. For safe lazy init use `setIfNotPresent()` / `addCustomIfNotPresent()` (preferred over `if(!has()) set()`).
@@ -290,23 +282,23 @@ If a feature is reused by many different elements, it should be a **component + 
     - Do not subclass components to add behaviour. Instead, configure them via their public fields or functional hooks (e.g., `onClicked`, `onHover`).
     - **Write rule**: if an entity exposes a convenience setter for a component field (e.g., `setTooltipEnabled()`), use that setter instead of writing the field directly. Direct writes can leave dependent state out of sync.
 
-## How to access components
+### How to access components
 ```java
 public final BackgroundComp bg = container.get(NativeComponents.BACKGROUND);
 public final MyCustomComp cc = container.getCustom(MyCustomComp.class);
 ```
 
-# Systems
+## Systems
 Systems are **singleton**, **stateless** objects that provide behaviour to entities via components. They do not store per-element data; all element-specific state lives in components, which the system itself attaches during initialisation. Native systems are registered in the `NativeSystems` enum. Custom systems follow the same pattern but are added manually.
 
-## UISystemContainer
+### UISystemContainer
 
 Every `UIEntityAPI` holds a `UISystemContainer` accessed via `element.system()`. It works exactly like the component container:
 - **Native systems**: fixed set from `NativeSystems` enum (e.g.,  `BACKGROUND`, `TOOLTIP`, `INTERACTION`). Use `get(NativeSystems.TYPE)` / `set(NativeSystems.TYPE, system, element)`.
 - **Custom systems**: open list, accessed via `getCustom(Class<T>)` / `addCustom(system, element)`.
 - Check existence with `has()` / `hasCustom()`. For lazy initialisation, use `setIfNotPresent()` / `addCustomIfNotPresent()`.
 
-## BaseSystem
+### BaseSystem
 All systems extend `BaseSystem`. They are **singletons**. Get the instance via a static `get()` method, and the constructor is private.
 
 - `init(UIEntityAPI element)`: called once when the system is attached. This is where the system attaches the components it needs by calling `element.comp().setIfNotPresent(...)` and optionally registers other systems with `element.system().setIfNotPresent(...)`.
@@ -329,7 +321,32 @@ public final class MySystem extends BaseSystem {
 }
 ```
 
-# Attachments
+### UIElementFlags
+
+```java
+import wfg.native_ui.ui.core.UIElementFlags;
+```
+
+`UIElementFlags` is a set of **marker interfaces** that a `UIEntity` subclass can implement to opt into native systems.  
+No methods need to be overridden; simply `implements` the desired flags.
+
+The `UIEntity` constructors call `initSystems()`, which checks `instanceof` for each flag and calls `system().setIfNotPresent()` with the appropriate singleton system.  
+You never need to call `initSystems()` manually; it runs automatically from every constructor.
+
+Example:
+
+```java
+public final class MyPanel extends UIEntity
+    implements UIElementFlags.HasInteraction, UIElementFlags.HasTooltip {
+
+    public MyPanel() {
+        super(); // InteractionSystem and TooltipSystem are automatically registered
+    }
+}
+```
+Custom systems must still be registered manually (see `init()` example above). The flags only cover the built‑in native systems.
+
+## Attachments
 
 `Attachments` provides **static access points** to vanilla UI panels across all game states (campaign, combat, title). Use these methods to obtain a parent `UIPanelAPI` where you can insert NativeUI elements.
 
@@ -338,7 +355,7 @@ import wfg.native_ui.ui.Attachments;
 ```
 All methods return `UIPanelAPI` (may be `null` if the required state is not active). Not null-safe, so check the return before use.
 
-## Key accessors
+### Key accessors
 
 - **`getScreenPanel()`** – universal: returns the main screen panel depending on current state.
 
@@ -369,7 +386,7 @@ All methods return `UIPanelAPI` (may be `null` if the required state is not acti
 
 - **`getCampaignCurrentTab()`** – returns the current tab panel in the campaign core UI.
 
-## Usage
+### Usage
 
 Use the returned panel as a parent to attach NativeUI containers.
 Critical – Always use `wrapAndAdd()`, never `addComponent()`. Starting with Starsector v0.9.85, vanilla UIPanelAPI provides:
@@ -392,16 +409,16 @@ parent.wrapAndAdd(myPanel, myPanel.getFader()); // ✅ correct
 
 Important: The returned panels are vanilla UIPanelAPI objects. You can add your NativeUI components as children, but follow the usual NativeUI rules inside your own container.
 
-# UIEventBus
+## UIEventBus
 `UIEventBus` is a **cross‑mod communication channel** that notifies listeners about panel lifecycle events.  
 You do not need it for standard single‑mod usage; it exists so other mods can react to your UI panels being attached, detached, or refreshed.
 
-## How it works
+### How it works
 - Panels that want to be identifiable implement `IdentifiedPanel` and return a unique `getPanelId()`.
 - Listeners register via `UIEventBus.addListener(listener)` (implementing `UILifecycleListener`).
 - When NativeUI adds/removes/refreshes a panel, the bus fires the corresponding method on all registered listeners, passing the panel and its ID (or `null` if not identifiable).
 
-## Listener interface
+### Listener interface
 
 ```java
 public interface UILifecycleListener {
@@ -411,7 +428,7 @@ public interface UILifecycleListener {
 }
 ```
 
-# NativeUiUtils
+## NativeUiUtils
 
 Utility class with common helper methods for UI layout, positioning, color manipulation, and input checks.
 
@@ -445,7 +462,7 @@ Utility class with common helper methods for UI layout, positioning, color manip
 
 All methods are `static`. Import via `import wfg.native_ui.util.NativeUiUtils;`.
 
-# RenderUtils
+## RenderUtils
 
 - **drawFramedBorder** – draws a rectangular border frame with adjustable thickness, either outward or inward.
 - **drawQuad** – draws a filled rectangle (quad) with optional additive blending.
@@ -461,3 +478,29 @@ All methods are `static`. Import via `import wfg.native_ui.util.NativeUiUtils;`.
 - **drawGradientQuad** – draws a filled quad with a different color at each corner (smooth gradient).
 - **quadWithBlend** – draws a quad with a special blending mode (GL_SRC_ALPHA, GL_ZERO) used for stencil‑like masking.
 - **quadNoBlend** – draws a quad without blending, useful for resetting color masks or solid shapes.
+
+## Example Index
+
+- **BaseContainer** -> `wfg.native_ui.example.container.BaseContainerExample`
+- **DockPanel** -> `wfg.native_ui.example.container.DockPanelExample`
+- **ScrollPanel** -> `wfg.native_ui.example.container.ScrollPanelExample`
+- **VanillaScrollPanelExample** -> `wfg.native_ui.example.container.VanillaScrollPanelExample`
+- **DialogPanel** -> `wfg.native_ui.example.dialog.DialogPanelExample`
+- **UIClickable** -> `wfg.native_ui.example.interaction.UIClickableExample`
+- **GridTable** -> `wfg.native_ui.example.table.GridTableExample`
+- **SortableTable** -> `wfg.native_ui.example.table.SortableTableExample`
+- **IdentityMarker** -> no example (trivial identifier wrapper)
+- **AbstractSpriteElement** -> no example (abstract base class; use `SpriteElement`)
+- **SpriteElement** -> no example (trivial; see source)
+- **IconValuePair** / **IconValuePairTp** -> `wfg.native_ui.example.visual.IconValuePairExample`
+- **InteractiveSprite** -> no example (trivial; see source)
+- **PieChart** -> `wfg.native_ui.example.visual.PieChartExample`
+- **TextWrapper** -> `wfg.native_ui.example.visual.TextWrapperExample`
+- **Button** -> `wfg.native_ui.example.widget.ButtonExample`
+- **CheckboxButton** -> `wfg.native_ui.example.widget.CheckboxButtonExample`
+- **DockButton** -> `wfg.native_ui.example.widget.DockButtonExample`
+- **DockClickable** -> no example (trivial; see `DockButton` for similar pattern)
+- **MultiSelect** -> `wfg.native_ui.example.widget.MultiSelectExample`
+- **RadioPanel** -> `wfg.native_ui.example.widget.RadioPanelExample`
+- **Slider** -> `wfg.native_ui.example.widget.SliderExample`
+- **TextField** -> `wfg.native_ui.example.widget.TextFieldExample`
