@@ -218,6 +218,7 @@ Then call the methods directly on the class:
 - `UIElement` has four members: `mFader`, `mPos`, `mParent` and `mOpacity`. All protected.
 - Convenience methods for parent interaction (null safe) `bringToFront()`, `sendToBack()` and `detach()`.
 - Three constructors for `UIElement`: empty, `(float width, float height)` and `(PositionAPI pos)`.
+- The universal traversal order for UI elements in Starsector is `render -> processInput -> advance`. This information should not be needed, as the logic contained within the three methods should be order agnostic.
 
 ### `UIEntityAPI` and `UIEntity`
 - Extends `UIElementAPI` and adds 3 new methods: `getUIComponentContainer()`, `getUISystemContainer()` and `initSystems()`.

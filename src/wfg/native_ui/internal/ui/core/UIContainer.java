@@ -16,7 +16,9 @@ import wfg.native_ui.ui.event.IdentifiedPanel;
 import wfg.native_ui.ui.system.BaseSystem;
 
 public class UIContainer extends UIEntity implements UIContainerAPI {
-    private final ArrayList<UIComponentAPI> children = new ArrayList<>(4);
+    private final ArrayList<UIComponentAPI> mChildren = new ArrayList<>(4);
+    /** Used for iteration. */
+    private UIComponentAPI[] mChildSnapshot = new UIComponentAPI[0];
 
     public UIContainer(float width, float height) {
         super(width, height);
@@ -31,8 +33,8 @@ public class UIContainer extends UIEntity implements UIContainerAPI {
     }
 
     public PositionAPI add(UIComponentAPI comp) {
-        if (!children.contains(comp)) {
-            children.add(comp);
+        if (!mChildren.contains(comp)) {
+            mChildren.add(comp);
             final PositionAPI compPos = comp.getPosition();
             // TODO
             // mPos.add(compPos);
@@ -51,7 +53,7 @@ public class UIContainer extends UIEntity implements UIContainerAPI {
     }
 
     public void remove(UIComponentAPI comp) {
-        if (children.remove(comp)) {
+        if (mChildren.remove(comp)) {
             final PositionAPI compPos = comp.getPosition();
             // TODO
             // mPos.remove(compPos);
@@ -65,22 +67,22 @@ public class UIContainer extends UIEntity implements UIContainerAPI {
     }
 
     public List<UIComponentAPI> getChildren() {
-        return children;
+        return mChildren;
     }
 
     public List<UIComponentAPI> getChildrenCopy() {
-        return new ArrayList<>(children);
+        return new ArrayList<>(mChildren);
     }
 
     public void clearChildren() {
         for (UIComponentAPI child : getChildrenCopy()) {
             removeComponent(child);
         }
-        children.clear();
+        mChildren.clear();
     }
 
     public <T extends UIComponentAPI> T getChild(Class<T> type) {
-        for (UIComponentAPI child : children) {
+        for (UIComponentAPI child : mChildren) {
             if (type.isInstance(child)) return type.cast(child);
         }
         return null;
@@ -88,7 +90,7 @@ public class UIContainer extends UIEntity implements UIContainerAPI {
 
     public UIComponentAPI getChild(String panelId) {
         if (panelId == null) return null;
-        for (UIComponentAPI child : children) {
+        for (UIComponentAPI child : mChildren) {
             if (child instanceof IdentifiedPanel ip && panelId.equals(ip.getPanelId())) {
                 return child;
             }
@@ -116,28 +118,28 @@ public class UIContainer extends UIEntity implements UIContainerAPI {
 
     public void bringComponentToTop(UIComponentAPI comp) { bringToTop(comp); }
     public void bringToTop(UIComponentAPI comp) {
-        if (children.remove(comp)) {
-            children.add(comp);
-            if (mParent != null) mParent.bringComponentToTop(this);
+        if (mChildren.remove(comp)) {
+            mChildren.add(comp);
+            bringToFront();
         }
     }
 
     public void bringToTopWithinItself(UIComponentAPI comp) {
-        if (children.remove(comp)) {
-            children.add(comp);
+        if (mChildren.remove(comp)) {
+            mChildren.add(comp);
         }
     }
 
     public void sendToBottom(UIComponentAPI comp) {
-        if (children.remove(comp)) {
-            children.add(0, comp);
+        if (mChildren.remove(comp)) {
+            mChildren.add(0, comp);
             sendToBack();
         }
     }
 
     public void sendToBottomWithinItself(UIComponentAPI comp) {
-        if (children.remove(comp)) {
-            children.add(0, comp);
+        if (mChildren.remove(comp)) {
+            mChildren.add(0, comp);
         }
     }
 
@@ -148,7 +150,10 @@ public class UIContainer extends UIEntity implements UIContainerAPI {
         }
         renderBelowImpl(alpha);
 
-        children.forEach(c -> c.render(alpha));
+        final int size = mChildren.size();
+        final UIComponentAPI[] snap = mChildren.toArray(mChildSnapshot);
+        if (snap != mChildSnapshot) mChildSnapshot = snap;
+        for (int i = 0; i < size; i++) snap[i].render(alpha);
 
         for (BaseSystem system : system().getAll()) {
             system.renderAbove(this, alpha);
@@ -159,13 +164,21 @@ public class UIContainer extends UIEntity implements UIContainerAPI {
     @Override
     public void advanceImpl(float delta) {
         super.advanceImpl(delta);
-        children.forEach(c -> c.advance(delta));
+
+        final int size = mChildren.size();
+        final UIComponentAPI[] snap = mChildren.toArray(mChildSnapshot);
+        if (snap != mChildSnapshot) mChildSnapshot = snap;
+        for (int i = 0; i < size; i++) snap[i].advance(delta);
     }
 
     @Override
     public void processInputImpl(List<InputEventAPI> events) {
         super.processInputImpl(events);
-        children.forEach(c -> c.processInput(events));
+
+        final int size = mChildren.size();
+        final UIComponentAPI[] snap = mChildren.toArray(mChildSnapshot);
+        if (snap != mChildSnapshot) mChildSnapshot = snap;
+        for (int i = size - 1; i >= 0; i--) snap[i].processInput(events);
     }
 
 

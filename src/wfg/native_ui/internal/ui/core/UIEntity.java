@@ -22,8 +22,8 @@ import wfg.native_ui.ui.system.UISystemContainer;
 
 public class UIEntity extends UIElement implements UIEntityAPI {
 
-    private UIComponentContainer compContainer = null;
-    private UISystemContainer systemContainer = null;
+    private UIComponentContainer mCompContainer = null;
+    private UISystemContainer mSystemContainer = null;
 
     public UIEntity(float width, float height) {
         super(width, height);
@@ -42,14 +42,14 @@ public class UIEntity extends UIElement implements UIEntityAPI {
 
     public final UIComponentContainer getUIComponentContainer() { return comp(); }
     public final UIComponentContainer comp() {
-        if (compContainer == null) compContainer = new UIComponentContainer();
-        return compContainer;
+        if (mCompContainer == null) mCompContainer = new UIComponentContainer();
+        return mCompContainer;
     }
 
     public final UISystemContainer getUISystemContainer() { return system(); }
     public final UISystemContainer system() {
-        if (systemContainer == null) systemContainer = new UISystemContainer();
-        return systemContainer;
+        if (mSystemContainer == null) mSystemContainer = new UISystemContainer();
+        return mSystemContainer;
     }
 
     public void initSystems() {
