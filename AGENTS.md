@@ -244,7 +244,7 @@ Then call the methods directly on the class:
 - When a position method is called `inTL`, `inBR`, `inBMid` etc., they all call the internal `relativeTo` method.
 
 ### The recompute formula
-For each element, posX and posY (the bottom‑left corner) are calculated as:
+For each element, posX and posY (the bottom-left corner) are calculated as:
 ```java
 posX = base.posX + (baseAnchorX * base.width) + (selfAlignX * width) + marginX + offsetX
 posY = base.posY + (baseAnchorY * base.height) + (selfAlignY * width) + marginY + offsetY
@@ -253,9 +253,9 @@ posY = base.posY + (baseAnchorY * base.height) + (selfAlignY * width) + marginY 
 - **`baseAnchorX`, `baseAnchorY`**: Fractions (0 to 1) that define an anchor point on the base's bounding box. Multiplying by the base's width/height converts these fractions into pixel coordinates relative to the base's origin.
     - **`baseAnchorX`**: `0` = left edge, `0.5` = horizontal centre, `1` = right edge.
     - **`baseAnchorY`**: `0` = bottom edge, `0.5` = vertical centre, `1` = top edge.
-- **`selfAlignX`, `selfAlignY`**: Fractions that specify how the element’s own bounding box is aligned relative to the anchor point. Multiplying by the element’s own width/height gives the necessary shift.
+- **`selfAlignX`, `selfAlignY`**: Fractions that specify how the element’s own bounding box is aligned relative to the anchor point. Multiplying by the element's own width/height gives the necessary shift.
     - **`selfAlignX`**: `0` = element's left edge at the anchor, `-0.5` = element's horizontal centre at the anchor, `-1` = element's right edge at the anchor.
-    - **`selfAlignY`**: `0` = element’s bottom edge at the anchor, `-0.5` = element’s vertical centre at the anchor, `-1` = element’s top edge at the anchor.
+    - **`selfAlignY`**: `0` = element's bottom edge at the anchor, `-0.5` = element's vertical centre at the anchor, `-1` = element's top edge at the anchor.
 - **`marginX`, `marginY`**: Pixel offsets added after the alignment calculation. These are the gap/spacing values passes to methods like `inTL(gapX, gapY)`.
 - **`offsetX`, `offsetY`**: Additional manual offsets, separate from alignment margins. They default to 0 and can be adjusted via a dedicated offset setter.
 

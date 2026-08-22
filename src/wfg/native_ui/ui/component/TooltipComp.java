@@ -12,7 +12,6 @@ public final class TooltipComp extends BaseComponent {
     public float width = 400f;
     public float bgAlpha = 1f;
     public boolean expandable = false;
-    public boolean useScroller = false;
     public String codexID = null;
     public String expandTxt = null;
     public String unexpandTxt = null;

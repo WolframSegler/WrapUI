@@ -6,6 +6,7 @@ import com.fs.starfarer.api.input.InputEventAPI;
 import com.fs.starfarer.api.ui.PositionAPI;
 import com.fs.starfarer.api.ui.UIComponentAPI;
 import com.fs.starfarer.api.ui.UIPanelAPI;
+import com.fs.starfarer.api.util.FaderUtil;
 
 public interface UIElementAPI extends UIComponentAPI {
 
@@ -39,4 +40,6 @@ public interface UIElementAPI extends UIComponentAPI {
     void bringToFront();
     void sendToBack();
     void detach();
+
+    FaderUtil getFader();
 }

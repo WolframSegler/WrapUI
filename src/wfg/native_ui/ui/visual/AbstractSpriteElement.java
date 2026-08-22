@@ -15,7 +15,7 @@ import wfg.native_ui.util.RenderUtils;
 
 
 /**
- * {@link AbstractSpriteElement} is a UI panel for displaying a single sprite with
+ * {@link AbstractSpriteElement} is a UI panel for displaying a {@link SpriteAPI} with
  * optional coloring and border outline. It implements {@link HasOutline}.
  * 
  * <p><b>Usage:</b>

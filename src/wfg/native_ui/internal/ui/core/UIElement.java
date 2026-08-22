@@ -112,6 +112,11 @@ public class UIElement implements UIElementAPI {
         reportDetached();
     }
 
+    @Override
+    public FaderUtil getFader() {
+        return mFader;
+    }
+
     public void reportAttached() { UIEventBus.fireAttached(this); }
     public void reportDetached() { UIEventBus.fireDetached(this); }
 }

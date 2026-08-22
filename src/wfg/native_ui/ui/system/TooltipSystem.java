@@ -3,9 +3,8 @@ package wfg.native_ui.ui.system;
 import static wfg.native_ui.util.Globals.settings;
 import static wfg.native_ui.util.UIConstants.pad;
 
-import java.util.List;
+import org.lwjgl.input.Mouse;
 
-import com.fs.starfarer.api.input.InputEventAPI;
 import com.fs.starfarer.api.ui.CustomPanelAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
@@ -56,64 +55,83 @@ public final class TooltipSystem extends BaseSystem {
         );
     }
 
-    // TODO fix bug causing tooltip to be visible even when its owner is invisible
-    @Override
-    public final void advance(final UIEntityAPI element, float delta) {
-        final var comp = element.comp();
-        final TooltipComp spec = comp.get(NativeComponents.TOOLTIP);
-        final InputSnapshotComp input = comp.get(NativeComponents.INPUT_SNAPSHOT);
+    private static final float TOOLTIP_DELAY = 0.3f; // TODO replace with SettingsAPI.getTooltipDelay()
+    private static final float SCROLL_COOLDOWN = 0.15f;
 
-        if (!spec.enabled) {
+    @Override
+    public void advance(UIEntityAPI element, float delta) {
+        final TooltipComp spec = element.comp().get(NativeComponents.TOOLTIP);
+
+        if (element.getOpacity() <= 0f || element.getFader().isFadedOut() || !spec.enabled) {
+            forceHideTooltip(spec);
             spec.internal_hoverTime = 0f;
-            hideTooltip(spec);
             return;
         }
 
-        if (spec.builder != null && input.hoveredLastFrame && !input.hasLMBClickedBefore) {
+        if (spec.internal_tp != null) {
+            spec.internal_tp.updateFader(delta);
+        }
+
+        final InputSnapshotComp input = element.comp().get(NativeComponents.INPUT_SNAPSHOT);
+
+        final boolean hovering = input.hoveredLastFrame && !input.hasLMBClickedBefore;
+        final boolean scrolled = Mouse.getDWheel() != 0;
+        final boolean anyMouseDown = input.LMBDownLastFrame || input.RMBDownLastFrame || Mouse.isButtonDown(2) || scrolled;
+
+        if (hovering && !anyMouseDown && spec.builder != null) {
             spec.internal_hoverTime += delta;
-            if (spec.internal_hoverTime > 0.3f) { // TODO replace with SettingsAPI.getTooltipDelay()
+            if (spec.internal_hoverTime > TOOLTIP_DELAY) {
                 showTooltip(spec);
             }
+            if (spec.internal_tp != null) {
+                spec.positioner.position(spec.internal_tp, spec.internal_tp.isExpanded());
+            }
         } else {
-            spec.internal_hoverTime = 0f;
+            spec.internal_hoverTime = scrolled ? -SCROLL_COOLDOWN : 0f;
             hideTooltip(spec);
         }
     }
 
-    @Override
-    public void processInput(final UIEntityAPI element, final List<InputEventAPI> events) {
-        for (InputEventAPI event : events) {
-            if (event.isMouseScrollEvent()) {
-                final TooltipComp spec = element.comp().get(NativeComponents.TOOLTIP);
-                spec.internal_hoverTime = 0f;
-                hideTooltip(spec);
-                break;
-            }
-        }
+    // TODO implement after update
+    public void focusLost(UIEntityAPI element) {
+        final TooltipComp spec = element.comp().get(NativeComponents.TOOLTIP);
+        spec.internal_hoverTime = 0f;
+        hideTooltip(spec);
     }
 
-    public final void showTooltip(TooltipComp spec) {
+    @Override
+    public void onRemove(UIEntityAPI element) {
+        forceHideTooltip(element.comp().get(NativeComponents.TOOLTIP));
+    }
+
+    public void showTooltip(TooltipComp spec) {
         if (spec.internal_tp != null) return;
 
-        final var tp = createTp(spec);
+        final UITooltip tp = createTp(spec);
         tp.createImpl(false);
         spec.internal_tp = tp;
 
-        tp.attach();
-        spec.positioner.position(spec.internal_tp, false);
+        tp.attachAndFadeIn();
+        spec.positioner.position(tp, false);
     }
 
-    public final void hideTooltip(TooltipComp spec) {
+    public void hideTooltip(TooltipComp spec) {
+        if (spec.internal_tp != null) {
+            spec.internal_tp.fadeOutAndHide();
+        }
+    }
+
+    public void forceHideTooltip(TooltipComp spec) {
         if (spec.internal_tp != null) {
             spec.internal_tp.detach();
             spec.internal_tp = null;
         }
+        spec.internal_hoverTime = 0f;
     }
 
     private static final UITooltip createTp(TooltipComp spec) {
-        final UITooltip tp = new UITooltip(
-            spec.width - 10f, spec.expandable, spec.useScroller
-        ) {
+        final UITooltip tp = new UITooltip(spec.width - 10f, spec.expandable) {
+            
             @Override
             public void createImpl(boolean expanded) {
                 if (expanded) {

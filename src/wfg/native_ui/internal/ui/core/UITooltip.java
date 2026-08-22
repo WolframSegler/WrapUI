@@ -11,37 +11,54 @@ import wfg.native_ui.ui.Attachments;
 import wfg.native_ui.ui.ComponentFactory;
 
 public class UITooltip extends StandardTooltipV2Expandable implements OutisdeEventListener {
-    private final OutsideEventDetector detector;
+    private final OutsideEventDetector detector = new OutsideEventDetector(this);
     private final UIPanelAPI parent = Attachments.getScreenPanel();
-    private final boolean useScroller;
 
-    public UITooltip(float width, boolean expandable, boolean useScroller) {
-        super(width - (useScroller ? 5f : 0f), expandable);
-        this.useScroller = useScroller;
+    private boolean pendingDetach = false;
 
-        detector = new OutsideEventDetector(this);
+    public UITooltip(float width, boolean expandable) {
+        super(width, expandable);
+
         detector.consumeMouseMove = false;
         detector.consumeMouseScroll = false;
         detector.triggerByModKey = true;
     }
 
+    public void attachAndFadeIn() {
+        attach();
+        getFader().fadeIn();
+        pendingDetach = false;
+    }
+
+    public void fadeOutAndHide() {
+        getFader().fadeOut();
+        pendingDetach = true;
+    }
+
+    public void updateFader(float delta) {
+        advance(delta);
+        if (pendingDetach && getFader().isFadedOut()) {
+            detach();
+            pendingDetach = false;
+        }
+    }
+
     public final void detach() {
         detector.detach();
         parent.removeComponent(this);
+
+        pendingDetach = false;
     }
 
     public final void attach() {
         detector.attach();
-        ComponentFactory.addTooltip(this, 0f, useScroller, parent);
+        ComponentFactory.addTooltip(this, 0f, false, parent);
         parent.bringComponentToTop(this);
     }
 
+    public boolean isExpanded() { return expanded; }
     public PositionAPI pos() { return ((UIComponentAPI)this).getPosition(); }
-    public void buttonPressed(int lwjgl_key) {
-        detach();
-    }
-    public void outsideClicked(boolean isLeft) {
-        detach();
-    }
+    public void outsideClicked(boolean isLeft) { fadeOutAndHide(); }
+    public void buttonPressed(int lwjgl_key) { fadeOutAndHide(); }
     public void createImpl(boolean expanded) {}
 }

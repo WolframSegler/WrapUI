@@ -158,36 +158,37 @@ public final class ComponentFactory {
         UIPanelAPI parent
     ) {
         tooltip.setForceProcessInput(true);
-        if (tooltip instanceof StandardTooltipV2Expandable tp) {
-            StandardTooltipV2Expandable.updateSizeAsUIElement(tp);
-            if (withScroller) {
-                final var scrollPanel = (ScrollPanelAPI) RolfLectionUtil.instantiateClass(
-                    TooltipSystem.scrollPanelConstr
-                );
-                RolfLectionUtil.invokeMethodDirectly(TooltipSystem.setContentSizeMethod, scrollPanel,
-                    tp.getWidth(), tp.getHeight()
-                );
-                RolfLectionUtil.invokeMethodDirectly(TooltipSystem.setSizeMethod, scrollPanel,
-                    tp.getWidth() + 5f, h
-                );
-                RolfLectionUtil.invokeMethodDirectly(TooltipSystem.setMaxShadowHeightMethod, scrollPanel,
-                    15f
-                );
-                RolfLectionUtil.invokeMethodDirectly(TooltipSystem.setUseSimpleShadowsMethod, scrollPanel,
-                    true
-                );
-                scrollPanel.addComponent(tooltip).inTL(0f, 0f);
-                tooltip.setExternalScroller(scrollPanel);
-                return parent.addComponent(scrollPanel);
-            } else {
-                tooltip.getPosition().setSize(tp.getWidth(), Math.max(tp.getHeight(), h));
-                return parent.addComponent(tooltip);
-            }
+        final StandardTooltipV2Expandable tp = (StandardTooltipV2Expandable) tooltip;
+        StandardTooltipV2Expandable.updateSizeAsUIElement(tp);
+
+        if (withScroller) {
+            final ScrollPanelAPI scrollPanel = wrapWithScrollPanel(tp, tp.getWidth(), h);
+            tp.setExternalScroller(scrollPanel);
+            return parent.addComponent(scrollPanel);
         } else {
-            throw new IllegalArgumentException(
-                "addTooltip only supports StandardTooltipV2Expandable instances. " +
-                "Provided tooltip of type " + tooltip.getClass().getName() + " is invalid."
-            );
+            tp.getPosition().setSize(tp.getWidth(), Math.max(tp.getHeight(), h));
+            return parent.addComponent(tp);
         }
+    }
+
+    // TODO Replace reflection calls with API calls once new update drops
+    public static final ScrollPanelAPI wrapWithScrollPanel(UIComponentAPI content, float width, float height) {
+        final var scrollPanel = (ScrollPanelAPI) RolfLectionUtil.instantiateClass(
+            TooltipSystem.scrollPanelConstr
+        );
+        RolfLectionUtil.invokeMethodDirectly(TooltipSystem.setContentSizeMethod, scrollPanel,
+            content.getPosition().getWidth(), content.getPosition().getHeight()
+        );
+        RolfLectionUtil.invokeMethodDirectly(TooltipSystem.setSizeMethod, scrollPanel,
+            width + 5f, height
+        );
+        RolfLectionUtil.invokeMethodDirectly(TooltipSystem.setMaxShadowHeightMethod, scrollPanel,
+            15f
+        );
+        RolfLectionUtil.invokeMethodDirectly(TooltipSystem.setUseSimpleShadowsMethod, scrollPanel,
+            true
+        );
+        scrollPanel.addComponent(content).inTL(0f, 0f);
+        return scrollPanel;
     }
 }
