@@ -39,7 +39,6 @@ public class UITooltip extends StandardTooltipV2Expandable implements OutisdeEve
         advance(delta);
         if (pendingDetach && getFader().isFadedOut()) {
             detach();
-            pendingDetach = false;
         }
     }
 
@@ -48,6 +47,7 @@ public class UITooltip extends StandardTooltipV2Expandable implements OutisdeEve
         parent.removeComponent(this);
 
         pendingDetach = false;
+        notiftyHidden();
     }
 
     public final void attach() {

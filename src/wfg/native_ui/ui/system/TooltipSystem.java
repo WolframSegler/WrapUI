@@ -111,8 +111,12 @@ public final class TooltipSystem extends BaseSystem {
         tp.createImpl(false);
         spec.internal_tp = tp;
 
+        tp.beforeShown();
+
         tp.attachAndFadeIn();
         spec.positioner.position(tp, false);
+
+        tp.notifyShown();
     }
 
     public void hideTooltip(TooltipComp spec) {
