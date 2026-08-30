@@ -61,8 +61,7 @@ public final class DockPanelExample extends DockPanel {
             yCoord += ROW_H + pad;
         }
         container.setHeight(yCoord);
-        ComponentFactory.wrapWithScrollPanel(container, width, contentContainer.getHeight())
-            .getPosition().inTL(0f, 0f);
+        add(ComponentFactory.wrapWithScrollPanel(container, width, contentContainer.getHeight())).inTL(0f, 0f);
     }
 
     private void onFactionSelected(FactionSpecAPI faction) {

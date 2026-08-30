@@ -140,7 +140,7 @@ public abstract class GridTable<T, W extends WidgetAPI<W>> extends UIContainer i
 
         final float visibleHeight = getHeight() - margin;
         scrollContainer = ComponentFactory.wrapWithScrollPanel(content, getWidth(), visibleHeight);
-        scrollContainer.getPosition().inTL(0f, margin);
+        add(scrollContainer).inTL(0f, margin);
 
         final float maxScroll = Math.max(0f, contentHeight - visibleHeight);
         scrollContainer.setYOffset(Arithmetic.clamp(scrollOffset, 0f, maxScroll));
