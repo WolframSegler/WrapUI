@@ -199,7 +199,7 @@ public final class UIEntityTest {
         UIEntity entity = new UIEntity();
         UISystemContainer mockContainer = mock(UISystemContainer.class);
         when(mockContainer.getAll()).thenReturn(systems);
-        java.lang.reflect.Field containerField = UIEntity.class.getDeclaredField("systemContainer");
+        java.lang.reflect.Field containerField = UIEntity.class.getDeclaredField("mSystemContainer");
         containerField.setAccessible(true);
         containerField.set(entity, mockContainer);
         return entity;

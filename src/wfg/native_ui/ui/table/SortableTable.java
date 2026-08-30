@@ -146,22 +146,23 @@ public class SortableTable extends UIContainer implements UIBuildableAPI, HasOut
         }
 
 
-        // create rows
-        final TooltipMakerAPI tp = ComponentFactory.createTooltip(
-            getWidth(), true
-        );
-
-        int cumulativeYOffset = 0;
-        for (TableRow row : mRows) {
-            tp.addComponent(row).inTL(pad, cumulativeYOffset);
-
-            cumulativeYOffset += ROW_HEIGHT;
+        if (!mRows.isEmpty()) {
+            final TooltipMakerAPI tp = ComponentFactory.createTooltip(
+                getWidth(), true
+            );
+    
+            int cumulativeYOffset = 0;
+            for (TableRow row : mRows) {
+                tp.addComponent(row).inTL(pad, cumulativeYOffset);
+    
+                cumulativeYOffset += ROW_HEIGHT;
+            }
+    
+            tp.setHeightSoFar(cumulativeYOffset);
+            ComponentFactory.addTooltip(tp, getHeight() - (HEADER_HEIGHT + pad),
+                true, this
+            ).inTL(0f, HEADER_HEIGHT + pad);
         }
-
-        tp.setHeightSoFar(cumulativeYOffset);
-        ComponentFactory.addTooltip(tp, getHeight() - (HEADER_HEIGHT + pad),
-            true, this
-        ).inTL(0f, HEADER_HEIGHT + pad);
     }
 
     public class HeaderPanel extends UIContainer implements UIBuildableAPI, HasTooltip,

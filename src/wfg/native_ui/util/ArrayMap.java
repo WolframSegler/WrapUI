@@ -84,6 +84,9 @@ public final class ArrayMap<K, V> implements Map<K, V>, Serializable {
      */
     private static final int[] EMPTY_IMMUTABLE_INTS = new int[0];
 
+    @SuppressWarnings("rawtypes")
+    public static final ArrayMap EMPTY_MAP = new ArrayMap<>(0);
+
     private final boolean mIdentityHashCode;
     int[] mHashes;
     Object[] mArray;
@@ -169,7 +172,7 @@ public final class ArrayMap<K, V> implements Map<K, V>, Serializable {
     }
 
     /**
-     * Create a new empty ArrayMap.  The default capacity of an array map is 0, and
+     * Create a new empty ArrayMap. The default capacity of an array map is 0, and
      * will grow once items are added to it.
      */
     public ArrayMap() {
