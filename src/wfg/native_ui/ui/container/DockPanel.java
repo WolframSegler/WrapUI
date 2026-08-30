@@ -19,6 +19,7 @@ import wfg.native_ui.internal.util.BorderRenderer;
 import wfg.native_ui.ui.Attachments;
 import wfg.native_ui.ui.ComponentFactory;
 import wfg.native_ui.ui.core.UIBuildableAPI;
+import wfg.native_ui.ui.core.UIContainerAPI;
 import wfg.native_ui.ui.functional.CallbackRunnable;
 import wfg.native_ui.util.UIConstants;
 
@@ -70,7 +71,7 @@ public abstract class DockPanel extends UIContainer implements
     protected String borderPrefix = UIConstants.UI_BORDER_1;
 
     protected final OutsideEventDetector detector;
-    protected final UIContainer contentContainer;
+    protected final UIContainerAPI contentContainer;
 
     private Side dockDir = Side.LEFT;
     private float innerPad;
@@ -187,7 +188,7 @@ public abstract class DockPanel extends UIContainer implements
         }
     }
 
-    public UIContainer getContentContainer() { return contentContainer; }
+    public UIContainerAPI getContentContainer() { return contentContainer; }
 
     @Override
     public PositionAPI add(TooltipMakerAPI tooltip) {

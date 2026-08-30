@@ -11,7 +11,6 @@ import com.fs.starfarer.api.campaign.FactionSpecAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.ui.Fonts;
 import com.fs.starfarer.api.ui.LabelAPI;
-import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import wfg.native_ui.internal.ui.Side;
 import wfg.native_ui.internal.ui.core.UIContainer;
@@ -22,6 +21,7 @@ import wfg.native_ui.ui.component.InteractionComp;
 import wfg.native_ui.ui.component.NativeComponents;
 import wfg.native_ui.ui.container.DockPanel;
 import wfg.native_ui.ui.core.UIBuildableAPI;
+import wfg.native_ui.ui.core.UIContainerAPI;
 import wfg.native_ui.ui.core.UIElementFlags.HasAudioFeedback;
 import wfg.native_ui.ui.core.UIElementFlags.HasHoverGlow;
 import wfg.native_ui.ui.core.UIElementFlags.HasInteraction;
@@ -47,8 +47,8 @@ public final class DockPanelExample extends DockPanel {
     public void buildUI() {
         clearChildren();
 
-        final int width = (int) contentContainer.getPosition().getWidth();
-        final TooltipMakerAPI container = ComponentFactory.createTooltip(width, true);
+        final int width = (int) contentContainer.getWidth();
+        final UIContainerAPI container = new UIContainer(width, 0f);
         final List<FactionSpecAPI> factions = new ArrayList<>(settings.getAllFactionSpecs().stream().filter(f -> f.isShowInIntelTab()).toList());
         factions.add(settings.getFactionSpec(Factions.PLAYER));
 
@@ -57,11 +57,12 @@ public final class DockPanelExample extends DockPanel {
             final FactionRow row = new FactionRow(
                 width, ROW_H, faction, this::onFactionSelected
             );
-            container.addCustom(row, 0f).getPosition().inTL(0f, yCoord);
+            container.add(row).inTL(0f, yCoord);
             yCoord += ROW_H + pad;
         }
-        container.setHeightSoFar(yCoord);
-        ComponentFactory.addTooltip(container, contentContainer.getPosition().getHeight(), true, contentContainer).inTL(0f, 0f);
+        container.setHeight(yCoord);
+        ComponentFactory.wrapWithScrollPanel(container, width, contentContainer.getHeight())
+            .getPosition().inTL(0f, 0f);
     }
 
     private void onFactionSelected(FactionSpecAPI faction) {

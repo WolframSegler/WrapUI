@@ -13,7 +13,6 @@ import com.fs.starfarer.api.graphics.SpriteAPI;
 import com.fs.starfarer.api.ui.Alignment;
 import com.fs.starfarer.api.ui.Fonts;
 import com.fs.starfarer.api.ui.LabelAPI;
-import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.ui.UIComponentAPI;
 
 import wfg.native_ui.example.table.SortableTableExample;
@@ -29,6 +28,7 @@ import wfg.native_ui.ui.component.TooltipComp;
 import wfg.native_ui.ui.component.HoverGlowComp.GlowType;
 import wfg.native_ui.ui.component.TooltipComp.TooltipBuilder;
 import wfg.native_ui.ui.core.UIBuildableAPI;
+import wfg.native_ui.ui.core.UIContainerAPI;
 import wfg.native_ui.ui.core.UIElementFlags.HasAudioFeedback;
 import wfg.native_ui.ui.core.UIElementFlags.HasBackground;
 import wfg.native_ui.ui.core.UIElementFlags.HasHoverGlow;
@@ -147,21 +147,18 @@ public class SortableTable extends UIContainer implements UIBuildableAPI, HasOut
 
 
         if (!mRows.isEmpty()) {
-            final TooltipMakerAPI tp = ComponentFactory.createTooltip(
-                getWidth(), true
-            );
+            final UIContainerAPI content = new UIContainer(getWidth(), 0f);
     
             int cumulativeYOffset = 0;
             for (TableRow row : mRows) {
-                tp.addComponent(row).inTL(pad, cumulativeYOffset);
+                content.add(row).inTL(pad, cumulativeYOffset);
     
                 cumulativeYOffset += ROW_HEIGHT;
             }
     
-            tp.setHeightSoFar(cumulativeYOffset);
-            ComponentFactory.addTooltip(tp, getHeight() - (HEADER_HEIGHT + pad),
-                true, this
-            ).inTL(0f, HEADER_HEIGHT + pad);
+            content.setHeight(cumulativeXOffset);
+            ComponentFactory.wrapWithScrollPanel(content, getWidth(), getHeight() - (HEADER_HEIGHT + pad))
+                .getPosition().inTL(0f, HEADER_HEIGHT + pad);
         }
     }
 

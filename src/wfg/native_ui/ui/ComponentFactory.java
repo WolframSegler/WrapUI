@@ -172,7 +172,7 @@ public final class ComponentFactory {
     }
 
     // TODO Replace reflection calls with API calls once new update drops
-    public static final ScrollPanelAPI wrapWithScrollPanel(UIComponentAPI content, float width, float height) {
+    public static final ScrollPanelAPI wrapWithScrollPanel(UIComponentAPI content, float viewWidth, float viewHeight) {
         final var scrollPanel = (ScrollPanelAPI) RolfLectionUtil.instantiateClass(
             TooltipSystem.scrollPanelConstr
         );
@@ -180,7 +180,7 @@ public final class ComponentFactory {
             content.getPosition().getWidth(), content.getPosition().getHeight()
         );
         RolfLectionUtil.invokeMethodDirectly(TooltipSystem.setSizeMethod, scrollPanel,
-            width + 5f, height
+            viewWidth + 5f, viewHeight
         );
         RolfLectionUtil.invokeMethodDirectly(TooltipSystem.setMaxShadowHeightMethod, scrollPanel,
             15f

@@ -8,12 +8,13 @@ import java.util.List;
 
 import com.fs.starfarer.api.ui.Fonts;
 import com.fs.starfarer.api.ui.LabelAPI;
-import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import com.fs.starfarer.api.ui.ScrollPanelAPI;
 
 import wfg.native_ui.example.table.GridTableExample;
 import wfg.native_ui.internal.ui.core.UIContainer;
 import wfg.native_ui.ui.ComponentFactory;
 import wfg.native_ui.ui.core.UIBuildableAPI;
+import wfg.native_ui.ui.core.UIContainerAPI;
 import wfg.native_ui.util.Arithmetic;
 
 /**
@@ -38,8 +39,10 @@ public abstract class GridTable<T, W extends WidgetAPI<W>> extends UIContainer i
     /** Currently selected widget, if selection is enabled. */
     protected W selectedWidget = null;
 
-    /** Scrollable container built via {@code ComponentFactory}. */
-    protected TooltipMakerAPI container;
+    /** Scrollable container built via {@link ComponentFactory}. */
+    protected ScrollPanelAPI scrollContainer;
+    /** The content container that holds the {@link WidgetAPI}'s. */
+    protected UIContainerAPI content;
     /** Last known scroll offset, restored on rebuild. */
     protected float scrollOffset = 0f;
     /** Determines whether widget selection is enabled. */
@@ -96,8 +99,8 @@ public abstract class GridTable<T, W extends WidgetAPI<W>> extends UIContainer i
             return;
         }
 
-        if (container != null) scrollOffset = container.getExternalScroller().getYOffset();
-        container = ComponentFactory.createTooltip(getWidth(), true);
+        if (scrollContainer != null) scrollOffset = scrollContainer.getYOffset();
+        content = new UIContainer(getWidth(), 0f);
 
         final float margin = uniformOuterGap ? gap : 0f;
         final float availableW = getWidth() - 2 * margin;
@@ -119,7 +122,7 @@ public abstract class GridTable<T, W extends WidgetAPI<W>> extends UIContainer i
             widgets.add(widget);
 
             if (isSelectionEnabled) {
-                widget.getInteraction().onClicked = (w, left) -> onWidgetClicked(w);
+                widget.getInteraction().onClicked = (w, isLeft) -> onWidgetClicked(w);
             }
 
             final int row = i / cols;
@@ -128,25 +131,26 @@ public abstract class GridTable<T, W extends WidgetAPI<W>> extends UIContainer i
             final float x = margin + col * (widgetW + effGap);
             final float y = margin + row * (widgetH + gap);
 
-            container.addCustom(widget, 0f).getPosition().inTL(x, y);
+            content.add(widget).inTL(x, y);
         }
 
         final int rows = (items.size() + cols - 1) / cols;
         final float contentHeight = margin + rows * (widgetH + gap);
-        container.setHeightSoFar(contentHeight);
+        content.setHeight(contentHeight);
 
         final float visibleHeight = getHeight() - margin;
-        ComponentFactory.addTooltip(container, visibleHeight, true, this).inTL(0f, margin);
+        scrollContainer = ComponentFactory.wrapWithScrollPanel(content, getWidth(), visibleHeight);
+        scrollContainer.getPosition().inTL(0f, margin);
 
         final float maxScroll = Math.max(0f, contentHeight - visibleHeight);
-        container.getExternalScroller().setYOffset(Arithmetic.clamp(scrollOffset, 0f, maxScroll));
+        scrollContainer.setYOffset(Arithmetic.clamp(scrollOffset, 0f, maxScroll));
     }
 
     public final void scrollToBottom() {
-        if (container == null) return;
+        if (content == null) return;
         final float visibleHeight = getHeight() - gap;
-        final float maxScroll = Math.max(0f, container.getHeightSoFar() - visibleHeight);
-        container.getExternalScroller().setYOffset(maxScroll);
+        final float maxScroll = Math.max(0f, content.getHeight() - visibleHeight);
+        scrollContainer.setYOffset(maxScroll);
     }
 
     protected final int calculateColumns() {
