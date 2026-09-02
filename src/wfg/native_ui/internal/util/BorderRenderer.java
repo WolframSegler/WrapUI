@@ -3,9 +3,13 @@ package wfg.native_ui.internal.util;
 import static wfg.native_ui.util.Globals.settings;
 
 import java.awt.Color;
+
+import org.lwjgl.opengl.GL11;
+
 import com.fs.starfarer.api.graphics.SpriteAPI;
 
 import wfg.native_ui.internal.ui.Side;
+import wfg.native_ui.util.RenderUtils;
 import wfg.native_ui.util.UIConstants;
 
 /**
@@ -43,14 +47,13 @@ public final class BorderRenderer {
     private int hiddenSidesMask = 0;
     private float width;
     private float height;
-    private float prevAlpha = 0f;
 
     public BorderRenderer(String prefix, boolean whiteCenter, float w, float h) {
         this(prefix, whiteCenter);
         this.setSize(w, h);
     }
 
-    // TODO fix border2 rendering bug
+    // TODO fix UIConstants#UI_BORDER_2 rendering bug
     public BorderRenderer(String prefix, boolean whiteCenter) {
         bottom_left = settings.getSprite("ui", prefix + "_bot_left");
         bottom_right = settings.getSprite("ui", prefix + "_bot_right");
@@ -99,20 +102,6 @@ public final class BorderRenderer {
     }
 
     public final void render(float x, float y, float alpha) {
-        if (prevAlpha != alpha)  {
-            prevAlpha = alpha;
-
-            bottom_left.setAlphaMult(alpha);
-            bottom_right.setAlphaMult(alpha);
-            top_left.setAlphaMult(alpha);
-            top_right.setAlphaMult(alpha);
-            left_mid.setAlphaMult(alpha);
-            right_mid.setAlphaMult(alpha);
-            top_mid.setAlphaMult(alpha);
-            bottom_mid.setAlphaMult(alpha);
-            center.setAlphaMult(alpha);
-        }
-        
         final boolean hideTop = (hiddenSidesMask & HIDE_TOP) != 0;
         final boolean hideLeft = (hiddenSidesMask & HIDE_LEFT) != 0;
         final boolean hideRight = (hiddenSidesMask & HIDE_RIGHT) != 0;
@@ -128,23 +117,56 @@ public final class BorderRenderer {
         final float innerW = width - 2f * corner_size - leftOffset + rightOffset;
         final float innerH = height - 2f * corner_size - bottomOffset + topOffset;
 
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+
         if (renderCenter) {
-            center.setColor(centerColor);
-            center.renderRegion(innerX - fudge, innerY - fudge, 0f, 0f, (innerW+fudge*2) / corner_size, (innerH+fudge*2) / corner_size);
+            final float cx = innerX - fudge;
+            final float cy = innerY - fudge;
+            final float cw = innerW + 2f * fudge;
+            final float ch = innerH + 2f * fudge;
+            RenderUtils.setGlColor(centerColor, alpha);
+            center.bindTexture();
+            NineSliceUtils.drawStretch(false, false, corner_size, corner_size, cx, cy, cw, ch);
         }
 
-        if (!hideBottom && !hideLeft) bottom_left.render(x, y);
-        if (!hideBottom && !hideRight) bottom_right.render(x + width - corner_size, y);
-        if (!hideTop && !hideLeft) top_left.render(x, y + height - corner_size);
-        if (!hideTop && !hideRight) top_right.render(x + width - corner_size, y + height - corner_size);
+        RenderUtils.setGlColor(Color.white, alpha);
+        if (!hideBottom && !hideLeft) {
+            bottom_left.bindTexture();
+            NineSliceUtils.drawCorner(false, false, corner_size, corner_size, x, y);
+        }
+        if (!hideBottom && !hideRight) {
+            bottom_right.bindTexture();
+            NineSliceUtils.drawCorner(false, false, corner_size, corner_size, x + width - corner_size, y);
+        }
+        if (!hideTop && !hideLeft) {
+            top_left.bindTexture();
+            NineSliceUtils.drawCorner(false, false, corner_size, corner_size, x, y + height - corner_size);
+        }
+        if (!hideTop && !hideRight) {
+            top_right.bindTexture();
+            NineSliceUtils.drawCorner(false, false, corner_size, corner_size, x + width - corner_size, y + height - corner_size);
+        }
 
-        final float tileW = innerW / corner_size;
-        final float tileH = innerH / corner_size;
+        if (!hideLeft) {
+            left_mid.bindTexture();
+            NineSliceUtils.drawStretch(false, false, corner_size, corner_size, x, innerY, corner_size, innerH);
+        }
+        if (!hideRight) {
+            right_mid.bindTexture();
+            NineSliceUtils.drawStretch(false, false, corner_size, corner_size, x + width - corner_size, innerY, corner_size, innerH);
+        }
+        if (!hideTop) {
+            top_mid.bindTexture();
+            NineSliceUtils.drawStretch(false, false, corner_size, corner_size, innerX, y + height - corner_size, innerW, corner_size);
+        }
+        if (!hideBottom) {
+            bottom_mid.bindTexture();
+            NineSliceUtils.drawStretch(false, false, corner_size, corner_size, innerX, y, innerW, corner_size);
+        }
 
-        if (!hideLeft) left_mid.renderRegion(x, innerY, 0f, 0f, 1f, tileH);
-        if (!hideRight) right_mid.renderRegion(x + width - corner_size, innerY, 0f, 0f, 1f, tileH);
-        if (!hideTop) top_mid.renderRegion(innerX, y + height - corner_size, 0f, 0f, tileW, 1f);
-        if (!hideBottom) bottom_mid.renderRegion(innerX, y, 0f, 0f, tileW, 1f);
+        GL11.glDisable(GL11.GL_BLEND);
     }
 
     private static final int bitForSide(Side side) {

@@ -1,7 +1,11 @@
 {
     "graphics": {
         "ui": {
-          "center_white": "graphics/ui/bg/border_center_white.png"
+          "center_white": "graphics/ui/bg/border_center_white.png",
+          "center_white_gradient": "graphics/ui/bg/border_center_white_gradient.png",
+          "toast_handle_left": "graphics/ui/toast_handle_left.png",
+          "toast_handle_bottom_left": "graphics/ui/toast_handle_bottom_left.png",
+          "toast_handle_center_left": "graphics/ui/toast_handle_center_left.png"
         }
     }
 }
