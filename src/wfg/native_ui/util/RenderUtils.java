@@ -12,6 +12,7 @@ import java.awt.Color;
 public final class RenderUtils {
     private RenderUtils() {}
     private static final SpriteAPI LINE_TEX = settings.getSprite("graphics/hud/line4x4.png");
+    private static final Color BLACK_HIGHLIGHT = new Color(0, 0, 0, 127);
 
     /**
      * @param x = posX
@@ -115,11 +116,7 @@ public final class RenderUtils {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 
-        final int r = Math.min(255, (int)(glowColor.getRed() * intensity));
-        final int g = Math.min(255, (int)(glowColor.getGreen() * intensity));
-        final int b = Math.min(255, (int)(glowColor.getBlue() * intensity));
-        final int a = Math.min(255, (int)(255 * intensity));
-        sprite.setColor(new Color(r, g, b, a));
+        sprite.setColor(NativeUiUtils.adjustBrightnessWithAlpha(glowColor, intensity));
 
         sprite.setAdditiveBlend();
         sprite.render(x, y);
@@ -267,7 +264,7 @@ public final class RenderUtils {
 
         // Top half gradient shine
         float shineFactor = 0.3f + highlightIntensity * 0.7f;
-        Color shineColor = blendColors(baseColor, Color.WHITE, shineFactor * 0.5f);
+        Color shineColor = NativeUiUtils.lerpColor(baseColor, Color.WHITE, shineFactor * 0.5f);
 
         GL11.glBegin(GL11.GL_QUADS);
         GL11.glColor4ub((byte) shineColor.getRed(), (byte) shineColor.getGreen(), (byte) shineColor.getBlue(),
@@ -287,7 +284,7 @@ public final class RenderUtils {
         Color mainColor = baseColor;
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
         if (darkOverlay) {
-            mainColor = new Color(0, 0, 0, 127);
+            mainColor = BLACK_HIGHLIGHT;
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             mainFactor = 1f;
         }
@@ -313,18 +310,6 @@ public final class RenderUtils {
         GL11.glEnd();
 
         GL11.glEnable(GL11.GL_TEXTURE_2D);
-    }
-
-    public static final Color blendColors(Color c1, Color c2, float t) {
-        if (t <= 0f) return c1;
-        if (t >= 1f) return c2;
-
-        final int r = Math.min(255, Math.max(0, Math.round(c1.getRed() + (c2.getRed() - c1.getRed()) * t)));
-        final int g = Math.min(255, Math.max(0, Math.round(c1.getGreen() + (c2.getGreen() - c1.getGreen()) * t)));
-        final int b = Math.min(255, Math.max(0, Math.round(c1.getBlue() + (c2.getBlue() - c1.getBlue()) * t)));
-        final int a = Math.min(255, Math.max(0, Math.round(c1.getAlpha() + (c2.getAlpha() - c1.getAlpha()) * t)));
-
-        return new Color(r, g, b, a);
     }
 
     /**

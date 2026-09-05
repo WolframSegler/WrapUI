@@ -51,6 +51,18 @@ public final class NativeUiUtils {
     }
 
     /**
+     * Scales both color and alpha by the same factor.
+     * Values below 1 dim, values above 1 brighten (clamped at 255).
+     */
+    public static final Color adjustBrightnessWithAlpha(Color base, float factor) {
+        final int r = Math.min(255, (int)(base.getRed() * factor));
+        final int g = Math.min(255, (int)(base.getGreen() * factor));
+        final int b = Math.min(255, (int)(base.getBlue() * factor));
+        final int a = Math.min(255, (int)(base.getAlpha() * factor));
+        return new Color(r, g, b, a);
+    }
+
+    /**
      * Returns a new Color with the alpha channel multiplied by alphaMult,
      * clamped to 0–255. RGB channels are left unchanged.
      */
@@ -68,6 +80,7 @@ public final class NativeUiUtils {
      * @param t Must be between 0 and 1
      */
     public static final Color lerpColor(Color c1, Color c2, float t) {
+        t = Arithmetic.clamp(t, 0f, 1f);
         final int r = (int) (c1.getRed() + t * (c2.getRed() - c1.getRed()));
         final int g = (int) (c1.getGreen() + t * (c2.getGreen() - c1.getGreen()));
         final int b = (int) (c1.getBlue() + t * (c2.getBlue() - c1.getBlue()));
@@ -357,7 +370,7 @@ public final class NativeUiUtils {
         final float mouseX = settings.getMouseX();
         final float mouseY = settings.getMouseY();
 
-        pos.inBL(0, 0);
+        pos.inBL(0f, 0f);
 
         final float tooltipX = pos.getX();
         final float tooltipY = pos.getY();

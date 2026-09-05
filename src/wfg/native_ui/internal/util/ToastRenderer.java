@@ -8,37 +8,99 @@ import org.lwjgl.opengl.GL11;
 
 import com.fs.starfarer.api.graphics.SpriteAPI;
 
+import wfg.native_ui.util.NativeUiUtils;
 import wfg.native_ui.util.RenderUtils;
 
 public final class ToastRenderer {
     private ToastRenderer() {};
-    private static final SpriteAPI HANDLE_BL = settings.getSprite("ui", "toast_handle_bottom_left");
-    private static final SpriteAPI HANDLE_CL = settings.getSprite("ui", "toast_handle_center_left");
+    private static final SpriteAPI HANDLE_CORNER = settings.getSprite("ui", "toast_handle_bottom_left");
+    private static final SpriteAPI HANDLE_LEFT = settings.getSprite("ui", "toast_handle_center_left");
+    private static final SpriteAPI HOLO_CORNER = settings.getSprite("ui", "toast_holo_corner");
+    private static final SpriteAPI HOLO_LEFT = settings.getSprite("ui", "toast_holo_left");
+    private static final SpriteAPI HOLO_TOP = settings.getSprite("ui", "toast_holo_top");
+    private static final SpriteAPI HOLO_CENTER = settings.getSprite("ui", "toast_holo_center");
 
-    private static final float HANDLE_W = HANDLE_BL.getTextureWidth();
-    private static final float CORNER_H = HANDLE_BL.getTextureHeight();
+    private static final float HANDLE_W = HANDLE_CORNER.getTextureWidth();
+    private static final float HANDLE_CORNER_H = HANDLE_CORNER.getTextureHeight();
+    private static final float HOLO_CORNER_S = HOLO_CORNER.getWidth();
 
-    public static final void render(float x, float y, float w, float h, boolean mirror, float alpha, Color color, int blendSrc, int blendDest) {
+    public static final void render(float x, float y, float w, float h, boolean mirror, float alpha, Color handleColor, Color holoColor,
+        int blendSrc, int blendDest, float glowIntensity
+    ) {
         final float handleX = x + (mirror ? w - HANDLE_W : 0f);
+        final float holoX = x + (mirror ? 0f : HANDLE_W);
+        final float holoW = w - HANDLE_W;
+
         final float blY = y;
-        final float tlY = y + h - CORNER_H;
-        final float centerY = y + CORNER_H;
-        final float innerH = h - 2f * CORNER_H;
+        final float tlY = y + h - HANDLE_CORNER_H;
+        final float centerY = y + HANDLE_CORNER_H;
+        final float handleInnerH = h - 2f * HANDLE_CORNER_H;
+
+        final float holoInnerX = holoX + HOLO_CORNER_S;
+        final float holoInnerY = y + HOLO_CORNER_S;
+        final float holoInnerW = holoW - 2f * HOLO_CORNER_S;
+        final float holoInnerH = h - 2f * HOLO_CORNER_S;
+
+        final float holoRight = holoX + holoW - HOLO_CORNER_S;
+        final float holoTop = y + h - HOLO_CORNER_S;
 
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glEnable(GL11.GL_BLEND);
+
+        if (glowIntensity > 0.04f) {
+            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+
+            final Color glowColor = NativeUiUtils.adjustBrightnessWithAlpha(holoColor, 1f + glowIntensity);
+            RenderUtils.setGlColor(glowColor, alpha);
+
+            drawHologram(
+                holoRight, holoTop,
+                holoInnerX, holoInnerY, holoInnerW, holoInnerH,
+                holoX, holoW, y, h
+            );
+        }
+
         GL11.glBlendFunc(blendSrc, blendDest);
-        RenderUtils.setGlColor(color, alpha);
+        RenderUtils.setGlColor(holoColor, alpha);
+        
+        drawHologram(
+            holoRight, holoTop, holoInnerX, holoInnerY, holoInnerW,
+            holoInnerH, holoX, holoW, y, h
+        );
 
-        HANDLE_BL.bindTexture();
-        NineSliceUtils.drawCorner(HANDLE_BL, mirror, false, handleX, blY);
+        RenderUtils.setGlColor(handleColor, alpha);
 
-        HANDLE_BL.bindTexture();
-        NineSliceUtils.drawCorner(HANDLE_BL, mirror, true, handleX, tlY);
+        HANDLE_CORNER.bindTexture();
+        NineSliceUtils.drawCorner(HANDLE_CORNER, mirror, false, handleX, blY);
 
-        HANDLE_CL.bindTexture();
-        NineSliceUtils.drawStretch(HANDLE_CL, mirror, false, handleX, centerY, HANDLE_W, innerH);
+        HANDLE_CORNER.bindTexture();
+        NineSliceUtils.drawCorner(HANDLE_CORNER, mirror, true, handleX, tlY);
+
+        HANDLE_LEFT.bindTexture();
+        NineSliceUtils.drawStretch(HANDLE_LEFT, mirror, false, handleX, centerY, HANDLE_W, handleInnerH);
 
         GL11.glDisable(GL11.GL_BLEND);
+    }
+
+    private static final void drawHologram(
+        float holoRight, float holoTop, float holoInnerX, float holoInnerY, float holoInnerW,
+        float holoInnerH, float holoX, float holoW, float y, float h
+    ) {
+        HOLO_CENTER.bindTexture();
+        NineSliceUtils.drawStretch(false, false, HOLO_CENTER.getWidth(), HOLO_CENTER.getHeight(), holoInnerX, holoInnerY, holoInnerW, holoInnerH);
+
+        HOLO_CORNER.bindTexture();
+        NineSliceUtils.drawCorner(false, false, holoX, y, HOLO_CORNER_S, HOLO_CORNER_S);
+        NineSliceUtils.drawCorner(true, false, holoRight, y, HOLO_CORNER_S, HOLO_CORNER_S);
+        NineSliceUtils.drawCorner(false, true, holoX, holoTop, HOLO_CORNER_S, HOLO_CORNER_S);
+        NineSliceUtils.drawCorner(true, true, holoRight, holoTop, HOLO_CORNER_S, HOLO_CORNER_S);
+
+        HOLO_LEFT.bindTexture();
+        NineSliceUtils.drawStretch(false, false, HOLO_CORNER_S, HOLO_LEFT.getHeight(), holoX, holoInnerY, HOLO_CORNER_S, holoInnerH);
+        NineSliceUtils.drawStretch(true, false, HOLO_CORNER_S, HOLO_LEFT.getHeight(), holoX + holoW - HOLO_CORNER_S, holoInnerY, HOLO_CORNER_S, holoInnerH);
+
+        HOLO_TOP.bindTexture();
+        NineSliceUtils.drawStretch(false, false, HOLO_TOP.getWidth(), HOLO_CORNER_S, holoInnerX, y, holoInnerW, HOLO_CORNER_S);
+        NineSliceUtils.drawStretch(false, true, HOLO_TOP.getWidth(), HOLO_CORNER_S, holoInnerX, y + h - HOLO_CORNER_S, holoInnerW, HOLO_CORNER_S);
     }
 }
